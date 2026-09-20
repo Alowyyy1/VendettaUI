@@ -1,0 +1,5 @@
+.bin/*.zip
+dist/temp.lua
+node_modules/
+.DS_Store
+Thumbs.db
