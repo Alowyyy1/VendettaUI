@@ -14,10 +14,10 @@ local Tween = Creator.Tween
 local CreateButton = require("./ui/Button").New
 local DialogInit = require("./window/Dialog")
 
--- Функция эффекта печатания текста (Typewriter Effect)
+-- Функция печатания текста (Typewriter Effect) без искажения начальных размеров текста
 local function Typewriter(textLabel, fullText, speed)
 	speed = speed or 0.025
-	textLabel.Text = ""
+	textLabel.Text = fullText
 	task.spawn(function()
 		for i = 1, #fullText do
 			if not textLabel or not textLabel.Parent then
@@ -26,6 +26,7 @@ local function Typewriter(textLabel, fullText, speed)
 			textLabel.Text = string.sub(fullText, 1, i)
 			task.wait(speed)
 		end
+		textLabel.Text = fullText
 	end)
 end
 
@@ -117,7 +118,6 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 		Parent = ContentFrame,
 	})
 
-	-- Кнопка скрытия/показа (eye / eye-off) без изменения UIScale (чтобы интерфейс не танцевал)
 	local EyeIconButton = New("ImageButton", {
 		Size = UDim2.new(0, 20, 0, 20),
 		BackgroundTransparency = 1,
@@ -130,7 +130,6 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 		Parent = ContentFrame,
 	})
 
-	-- Безнегативный ховер-эффект (без смены размера UIScale)
 	Creator.AddSignal(EyeIconButton.MouseEnter, function()
 		Tween(EyeIconButton, 0.15, { ImageTransparency = 0.2 }):Play()
 	end)
@@ -138,7 +137,6 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 		Tween(EyeIconButton, 0.15, { ImageTransparency = 0 }):Play()
 	end)
 
-	-- Анимация фокуса поля ввода
 	Creator.AddSignal(TextBox.Focused, function()
 		Tween(GlassBg, 0.2, { ImageTransparency = 0.3 }):Play()
 		Tween(RoundBg, 0.2, { ImageTransparency = 0.6 }):Play()
@@ -188,7 +186,6 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 		EyeIconButton.ImageRectOffset = iconData[2].ImageRectPosition
 		UpdateDisplayText()
 
-		-- Импульсная вращательная анимация глаза
 		EyeIconButton.Rotation = -20
 		Tween(EyeIconButton, 0.25, { Rotation = 0 }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
 	end)
@@ -237,12 +234,8 @@ function AuthWindow.new(Config, OnSuccessCallback)
 	local Dialog = DialogInit.Create(true, "Popup", Config.Window, WindUI, WindUI.ScreenGui.KeySystem)
 
 	local UISize = 420
-	Dialog.UIElements.Main.AutomaticSize = Enum.AutomaticSize.Y
-	Dialog.UIElements.Main.Size = UDim2.new(0, UISize, 0, 0)
-	Dialog.UIElements.MainContainer.AutomaticSize = Enum.AutomaticSize.Y
-	Dialog.UIElements.MainContainer.Size = UDim2.new(0, UISize, 0, 0)
 
-	-- 1. Профиль игрока (Аватар + Ник с эффектом печатания)
+	-- 1. Профиль игрока (Аватар + Имя)
 	local UserId = LocalPlayer and LocalPlayer.UserId or 1
 	local Username = LocalPlayer and LocalPlayer.Name or "Guest"
 	local DisplayName = LocalPlayer and LocalPlayer.DisplayName or "Guest User"
@@ -261,7 +254,7 @@ function AuthWindow.new(Config, OnSuccessCallback)
 	local DisplayNameLabel = New("TextLabel", {
 		AutomaticSize = "XY",
 		BackgroundTransparency = 1,
-		Text = "",
+		Text = DisplayName,
 		FontFace = Font.new(Creator.Font, Enum.FontWeight.SemiBold),
 		ThemeTag = { TextColor3 = "Text" },
 		TextSize = 17,
@@ -271,7 +264,7 @@ function AuthWindow.new(Config, OnSuccessCallback)
 	local UsernameLabel = New("TextLabel", {
 		AutomaticSize = "XY",
 		BackgroundTransparency = 1,
-		Text = "",
+		Text = "@" .. Username,
 		FontFace = Font.new(Creator.Font, Enum.FontWeight.Medium),
 		ThemeTag = { TextColor3 = "Text" },
 		TextTransparency = 0.45,
@@ -279,9 +272,8 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		TextXAlignment = "Left",
 	})
 
-	-- Эффект печатания заголовков при открытии
 	Typewriter(DisplayNameLabel, DisplayName, 0.03)
-	task.delay(0.2, function()
+	task.delay(0.15, function()
 		Typewriter(UsernameLabel, "@" .. Username, 0.02)
 	end)
 
@@ -311,7 +303,7 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		ProfileInfo,
 	})
 
-	-- 2. Переключатель режимов с плавным скользящим индикатором (Sliding Pill)
+	-- 2. Переключатель режимов с плавным плавающим индикатором (Sliding Pill)
 	local ActiveMode = "Key" -- "Key" | "Account"
 
 	local TabSelectorContainer = Creator.NewRoundFrame(12, "Squircle", {
@@ -327,7 +319,6 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		}),
 	})
 
-	-- Плавающий слайдинг-индикатор (Sliding Indicator Pill)
 	local IndicatorPill = Creator.NewRoundFrame(9, "Squircle", {
 		Size = UDim2.new(0.5, -3, 1, 0),
 		Position = UDim2.new(0, 0, 0, 0),
@@ -336,7 +327,6 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		Parent = TabSelectorContainer,
 	})
 
-	-- Кнопка 1: По ключу
 	local ModeKeyButton = New("TextButton", {
 		Size = UDim2.new(0.5, 0, 1, 0),
 		Position = UDim2.new(0, 0, 0, 0),
@@ -349,7 +339,6 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		Parent = TabSelectorContainer,
 	})
 
-	-- Кнопка 2: Логин и пароль
 	local ModeAccountButton = New("TextButton", {
 		Size = UDim2.new(0.5, 0, 1, 0),
 		Position = UDim2.new(0.5, 0, 0, 0),
@@ -363,7 +352,7 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		Parent = TabSelectorContainer,
 	})
 
-	-- 3. Контейнеры ввода с анимациями слайдинга и прозрачности (Slide & Fade Tab Transition)
+	-- 3. Контейнеры ввода с анимациями слайдинга и прозрачности
 	local TabContentContainer = New("Frame", {
 		Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y,
@@ -497,7 +486,7 @@ function AuthWindow.new(Config, OnSuccessCallback)
 
 	local PasswordInputController = CreateMaskedInput("Введите пароль...", "lock", AccountContainer, nil, "", false)
 
-	-- Плавная анимация переключения вкладок (Slide & Fade Tab Transition)
+	-- Плавная анимация переключения вкладок
 	local isTransitioning = false
 	local function SwitchMode(newMode)
 		if ActiveMode == newMode or isTransitioning then
@@ -515,12 +504,10 @@ function AuthWindow.new(Config, OnSuccessCallback)
 			Tween(ModeAccountButton, 0.2, { TextTransparency = 0.4 }):Play()
 			ModeAccountButton.FontFace = Font.new(Creator.Font, Enum.FontWeight.Medium)
 
-			-- Анимация ухода AccountContainer влево
 			Tween(AccountContainer, 0.15, { Position = UDim2.new(0, 15, 0, 0) }, Enum.EasingStyle.Quint, Enum.EasingDirection.In):Play()
 			task.wait(0.12)
 			AccountContainer.Visible = false
 
-			-- Анимация прихода KeyContainer слева в 0px
 			KeyContainer.Position = UDim2.new(0, -15, 0, 0)
 			KeyContainer.Visible = true
 			Tween(KeyContainer, 0.22, { Position = UDim2.new(0, 0, 0, 0) }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
@@ -533,12 +520,10 @@ function AuthWindow.new(Config, OnSuccessCallback)
 			Tween(ModeAccountButton, 0.2, { TextTransparency = 0 }):Play()
 			ModeAccountButton.FontFace = Font.new(Creator.Font, Enum.FontWeight.SemiBold)
 
-			-- Анимация ухода KeyContainer вправо
 			Tween(KeyContainer, 0.15, { Position = UDim2.new(0, -15, 0, 0) }, Enum.EasingStyle.Quint, Enum.EasingDirection.In):Play()
 			task.wait(0.12)
 			KeyContainer.Visible = false
 
-			-- Анимация прихода AccountContainer справа в 0px
 			AccountContainer.Position = UDim2.new(0, 15, 0, 0)
 			AccountContainer.Visible = true
 			Tween(AccountContainer, 0.22, { Position = UDim2.new(0, 0, 0, 0) }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
@@ -555,7 +540,7 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		SwitchMode("Account")
 	end)
 
-	-- Эффект физической тряски окна при ошибке (Shake Animation)
+	-- Эффект физической тряски окна при ошибке
 	local function ShakeWindow()
 		local mainContainer = Dialog.UIElements.MainContainer
 		local originalPos = mainContainer.Position
@@ -636,7 +621,6 @@ function AuthWindow.new(Config, OnSuccessCallback)
 			end
 
 			if isSuccess then
-				-- Сохранение ТОЛЬКО логина/почты
 				if (Config.SaveAccount == nil or Config.SaveAccount == true) and writefile then
 					pcall(function()
 						writefile(LoginSavePath, login)
@@ -646,9 +630,9 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		end
 
 		if isSuccess then
-			-- Сворачивание окна с пружинной анимацией (Collapse Close)
-			Dialog:CollapseClose()
-			task.wait(0.25)
+			-- Запуск вертикально-перевернутого macOS Genie Effect (0.6с)
+			Dialog:GenieClose(0.6)
+			task.wait(0.6)
 			if OnSuccessCallback then
 				OnSuccessCallback({
 					Mode = ActiveMode,
@@ -668,7 +652,7 @@ function AuthWindow.new(Config, OnSuccessCallback)
 
 	SubmitBtn.Size = UDim2.new(1, 0, 1, 0)
 
-	-- Главный фрейм окна Стадии 1 (с включенным AutomaticSize = Y для точного облегания фона)
+	-- Главный фрейм окна Стадии 1
 	local MainFrame = New("Frame", {
 		Size = UDim2.new(1, 0, 0, 0),
 		AutomaticSize = Enum.AutomaticSize.Y,
@@ -679,17 +663,32 @@ function AuthWindow.new(Config, OnSuccessCallback)
 			PaddingTop = UDim.new(0, 18),
 			PaddingLeft = UDim.new(0, 18),
 			PaddingRight = UDim.new(0, 18),
-			PaddingBottom = UDim.new(0, 18),
+			PaddingBottom = UDim.new(0, 22),
 		}),
 		New("UIListLayout", {
 			FillDirection = "Vertical",
 			Padding = UDim.new(0, 16),
+			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
 		HeaderContainer,
 		TabSelectorContainer,
 		TabContentContainer,
 		ActionContainer,
 	})
+
+	-- Динамическая математическая привязка высоты фоновой карточки (100% гарантия исключения переполнения подложки)
+	local listLayout = MainFrame:FindFirstChildOfClass("UIListLayout")
+	local function UpdateCardHeight()
+		if listLayout then
+			local contentY = listLayout.AbsoluteContentSize.Y
+			local totalHeight = contentY + 40 -- PaddingTop(18) + PaddingBottom(22)
+			Dialog.UIElements.Main.Size = UDim2.new(0, UISize, 0, totalHeight)
+			Dialog.UIElements.MainContainer.Size = UDim2.new(0, UISize, 0, totalHeight)
+		end
+	end
+
+	Creator.AddSignal(listLayout:GetPropertyChangedSignal("AbsoluteContentSize"), UpdateCardHeight)
+	task.defer(UpdateCardHeight)
 
 	Dialog:Open()
 	return Dialog

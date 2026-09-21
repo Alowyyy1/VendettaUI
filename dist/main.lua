@@ -2976,25 +2976,72 @@ return function()end
 end
 
 function aj.CollapseClose(ak)
-if not ae and aj.UIElements.FullScreen then
-ac(aj.UIElements.FullScreen,0.2,{BackgroundTransparency=1}):Play()
-aj.UIElements.FullScreen.Active=false
+return aj:GenieClose(0.6)
 end
 
-local al=aj.UIElements.MainContainer:FindFirstChildOfClass"UIScale"
-if not al then
-al=Instance.new("UIScale",aj.UIElements.MainContainer)
+function aj.GenieClose(ak,al)
+al=al or 0.6
+local am=cloneref(game:GetService"RunService")
+local an=aj.UIElements.MainContainer
+local ao=aj.UIElements.FullScreen
+
+if not an or not an.Parent then
+return function()end
 end
 
-ac(al,0.22,{Scale=0.85},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
-ac(aj.UIElements.MainContainer,0.22,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+local ap=an.Position
+local aq=an.Size
+local ar=an.AnchorPoint
 
-task.spawn(function()
-task.wait(0.22)
-if not ae and aj.UIElements.FullScreen then
-aj.UIElements.FullScreen:Destroy()
-else
-aj.UIElements.MainContainer:Destroy()
+local function EaseInOutQuad(as)
+return as<0.5 and(2*as*as)or(1-math.pow(-2*as+2,2)/2)
+end
+
+if not ae and ao then
+ao.Active=false
+ac(ao,al,{BackgroundTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.InOut):Play()
+end
+
+local as=0
+local at
+
+at=am.RenderStepped:Connect(function(au)
+as=as+au
+local av=math.clamp(as/al,0,1)
+local aw=EaseInOutQuad(av)
+
+local ax=(ap.Y.Scale*(1-aw))+(0.0*aw)
+local ay=(ar.Y*(1-aw))+(0.0*aw)
+an.AnchorPoint=Vector2.new(0.5,ay)
+
+local az=(1-aw)
+local aA=1+(0.2*math.sin(aw*math.pi))
+local aB=aq.X.Offset*az
+local b=aq.Y.Offset*(1-aw)*aA
+
+an.Position=UDim2.new(0.5,0,ax,ap.Y.Offset*(1-aw))
+an.Size=UDim2.new(0,math.max(0,aB),0,math.max(0,b))
+
+if av>=0.85 then
+local d=(av-0.85)/0.15
+an.ImageTransparency=d
+for f,g in ipairs(an:GetDescendants())do
+if g:IsA"TextLabel"or g:IsA"TextButton"or g:IsA"TextBox"then
+g.TextTransparency=d
+elseif g:IsA"ImageLabel"or g:IsA"ImageButton"then
+g.ImageTransparency=d
+end
+end
+end
+
+if av>=1 then
+if at then
+at:Disconnect()
+end
+if not ae and ao then
+pcall(function()ao:Destroy()end)
+end
+pcall(function()an:Destroy()end)
 end
 end)
 
@@ -3534,7 +3581,7 @@ local ai=a.o()
 
 local function Typewriter(aj,ak,al)
 al=al or 0.025
-aj.Text=""
+aj.Text=ak
 task.spawn(function()
 for am=1,#ak do
 if not aj or not aj.Parent then
@@ -3543,6 +3590,7 @@ end
 aj.Text=string.sub(ak,1,am)
 task.wait(al)
 end
+aj.Text=ak
 end)
 end
 
@@ -3634,7 +3682,6 @@ TextColor3="Text",
 Parent=au,
 })
 
-
 local ax=af("ImageButton",{
 Size=UDim2.new(0,20,0,20),
 BackgroundTransparency=1,
@@ -3647,14 +3694,12 @@ ImageColor3="Icon",
 Parent=au,
 })
 
-
 ae.AddSignal(ax.MouseEnter,function()
 ag(ax,0.15,{ImageTransparency=0.2}):Play()
 end)
 ae.AddSignal(ax.MouseLeave,function()
 ag(ax,0.15,{ImageTransparency=0}):Play()
 end)
-
 
 ae.AddSignal(aw.Focused,function()
 ag(at,0.2,{ImageTransparency=0.3}):Play()
@@ -3705,7 +3750,6 @@ ax.ImageRectSize=az[2].ImageRectSize
 ax.ImageRectOffset=az[2].ImageRectPosition
 UpdateDisplayText()
 
-
 ax.Rotation=-20
 ag(ax,0.25,{Rotation=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end)
@@ -3754,10 +3798,6 @@ end
 local at=ai.Create(true,"Popup",aj.Window,al,al.ScreenGui.KeySystem)
 
 local au=420
-at.UIElements.Main.AutomaticSize=Enum.AutomaticSize.Y
-at.UIElements.Main.Size=UDim2.new(0,au,0,0)
-at.UIElements.MainContainer.AutomaticSize=Enum.AutomaticSize.Y
-at.UIElements.MainContainer.Size=UDim2.new(0,au,0,0)
 
 
 local av=ad and ad.UserId or 1
@@ -3778,7 +3818,7 @@ CornerRadius=UDim.new(0,24),
 local aA=af("TextLabel",{
 AutomaticSize="XY",
 BackgroundTransparency=1,
-Text="",
+Text=ax,
 FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
 ThemeTag={TextColor3="Text"},
 TextSize=17,
@@ -3788,7 +3828,7 @@ TextXAlignment="Left",
 local aB=af("TextLabel",{
 AutomaticSize="XY",
 BackgroundTransparency=1,
-Text="",
+Text="@"..aw,
 FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
 ThemeTag={TextColor3="Text"},
 TextTransparency=0.45,
@@ -3796,9 +3836,8 @@ TextSize=13,
 TextXAlignment="Left",
 })
 
-
 Typewriter(aA,ax,0.03)
-task.delay(0.2,function()
+task.delay(0.15,function()
 Typewriter(aB,"@"..aw,0.02)
 end)
 
@@ -3844,7 +3883,6 @@ PaddingRight=UDim.new(0,3),
 }),
 })
 
-
 local h=ae.NewRoundFrame(9,"Squircle",{
 Size=UDim2.new(0.5,-3,1,0),
 Position=UDim2.new(0,0,0,0),
@@ -3852,7 +3890,6 @@ ThemeTag={ImageColor3="Primary"},
 ImageTransparency=0,
 Parent=g,
 })
-
 
 local i=af("TextButton",{
 Size=UDim2.new(0.5,0,1,0),
@@ -3865,7 +3902,6 @@ ZIndex=3,
 ThemeTag={TextColor3="Text"},
 Parent=g,
 })
-
 
 local l=af("TextButton",{
 Size=UDim2.new(0.5,0,1,0),
@@ -4032,11 +4068,9 @@ i.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
 ag(l,0.2,{TextTransparency=0.4}):Play()
 l.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
 
-
 ag(r,0.15,{Position=UDim2.new(0,15,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
 task.wait(0.12)
 r.Visible=false
-
 
 p.Position=UDim2.new(0,-15,0,0)
 p.Visible=true
@@ -4050,11 +4084,9 @@ i.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
 ag(l,0.2,{TextTransparency=0}):Play()
 l.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
 
-
 ag(p,0.15,{Position=UDim2.new(0,-15,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
 task.wait(0.12)
 p.Visible=false
-
 
 r.Position=UDim2.new(0,15,0,0)
 r.Visible=true
@@ -4153,7 +4185,6 @@ J=true
 end
 
 if J then
-
 if(aj.SaveAccount==nil or aj.SaveAccount==true)and writefile then
 pcall(function()
 writefile(aq,M)
@@ -4164,8 +4195,8 @@ end
 
 if J then
 
-at:CollapseClose()
-task.wait(0.25)
+at:GenieClose(0.6)
+task.wait(0.6)
 if ak then
 ak{
 Mode=f,
@@ -4186,7 +4217,7 @@ end,"Primary",H)
 J.Size=UDim2.new(1,0,1,0)
 
 
-af("Frame",{
+local L=af("Frame",{
 Size=UDim2.new(1,0,0,0),
 AutomaticSize=Enum.AutomaticSize.Y,
 BackgroundTransparency=1,
@@ -4196,17 +4227,32 @@ af("UIPadding",{
 PaddingTop=UDim.new(0,18),
 PaddingLeft=UDim.new(0,18),
 PaddingRight=UDim.new(0,18),
-PaddingBottom=UDim.new(0,18),
+PaddingBottom=UDim.new(0,22),
 }),
 af("UIListLayout",{
 FillDirection="Vertical",
 Padding=UDim.new(0,16),
+SortOrder=Enum.SortOrder.LayoutOrder,
 }),
 d,
 g,
 m,
 H,
 })
+
+
+local M=L:FindFirstChildOfClass"UIListLayout"
+local function UpdateCardHeight()
+if M then
+local N=M.AbsoluteContentSize.Y
+local O=N+40
+at.UIElements.Main.Size=UDim2.new(0,au,0,O)
+at.UIElements.MainContainer.Size=UDim2.new(0,au,0,O)
+end
+end
+
+ae.AddSignal(M:GetPropertyChangedSignal"AbsoluteContentSize",UpdateCardHeight)
+task.defer(UpdateCardHeight)
 
 at:Open()
 return at

@@ -174,25 +174,72 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 	end
 
 	function Dialog:CollapseClose()
-		if not Key and Dialog.UIElements.FullScreen then
-			Tween(Dialog.UIElements.FullScreen, 0.2, { BackgroundTransparency = 1 }):Play()
-			Dialog.UIElements.FullScreen.Active = false
+		return Dialog:GenieClose(0.6)
+	end
+
+	function Dialog:GenieClose(duration)
+		duration = duration or 0.6
+		local RunService = cloneref(game:GetService("RunService"))
+		local mainContainer = Dialog.UIElements.MainContainer
+		local fullScreen = Dialog.UIElements.FullScreen
+
+		if not mainContainer or not mainContainer.Parent then
+			return function() end
 		end
 
-		local uiScale = Dialog.UIElements.MainContainer:FindFirstChildOfClass("UIScale")
-		if not uiScale then
-			uiScale = Instance.new("UIScale", Dialog.UIElements.MainContainer)
+		local startPos = mainContainer.Position
+		local startSize = mainContainer.Size
+		local startAnchor = mainContainer.AnchorPoint
+
+		local function EaseInOutQuad(t)
+			return t < 0.5 and (2 * t * t) or (1 - math.pow(-2 * t + 2, 2) / 2)
 		end
 
-		Tween(uiScale, 0.22, { Scale = 0.85 }, Enum.EasingStyle.Quint, Enum.EasingDirection.In):Play()
-		Tween(Dialog.UIElements.MainContainer, 0.22, { ImageTransparency = 1 }, Enum.EasingStyle.Quint, Enum.EasingDirection.In):Play()
+		if not Key and fullScreen then
+			fullScreen.Active = false
+			Tween(fullScreen, duration, { BackgroundTransparency = 1 }, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut):Play()
+		end
 
-		task.spawn(function()
-			task.wait(0.22)
-			if not Key and Dialog.UIElements.FullScreen then
-				Dialog.UIElements.FullScreen:Destroy()
-			else
-				Dialog.UIElements.MainContainer:Destroy()
+		local elapsedTime = 0
+		local connection
+
+		connection = RunService.RenderStepped:Connect(function(deltaTime)
+			elapsedTime = elapsedTime + deltaTime
+			local linearProgress = math.clamp(elapsedTime / duration, 0, 1)
+			local p = EaseInOutQuad(linearProgress)
+
+			local curPosY = (startPos.Y.Scale * (1 - p)) + (0.0 * p)
+			local curAnchorY = (startAnchor.Y * (1 - p)) + (0.0 * p)
+			mainContainer.AnchorPoint = Vector2.new(0.5, curAnchorY)
+
+			local widthFactor = (1 - p)
+			local stretchFactor = 1 + (0.2 * math.sin(p * math.pi))
+			local curWidthOffset = startSize.X.Offset * widthFactor
+			local curHeightOffset = startSize.Y.Offset * (1 - p) * stretchFactor
+
+			mainContainer.Position = UDim2.new(0.5, 0, curPosY, startPos.Y.Offset * (1 - p))
+			mainContainer.Size = UDim2.new(0, math.max(0, curWidthOffset), 0, math.max(0, curHeightOffset))
+
+			if linearProgress >= 0.85 then
+				local fadeProgress = (linearProgress - 0.85) / 0.15
+				mainContainer.ImageTransparency = fadeProgress
+				for _, child in ipairs(mainContainer:GetDescendants()) do
+					if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
+						child.TextTransparency = fadeProgress
+					elseif child:IsA("ImageLabel") or child:IsA("ImageButton") then
+						child.ImageTransparency = fadeProgress
+					end
+				end
+			end
+
+			if linearProgress >= 1 then
+				if connection then
+					connection:Disconnect()
+				end
+				if not Key and fullScreen then
+					pcall(function() fullScreen:Destroy() end)
+				end
+				pcall(function() mainContainer:Destroy() end)
 			end
 		end)
 
