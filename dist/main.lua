@@ -3022,15 +3022,15 @@ local b=aq.Y.Offset*(1-aw)*aA
 an.Position=UDim2.new(0.5,0,ax,ap.Y.Offset*(1-aw))
 an.Size=UDim2.new(0,math.max(0,aB),0,math.max(0,b))
 
-if av>=0.85 then
-local d=(av-0.85)/0.15
+
+local d=math.clamp(av^1.2,0,1)
 an.ImageTransparency=d
+
 for f,g in ipairs(an:GetDescendants())do
 if g:IsA"TextLabel"or g:IsA"TextButton"or g:IsA"TextBox"then
 g.TextTransparency=d
 elseif g:IsA"ImageLabel"or g:IsA"ImageButton"then
 g.ImageTransparency=d
-end
 end
 end
 

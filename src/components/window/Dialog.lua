@@ -220,15 +220,15 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 			mainContainer.Position = UDim2.new(0.5, 0, curPosY, startPos.Y.Offset * (1 - p))
 			mainContainer.Size = UDim2.new(0, math.max(0, curWidthOffset), 0, math.max(0, curHeightOffset))
 
-			if linearProgress >= 0.85 then
-				local fadeProgress = (linearProgress - 0.85) / 0.15
-				mainContainer.ImageTransparency = fadeProgress
-				for _, child in ipairs(mainContainer:GetDescendants()) do
-					if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
-						child.TextTransparency = fadeProgress
-					elseif child:IsA("ImageLabel") or child:IsA("ImageButton") then
-						child.ImageTransparency = fadeProgress
-					end
+			-- Плавное непрерывное испарение / затухание (fade progress) на протяжении всего полета
+			local fadeProgress = math.clamp(linearProgress ^ 1.2, 0, 1)
+			mainContainer.ImageTransparency = fadeProgress
+
+			for _, child in ipairs(mainContainer:GetDescendants()) do
+				if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
+					child.TextTransparency = fadeProgress
+				elseif child:IsA("ImageLabel") or child:IsA("ImageButton") then
+					child.ImageTransparency = fadeProgress
 				end
 			end
 
