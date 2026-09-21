@@ -2975,6 +2975,32 @@ end)
 return function()end
 end
 
+function aj.CollapseClose(ak)
+if not ae and aj.UIElements.FullScreen then
+ac(aj.UIElements.FullScreen,0.2,{BackgroundTransparency=1}):Play()
+aj.UIElements.FullScreen.Active=false
+end
+
+local al=aj.UIElements.MainContainer:FindFirstChildOfClass"UIScale"
+if not al then
+al=Instance.new("UIScale",aj.UIElements.MainContainer)
+end
+
+ac(al,0.22,{Scale=0.85},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+ac(aj.UIElements.MainContainer,0.22,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+
+task.spawn(function()
+task.wait(0.22)
+if not ae and aj.UIElements.FullScreen then
+aj.UIElements.FullScreen:Destroy()
+else
+aj.UIElements.MainContainer:Destroy()
+end
+end)
+
+return function()end
+end
+
 
 return aj
 end
@@ -3506,35 +3532,16 @@ local ah=a.m().New
 local ai=a.o()
 
 
-local function AddTactileFeedback(aj,ak,al)
-ak=ak or 1.02
-al=al or 0.96
-
-local am=aj:FindFirstChildOfClass"UIScale"
-if not am then
-am=af("UIScale",{
-Scale=1,
-Parent=aj,
-})
+local function Typewriter(aj,ak,al)
+al=al or 0.025
+aj.Text=""
+task.spawn(function()
+for am=1,#ak do
+if not aj or not aj.Parent then
+break
 end
-
-ae.AddSignal(aj.MouseEnter,function()
-ag(am,0.15,{Scale=ak},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-end)
-
-ae.AddSignal(aj.MouseLeave,function()
-ag(am,0.15,{Scale=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-end)
-
-ae.AddSignal(aj.InputBegan,function(an)
-if an.UserInputType==Enum.UserInputType.MouseButton1 or an.UserInputType==Enum.UserInputType.Touch then
-ag(am,0.08,{Scale=al},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-end
-end)
-
-ae.AddSignal(aj.InputEnded,function(an)
-if an.UserInputType==Enum.UserInputType.MouseButton1 or an.UserInputType==Enum.UserInputType.Touch then
-ag(am,0.15,{Scale=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+aj.Text=string.sub(ak,1,am)
+task.wait(al)
 end
 end)
 end
@@ -3640,7 +3647,13 @@ ImageColor3="Icon",
 Parent=au,
 })
 
-AddTactileFeedback(ax,1.15,0.9)
+
+ae.AddSignal(ax.MouseEnter,function()
+ag(ax,0.15,{ImageTransparency=0.2}):Play()
+end)
+ae.AddSignal(ax.MouseLeave,function()
+ag(ax,0.15,{ImageTransparency=0}):Play()
+end)
 
 
 ae.AddSignal(aw.Focused,function()
@@ -3693,7 +3706,7 @@ ax.ImageRectOffset=az[2].ImageRectPosition
 UpdateDisplayText()
 
 
-ax.Rotation=-15
+ax.Rotation=-20
 ag(ax,0.25,{Rotation=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end)
 
@@ -3741,8 +3754,10 @@ end
 local at=ai.Create(true,"Popup",aj.Window,al,al.ScreenGui.KeySystem)
 
 local au=420
-at.UIElements.Main.AutomaticSize="Y"
+at.UIElements.Main.AutomaticSize=Enum.AutomaticSize.Y
 at.UIElements.Main.Size=UDim2.new(0,au,0,0)
+at.UIElements.MainContainer.AutomaticSize=Enum.AutomaticSize.Y
+at.UIElements.MainContainer.Size=UDim2.new(0,au,0,0)
 
 
 local av=ad and ad.UserId or 1
@@ -3760,7 +3775,34 @@ CornerRadius=UDim.new(0,24),
 }),
 })
 
-local aA=af("Frame",{
+local aA=af("TextLabel",{
+AutomaticSize="XY",
+BackgroundTransparency=1,
+Text="",
+FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
+ThemeTag={TextColor3="Text"},
+TextSize=17,
+TextXAlignment="Left",
+})
+
+local aB=af("TextLabel",{
+AutomaticSize="XY",
+BackgroundTransparency=1,
+Text="",
+FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
+ThemeTag={TextColor3="Text"},
+TextTransparency=0.45,
+TextSize=13,
+TextXAlignment="Left",
+})
+
+
+Typewriter(aA,ax,0.03)
+task.delay(0.2,function()
+Typewriter(aB,"@"..aw,0.02)
+end)
+
+local b=af("Frame",{
 AutomaticSize="XY",
 BackgroundTransparency=1,
 },{
@@ -3769,28 +3811,11 @@ FillDirection="Vertical",
 Padding=UDim.new(0,2),
 VerticalAlignment="Center",
 }),
-af("TextLabel",{
-AutomaticSize="XY",
-BackgroundTransparency=1,
-Text=ax,
-FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
-ThemeTag={TextColor3="Text"},
-TextSize=17,
-TextXAlignment="Left",
-}),
-af("TextLabel",{
-AutomaticSize="XY",
-BackgroundTransparency=1,
-Text="@"..aw,
-FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
-ThemeTag={TextColor3="Text"},
-TextTransparency=0.45,
-TextSize=13,
-TextXAlignment="Left",
-}),
+aA,
+aB,
 })
 
-local aB=af("Frame",{
+local d=af("Frame",{
 Size=UDim2.new(1,0,0,52),
 BackgroundTransparency=1,
 },{
@@ -3800,13 +3825,13 @@ Padding=UDim.new(0,14),
 VerticalAlignment="Center",
 }),
 az,
-aA,
+b,
 })
 
 
-local b="Key"
+local f="Key"
 
-local d=ae.NewRoundFrame(12,"Squircle",{
+local g=ae.NewRoundFrame(12,"Squircle",{
 Size=UDim2.new(1,0,0,40),
 ThemeTag={ImageColor3="LabelBackground"},
 ImageTransparency=0.5,
@@ -3820,16 +3845,16 @@ PaddingRight=UDim.new(0,3),
 })
 
 
-local f=ae.NewRoundFrame(9,"Squircle",{
+local h=ae.NewRoundFrame(9,"Squircle",{
 Size=UDim2.new(0.5,-3,1,0),
 Position=UDim2.new(0,0,0,0),
 ThemeTag={ImageColor3="Primary"},
 ImageTransparency=0,
-Parent=d,
+Parent=g,
 })
 
 
-local g=af("TextButton",{
+local i=af("TextButton",{
 Size=UDim2.new(0.5,0,1,0),
 Position=UDim2.new(0,0,0,0),
 BackgroundTransparency=1,
@@ -3838,11 +3863,11 @@ FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
 TextSize=14,
 ZIndex=3,
 ThemeTag={TextColor3="Text"},
-Parent=d,
+Parent=g,
 })
 
 
-local h=af("TextButton",{
+local l=af("TextButton",{
 Size=UDim2.new(0.5,0,1,0),
 Position=UDim2.new(0.5,0,0,0),
 BackgroundTransparency=1,
@@ -3852,18 +3877,24 @@ TextSize=14,
 TextTransparency=0.35,
 ZIndex=3,
 ThemeTag={TextColor3="Text"},
-Parent=d,
+Parent=g,
 })
 
-AddTactileFeedback(g,1.01,0.97)
-AddTactileFeedback(h,1.01,0.97)
 
-
-local i=af("Frame",{
+local m=af("Frame",{
 Size=UDim2.new(1,0,0,0),
-AutomaticSize="Y",
+AutomaticSize=Enum.AutomaticSize.Y,
+BackgroundTransparency=1,
+ClipsDescendants=false,
+})
+
+local p=af("Frame",{
+Size=UDim2.new(1,0,0,0),
+AutomaticSize=Enum.AutomaticSize.Y,
+Position=UDim2.new(0,0,0,0),
 BackgroundTransparency=1,
 Visible=true,
+Parent=m,
 },{
 af("UIListLayout",{
 FillDirection="Vertical",
@@ -3871,11 +3902,13 @@ Padding=UDim.new(0,10),
 }),
 })
 
-local l=af("Frame",{
+local r=af("Frame",{
 Size=UDim2.new(1,0,0,0),
-AutomaticSize="Y",
+AutomaticSize=Enum.AutomaticSize.Y,
+Position=UDim2.new(0,15,0,0),
 BackgroundTransparency=1,
 Visible=false,
+Parent=m,
 },{
 af("UIListLayout",{
 FillDirection="Vertical",
@@ -3884,17 +3917,17 @@ Padding=UDim.new(0,10),
 })
 
 
-local m=CreateMaskedInput("Введите ваш ключ...","key",i,nil,ar,false)
+local u=CreateMaskedInput("Введите ваш ключ...","key",p,nil,ar,false)
 
 
 if aj.KeySystem and aj.KeySystem.URL then
-local p=af("Frame",{
+local v=af("Frame",{
 Size=UDim2.new(1,0,0,34),
 BackgroundTransparency=1,
-Parent=i,
+Parent=p,
 })
 
-local r=ah("Получить ключ","external-link",function()
+local x=ah("Получить ключ","external-link",function()
 if setclipboard then
 setclipboard(aj.KeySystem.URL)
 al:Notify{
@@ -3903,41 +3936,40 @@ Content="Ссылка для получения ключа скопирован�
 Icon="copy",
 }
 end
-end,"Secondary",p)
-r.Size=UDim2.new(1,0,1,0)
-AddTactileFeedback(r,1.015,0.97)
+end,"Secondary",v)
+x.Size=UDim2.new(1,0,1,0)
 end
 
 
-local p=af("Frame",{
+local v=af("Frame",{
 Size=UDim2.new(1,0,0,42),
-Parent=l,
+Parent=r,
 BackgroundTransparency=1,
 })
 
-local r=ae.NewRoundFrame(10,"Squircle",{
+local x=ae.NewRoundFrame(10,"Squircle",{
 ThemeTag={ImageColor3="Placeholder"},
 Size=UDim2.new(1,0,1,0),
 ImageTransparency=0.85,
-Parent=p,
+Parent=v,
 })
 
-local u=ae.NewRoundFrame(9,"SquircleGlass",{
+local z=ae.NewRoundFrame(9,"SquircleGlass",{
 ThemeTag={ImageColor3="Outline"},
 Size=UDim2.new(1,1,1,1),
 AnchorPoint=Vector2.new(0.5,0.5),
 Position=UDim2.new(0.5,0,0.5,0),
 ImageTransparency=0.8,
-Parent=p,
+Parent=v,
 })
 
-local v=ae.NewRoundFrame(10,"Squircle",{
+local A=ae.NewRoundFrame(10,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 ThemeTag={
 ImageColor3="LabelBackground",
 ImageTransparency="LabelBackgroundTransparency",
 },
-Parent=p,
+Parent=v,
 },{
 af("UIPadding",{PaddingLeft=UDim.new(0,12),PaddingRight=UDim.new(0,12)}),
 af("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,8),VerticalAlignment="Center"}),
@@ -3951,7 +3983,7 @@ ThemeTag={ImageColor3="Icon"},
 }),
 })
 
-local x=af("TextBox",{
+local B=af("TextBox",{
 BackgroundTransparency=1,
 TextSize=15,
 FontFace=Font.new(ae.Font,Enum.FontWeight.Regular),
@@ -3961,75 +3993,94 @@ Text=as,
 TextXAlignment="Left",
 TextYAlignment="Center",
 ThemeTag={PlaceholderColor3="PlaceholderText",TextColor3="Text"},
-Parent=v,
+Parent=A,
 })
 
-ae.AddSignal(x.Focused,function()
-ag(u,0.2,{ImageTransparency=0.3}):Play()
-ag(r,0.2,{ImageTransparency=0.6}):Play()
+ae.AddSignal(B.Focused,function()
+ag(z,0.2,{ImageTransparency=0.3}):Play()
+ag(x,0.2,{ImageTransparency=0.6}):Play()
 end)
 
-ae.AddSignal(x.FocusLost,function()
-ag(u,0.25,{ImageTransparency=0.8}):Play()
-ag(r,0.25,{ImageTransparency=0.85}):Play()
+ae.AddSignal(B.FocusLost,function()
+ag(z,0.25,{ImageTransparency=0.8}):Play()
+ag(x,0.25,{ImageTransparency=0.85}):Play()
 end)
 
-local z={
+local C={
 GetValue=function()
-return x.Text
+return B.Text
 end,
 }
 
-local A=CreateMaskedInput("Введите пароль...","lock",l,nil,"",false)
+local F=CreateMaskedInput("Введите пароль...","lock",r,nil,"",false)
 
 
-local function SwitchMode(B)
-if b==B then
+local G=false
+local function SwitchMode(H)
+if f==H or G then
 return
 end
-b=B
+f=H
+G=true
 
-if B=="Key"then
-ag(f,0.25,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+if H=="Key"then
+ag(h,0.25,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
-ag(g,0.2,{TextTransparency=0}):Play()
-g.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
+ag(i,0.2,{TextTransparency=0}):Play()
+i.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
 
-ag(h,0.2,{TextTransparency=0.4}):Play()
-h.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
+ag(l,0.2,{TextTransparency=0.4}):Play()
+l.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
 
-l.Visible=false
-i.Visible=true
+
+ag(r,0.15,{Position=UDim2.new(0,15,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+task.wait(0.12)
+r.Visible=false
+
+
+p.Position=UDim2.new(0,-15,0,0)
+p.Visible=true
+ag(p,0.22,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 else
-ag(f,0.25,{Position=UDim2.new(0.5,3,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ag(h,0.25,{Position=UDim2.new(0.5,3,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
-ag(g,0.2,{TextTransparency=0.4}):Play()
-g.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
+ag(i,0.2,{TextTransparency=0.4}):Play()
+i.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
 
-ag(h,0.2,{TextTransparency=0}):Play()
-h.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
+ag(l,0.2,{TextTransparency=0}):Play()
+l.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
 
-i.Visible=false
-l.Visible=true
+
+ag(p,0.15,{Position=UDim2.new(0,-15,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+task.wait(0.12)
+p.Visible=false
+
+
+r.Position=UDim2.new(0,15,0,0)
+r.Visible=true
+ag(r,0.22,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
+
+task.wait(0.1)
+G=false
 end
 
-ae.AddSignal(g.MouseButton1Click,function()
+ae.AddSignal(i.MouseButton1Click,function()
 SwitchMode"Key"
 end)
-ae.AddSignal(h.MouseButton1Click,function()
+ae.AddSignal(l.MouseButton1Click,function()
 SwitchMode"Account"
 end)
 
 
 local function ShakeWindow()
-local B=at.UIElements.MainContainer
-local C=B.Position
+local H=at.UIElements.MainContainer
+local J=H.Position
 task.spawn(function()
-local F={-12,12,-8,8,-4,4,0}
-for G,H in ipairs(F)do
-ag(B,0.04,{
-Position=UDim2.new(C.X.Scale,C.X.Offset+H,C.Y.Scale,C.Y.Offset),
+local L={-12,12,-8,8,-4,4,0}
+for M,N in ipairs(L)do
+ag(H,0.04,{
+Position=UDim2.new(J.X.Scale,J.X.Offset+N,J.Y.Scale,J.Y.Offset),
 }):Play()
 task.wait(0.04)
 end
@@ -4037,18 +4088,18 @@ end)
 end
 
 
-local B=af("Frame",{
+local H=af("Frame",{
 Size=UDim2.new(1,0,0,44),
 BackgroundTransparency=1,
 })
 
-local C=ah("Продолжить","arrow-right",function()
-local C=false
-local F="Неверные данные для входа."
+local J=ah("Продолжить","arrow-right",function()
+local J=false
+local L="Неверные данные для входа."
 
-if b=="Key"then
-local G=m.GetValue()
-if G==""then
+if f=="Key"then
+local M=u.GetValue()
+if M==""then
 ShakeWindow()
 al:Notify{
 Title="Ошибка входа",
@@ -4059,30 +4110,30 @@ return
 end
 
 if aj.KeySystem and aj.KeySystem.KeyValidator then
-C=aj.KeySystem.KeyValidator(G)
+J=aj.KeySystem.KeyValidator(M)
 elseif aj.KeySystem and aj.KeySystem.Key then
-local H=aj.KeySystem.Key
-if type(H)=="table"then
-C=table.find(H,G)~=nil
+local N=aj.KeySystem.Key
+if type(N)=="table"then
+J=table.find(N,M)~=nil
 else
-C=tostring(H)==tostring(G)
+J=tostring(N)==tostring(M)
 end
 else
-C=true
+J=true
 end
 
-if C then
+if J then
 if(aj.SaveKey==nil or aj.SaveKey==true)and writefile then
 pcall(function()
-writefile(ap,G)
+writefile(ap,M)
 end)
 end
 end
 else
-local G=z.GetValue()
-local H=A.GetValue()
+local M=C.GetValue()
+local N=F.GetValue()
 
-if G==""or H==""then
+if M==""or N==""then
 ShakeWindow()
 al:Notify{
 Title="Ошибка входа",
@@ -4093,50 +4144,51 @@ return
 end
 
 if aj.AccountSystem and aj.AccountSystem.AccountValidator then
-C,F=aj.AccountSystem.AccountValidator(G,H)
-if C==nil then
-C=true
+J,L=aj.AccountSystem.AccountValidator(M,N)
+if J==nil then
+J=true
 end
 else
-C=true
+J=true
 end
 
-if C then
+if J then
 
 if(aj.SaveAccount==nil or aj.SaveAccount==true)and writefile then
 pcall(function()
-writefile(aq,G)
+writefile(aq,M)
 end)
 end
 end
 end
 
-if C then
-at:Close()()
-task.wait(0.3)
+if J then
+
+at:CollapseClose()
+task.wait(0.25)
 if ak then
 ak{
-Mode=b,
-Key=b=="Key"and m.GetValue()or nil,
-Login=b=="Account"and z.GetValue()or nil,
+Mode=f,
+Key=f=="Key"and u.GetValue()or nil,
+Login=f=="Account"and C.GetValue()or nil,
 }
 end
 else
 ShakeWindow()
 al:Notify{
 Title="Ошибка авторизации",
-Content=F or"Проверьте правильность введенных данных.",
+Content=L or"Проверьте правильность введенных данных.",
 Icon="triangle-alert",
 }
 end
-end,"Primary",B)
+end,"Primary",H)
 
-C.Size=UDim2.new(1,0,1,0)
-AddTactileFeedback(C,1.015,0.97)
+J.Size=UDim2.new(1,0,1,0)
 
 
 af("Frame",{
-Size=UDim2.new(1,0,1,0),
+Size=UDim2.new(1,0,0,0),
+AutomaticSize=Enum.AutomaticSize.Y,
 BackgroundTransparency=1,
 Parent=at.UIElements.Main,
 },{
@@ -4150,11 +4202,10 @@ af("UIListLayout",{
 FillDirection="Vertical",
 Padding=UDim.new(0,16),
 }),
-aB,
 d,
-i,
-l,
-B,
+g,
+m,
+H,
 })
 
 at:Open()

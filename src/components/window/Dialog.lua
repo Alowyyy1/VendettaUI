@@ -173,6 +173,32 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 		return function() end
 	end
 
+	function Dialog:CollapseClose()
+		if not Key and Dialog.UIElements.FullScreen then
+			Tween(Dialog.UIElements.FullScreen, 0.2, { BackgroundTransparency = 1 }):Play()
+			Dialog.UIElements.FullScreen.Active = false
+		end
+
+		local uiScale = Dialog.UIElements.MainContainer:FindFirstChildOfClass("UIScale")
+		if not uiScale then
+			uiScale = Instance.new("UIScale", Dialog.UIElements.MainContainer)
+		end
+
+		Tween(uiScale, 0.22, { Scale = 0.85 }, Enum.EasingStyle.Quint, Enum.EasingDirection.In):Play()
+		Tween(Dialog.UIElements.MainContainer, 0.22, { ImageTransparency = 1 }, Enum.EasingStyle.Quint, Enum.EasingDirection.In):Play()
+
+		task.spawn(function()
+			task.wait(0.22)
+			if not Key and Dialog.UIElements.FullScreen then
+				Dialog.UIElements.FullScreen:Destroy()
+			else
+				Dialog.UIElements.MainContainer:Destroy()
+			end
+		end)
+
+		return function() end
+	end
+
 	--Dialog:Open()
 	return Dialog
 end
