@@ -12,7 +12,7 @@ if isfile and isfile("dist/main.lua") then
 elseif isfile and isfile("WindUI/dist/main.lua") then
     WindUI = loadstring(readfile("WindUI/dist/main.lua"))()
 else
-    WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/main/dist/main.lua"))()
+    WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/dist/main.lua"))()
 end
 
 -- Состояние выбранного режима
