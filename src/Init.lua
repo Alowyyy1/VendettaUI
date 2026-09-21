@@ -82,6 +82,7 @@ if Package then
 end
 
 local KeySystem = require("./components/KeySystem")
+local AuthWindow = require("./components/AuthWindow")
 
 local Creator = WindUI.Creator
 
@@ -293,6 +294,11 @@ end
 function WindUI:Popup(PopupConfig)
 	PopupConfig.WindUI = WindUI
 	return require("./components/popup/Init").new(PopupConfig, WindUI.ScreenGui.Popups)
+end
+
+function WindUI:CreateAuthWindow(Config, OnSuccess)
+	Config.WindUI = WindUI
+	return AuthWindow.new(Config, OnSuccess)
 end
 
 WindUI.Themes = require("./themes/Init")(WindUI, Creator)

@@ -4,22 +4,15 @@ param (
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "🍏 [ VendettaUI Build System ]" -ForegroundColor Cyan
+Write-Host "[ VendettaUI Build System ]" -ForegroundColor Cyan
 
-# 1. Check/create package.lua
 $packageJson = Get-Content -Raw "package.json"
 $pkg = $packageJson | ConvertFrom-Json
 
-$packageLuaContent = @"
--- Generated from package.json | build.ps1
+$packageLuaContent = "-- Generated from package.json | build.ps1`n`nreturn [[`n$packageJson`n]]"
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllText("$PWD/build/package.lua", $packageLuaContent, $utf8NoBom)
 
-return [[
-$packageJson
-]]
-"@
-Set-Content -Path "build/package.lua" -Value $packageLuaContent -Encoding UTF8
-
-# 2. Config & Input
 $config = "build/darklua.dev.config.json"
 $input = "src/Init.lua"
 $output = "dist/main.lua"
@@ -29,7 +22,6 @@ if (!(Test-Path "dist")) {
     New-Item -ItemType Directory -Path "dist" | Out-Null
 }
 
-# 3. Locate darklua
 $darklua = if (Test-Path ".bin/darklua.exe") { ".bin/darklua.exe" } else { "darklua" }
 
 Write-Host "[ BUILD ] Processing $input through Darklua..." -ForegroundColor Yellow
@@ -44,7 +36,6 @@ if ($LASTEXITCODE -ne 0 -or !(Test-Path $temp)) {
 
 $sw.Stop()
 
-# 4. Generate Header
 $header = Get-Content -Raw "build/header.lua"
 $date = Get-Date -Format "yyyy-MM-dd"
 $header = $header -replace '\{\{VERSION\}\}', $pkg.version `
@@ -53,15 +44,14 @@ $header = $header -replace '\{\{VERSION\}\}', $pkg.version `
                   -replace '\{\{REPOSITORY\}\}', $pkg.repository `
                   -replace '\{\{LICENSE\}\}', $pkg.license
 
-# 5. Assemble final dist/main.lua
 $bundleBody = Get-Content -Raw $temp
 $finalContent = "$header`n`n$bundleBody"
-Set-Content -Path $output -Value $finalContent -Encoding UTF8
+[System.IO.File]::WriteAllText("$PWD/$output", $finalContent, $utf8NoBom)
 Remove-Item $temp -Force
 
 $sizeKB = [math]::Round((Get-Item $output).Length / 1KB, 1)
 
-Write-Host "✓ [ SUCCESS ] VendettaUI build completed successfully!" -ForegroundColor Green
+Write-Host "[ SUCCESS ] VendettaUI build completed successfully!" -ForegroundColor Green
 Write-Host "  Version: $($pkg.version)" -ForegroundColor Gray
 Write-Host "  Time:    $($sw.ElapsedMilliseconds)ms" -ForegroundColor Gray
 Write-Host "  Size:    $sizeKB KB" -ForegroundColor Gray

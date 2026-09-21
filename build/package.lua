@@ -1,34 +1,26 @@
--- Generated from package.json | build/build.sh
+-- Generated from package.json | build.ps1
 
 return [[
 {
-    "name": "windui",
-    "version": "1.6.66",
+    "name": "vendettaui",
+    "version": "1.0.0",
     "main": "./dist/main.lua",
-    "repository": "https://github.com/Footagesus/WindUI",
-    "discord": "https://discord.gg/ftgs-development-hub-1300692552005189632",
-    "author": "Footagesus",
-    "description": "Roblox UI Library for scripts",
+    "repository": "https://github.com/Alowyyy1/VendettaUI",
+    "author": "Alowyy1",
+    "description": "Apple-inspired Roblox UI Library with SF Symbols and macOS/iOS controls",
     "license": "MIT",
     "scripts": {
-        "dev": "bash build/build.sh dev $INPUT_FILE",
-        "build": "bash build/build.sh build $INPUT_FILE",
-        "live": "python3 -m http.server 8642",
-        "watch": "chokidar . -i 'node_modules' -i 'dist' -i 'build' -c 'npm run dev --'",
-        "live-build": "concurrently \"npm run live\" \"npm run watch --\"",
-        "example-live-build": "INPUT_FILE=main_example.lua npm run live-build",
-        "updater": "python3 updater/main.py"
+        "build": "powershell -ExecutionPolicy Bypass -File ./build.ps1",
+        "dev": "powershell -ExecutionPolicy Bypass -File ./build.ps1 -Dev"
     },
     "keywords": [
         "ui-library",
-        "ui-design",
-        "script",
-        "script-hub",
-        "exploiting"
-    ],
-    "devDependencies": {
-        "chokidar-cli": "^3.0.0",
-        "concurrently": "^9.2.0"
-    }
+        "apple-design",
+        "sf-symbols",
+        "roblox",
+        "macos",
+        "script-hub"
+    ]
 }
+
 ]]

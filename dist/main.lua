@@ -1,11 +1,11 @@
-﻿--[[
+--[[
     __     __             _      _   _          _   _ ___ 
     \ \   / /__ _ __   __| | ___| |_| |_ __ _  | | | |_ _|
      \ \ / / _ \ '_ \ / _` |/ _ \ __| __/ _` | | | | || | 
       \ V /  __/ | | | (_| |  __/ |_| || (_| | | |_| || | 
        \_/ \___|_| |_|\__,_|\___|\__|\__\__,_|  \___/|___|
     
-    v1.0.0  |  2026-09-20  |  Apple-inspired Roblox UI Library with SF Symbols and macOS/iOS controls
+    v1.0.0  |  2026-09-21  |  Apple-inspired Roblox UI Library with SF Symbols and macOS/iOS controls
     
     To view the source code, see the `src/` folder on the official GitHub repository.
     
@@ -2529,60 +2529,28 @@ New=a.j().New
 
 return[[
 {
-    "name": "windui",
-    "version": "1.6.66",
+    "name": "vendettaui",
+    "version": "1.0.0",
     "main": "./dist/main.lua",
-    "repository": "https://github.com/Footagesus/WindUI",
-    "discord": "https://discord.gg/ftgs-development-hub-1300692552005189632",
-    "author": "Footagesus",
-    "description": "Roblox UI Library for scripts",
+    "repository": "https://github.com/Alowyyy1/VendettaUI",
+    "author": "Alowyy1",
+    "description": "Apple-inspired Roblox UI Library with SF Symbols and macOS/iOS controls",
     "license": "MIT",
     "scripts": {
-        "dev": "bash build/build.sh dev $INPUT_FILE",
-        "build": "bash build/build.sh build $INPUT_FILE",
-        "live": "python3 -m http.server 8642",
-        "watch": "chokidar . -i 'node_modules' -i 'dist' -i 'build' -c 'npm run dev --'",
-        "live-build": "concurrently \"npm run live\" \"npm run watch --\"",
-        "example-live-build": "INPUT_FILE=main_example.lua npm run live-build",
-        "updater": "python3 updater/main.py"
+        "build": "powershell -ExecutionPolicy Bypass -File ./build.ps1",
+        "dev": "powershell -ExecutionPolicy Bypass -File ./build.ps1 -Dev"
     },
     "keywords": [
         "ui-library",
-        "ui-design",
-        "script",
-        "script-hub",
-        "exploiting"
-    ],
-    "devDependencies": {
-        "chokidar-cli": "^3.0.0",
-        "concurrently": "^9.2.0"
-    }
+        "apple-design",
+        "sf-symbols",
+        "roblox",
+        "macos",
+        "script-hub"
+    ]
 }
-]]end function a.l():typeof(__modImpl())local aa=a.cache.l if not aa then aa={c=__modImpl()}a.cache.l=aa end return aa.c end end do local function __modImpl()
 
-local aa={}
-
-local ab=a.d()
-local ac=ab.New
-local ad=ab.Tween
-
-function aa.New(ae,af,ag,ah,ai,aj,ak,al)
-ah=ah or"Primary"
-local am=al or(not ak and 10 or 999)
-local an
-if af and af~=""then
-an=ac("ImageLabel",{
-Image=ab.Icon(af)[1],
-ImageRectSize=ab.Icon(af)[2].ImageRectSize,
-ImageRectOffset=ab.Icon(af)[2].ImageRectPosition,
-Size=UDim2.new(0,21,0,21),
-BackgroundTransparency=1,
-ImageColor3=ah=="White"and Color3.new(0,0,0)or nil,
-ImageTransparency=ah=="White"and 0.4 or 0,
-ThemeTag={
-ImageColor3=ah~="White"and"Icon"or nil,
-},
-})
+]]end function a.l():typeof(__modImpl())local aa=a.cache.l if not aa then aa={c=__modImpl()}a.cache.l=aa end return aa.c end end do local function __modImpl()local aa={}local ab=a.d()local ac=ab.New local ad=ab.Tween function aa.New(ae,af,ag,ah,ai,aj,ak,al)ah=ah or"Primary"local am=al or(not ak and 10 or 999)local an if af and af~=""then an=ac("ImageLabel",{Image=ab.Icon(af)[1],ImageRectSize=ab.Icon(af)[2].ImageRectSize,ImageRectOffset=ab.Icon(af)[2].ImageRectPosition,Size=UDim2.new(0,21,0,21),BackgroundTransparency=1,ImageColor3=ah=="White"and Color3.new(0,0,0)or nil,ImageTransparency=ah=="White"and 0.4 or 0,ThemeTag={ImageColor3=ah~="White"and"Icon"or nil,},})
 end
 
 local ao=ac("TextButton",{
@@ -3521,6 +3489,595 @@ end
 
 return aa end function a.p():typeof(__modImpl())local aa=a.cache.p if not aa then aa={c=__modImpl()}a.cache.p=aa end return aa.c end end do local function __modImpl()
 
+local aa={}
+
+local ab=(cloneref or clonereference or function(ab)
+return ab
+end)
+
+local ac=ab(game:GetService"Players")
+local ad=ac.LocalPlayer
+
+local ae=a.d()
+local af=ae.New
+local ag=ae.Tween
+
+local ah=a.m().New
+local ai=a.o()
+
+
+local function CreateMaskedInput(aj,ak,al,am,an,ao)
+an=an or""
+local ap=an
+local aq=true
+
+local ar=af("Frame",{
+Size=UDim2.new(1,0,0,42),
+Parent=al,
+BackgroundTransparency=1,
+})
+
+ae.NewRoundFrame(10,"Squircle",{
+ThemeTag={
+ImageColor3="Placeholder",
+},
+Size=UDim2.new(1,0,1,0),
+ImageTransparency=0.85,
+Parent=ar,
+})
+
+ae.NewRoundFrame(9,"SquircleGlass",{
+ThemeTag={
+ImageColor3="Outline",
+},
+Size=UDim2.new(1,1,1,1),
+AnchorPoint=Vector2.new(0.5,0.5),
+Position=UDim2.new(0.5,0,0.5,0),
+ImageTransparency=0.8,
+Parent=ar,
+})
+
+local as=ae.NewRoundFrame(10,"Squircle",{
+Size=UDim2.new(1,0,1,0),
+Name="Frame",
+ThemeTag={
+ImageColor3="LabelBackground",
+ImageTransparency="LabelBackgroundTransparency",
+},
+Parent=ar,
+},{
+af("UIPadding",{
+PaddingTop=UDim.new(0,0),
+PaddingLeft=UDim.new(0,12),
+PaddingRight=UDim.new(0,12),
+PaddingBottom=UDim.new(0,0),
+}),
+af("UIListLayout",{
+FillDirection="Horizontal",
+Padding=UDim.new(0,8),
+VerticalAlignment="Center",
+HorizontalAlignment="Left",
+}),
+})
+
+local at
+if ak and ak~=""then
+at=af("ImageLabel",{
+Image=ae.Icon(ak)[1],
+ImageRectSize=ae.Icon(ak)[2].ImageRectSize,
+ImageRectOffset=ae.Icon(ak)[2].ImageRectPosition,
+Size=UDim2.new(0,21,0,21),
+BackgroundTransparency=1,
+ThemeTag={
+ImageColor3="Icon",
+},
+Parent=as,
+})
+end
+
+local au=af("TextBox",{
+BackgroundTransparency=1,
+TextSize=16,
+FontFace=Font.new(ae.Font,Enum.FontWeight.Regular),
+Size=UDim2.new(1,(at and-29 or 0)-28,1,0),
+PlaceholderText=aj,
+ClearTextOnFocus=ao or false,
+ClipsDescendants=true,
+TextXAlignment="Left",
+TextYAlignment="Center",
+Text=an~=""and(aq and string.rep("вЂў",#an)or an)or"",
+ThemeTag={
+PlaceholderColor3="PlaceholderText",
+TextColor3="Text",
+},
+Parent=as,
+})
+
+
+local av=af("ImageButton",{
+Size=UDim2.new(0,20,0,20),
+BackgroundTransparency=1,
+Image=ae.Icon"eye-off"[1],
+ImageRectSize=ae.Icon"eye-off"[2].ImageRectSize,
+ImageRectOffset=ae.Icon"eye-off"[2].ImageRectPosition,
+ThemeTag={
+ImageColor3="Icon",
+},
+Parent=as,
+})
+
+local function UpdateDisplayText()
+if aq then
+au.Text=string.rep("вЂў",#ap)
+else
+au.Text=ap
+end
+end
+
+au:GetPropertyChangedSignal"Text":Connect(function()
+local aw=au.Text
+if aq then
+
+local ax=string.rep("вЂў",#ap)
+if aw~=ax then
+if#aw>#ax then
+local ay=string.sub(aw,#ax+1)
+ap=ap..ay
+elseif#aw<#ax then
+ap=string.sub(ap,1,#aw)
+end
+UpdateDisplayText()
+end
+else
+ap=aw
+end
+
+if am then
+ae.SafeCallback(am,ap)
+end
+end)
+
+av.MouseButton1Click:Connect(function()
+aq=not aq
+local aw=aq and"eye-off"or"eye"
+local ax=ae.Icon(aw)
+av.Image=ax[1]
+av.ImageRectSize=ax[2].ImageRectSize
+av.ImageRectOffset=ax[2].ImageRectPosition
+UpdateDisplayText()
+end)
+
+local aw={
+Frame=ar,
+TextBox=au,
+GetValue=function()
+return ap
+end,
+SetValue=function(aw)
+ap=aw or""
+UpdateDisplayText()
+if am then
+ae.SafeCallback(am,ap)
+end
+end,
+}
+
+return aw
+end
+
+function aa.new(aj,ak)
+local al=aj.WindUI
+local am=aj.Folder or aj.Title or"WindUI"
+local an=gethwid or function()
+return ad and ad.UserId or 0
+end
+local ao=tostring(an())
+
+local ap=am.."/"..ao..".key"
+local aq=am.."/"..ao..".login"
+
+local ar=""
+local as=""
+
+if isfile and isfile(ap)then
+pcall(function()
+ar=readfile(ap)or""
+end)
+end
+if isfile and isfile(aq)then
+pcall(function()
+as=readfile(aq)or""
+end)
+end
+
+local at=ai.Create(true,"Popup",aj.Window,al,al.ScreenGui.KeySystem)
+
+local au=420
+at.UIElements.Main.AutomaticSize="Y"
+at.UIElements.Main.Size=UDim2.new(0,au,0,0)
+
+
+local av=ad and ad.UserId or 1
+local aw=ad and ad.Name or"Guest"
+local ax=ad and ad.DisplayName or"Guest User"
+local ay="rbxthumb://type=AvatarHeadShot&id="..av.."&w=150&h=150"
+
+local az=ae.New("ImageLabel",{
+Size=UDim2.new(0,48,0,48),
+Image=ay,
+BackgroundTransparency=1,
+},{
+af("UICorner",{
+CornerRadius=UDim.new(0,24),
+}),
+})
+
+local aA=af("Frame",{
+AutomaticSize="XY",
+BackgroundTransparency=1,
+},{
+af("UIListLayout",{
+FillDirection="Vertical",
+Padding=UDim.new(0,2),
+VerticalAlignment="Center",
+}),
+af("TextLabel",{
+AutomaticSize="XY",
+BackgroundTransparency=1,
+Text=ax,
+FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
+ThemeTag={TextColor3="Text"},
+TextSize=17,
+TextXAlignment="Left",
+}),
+af("TextLabel",{
+AutomaticSize="XY",
+BackgroundTransparency=1,
+Text="@"..aw,
+FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
+ThemeTag={TextColor3="Text"},
+TextTransparency=0.45,
+TextSize=13,
+TextXAlignment="Left",
+}),
+})
+
+local aB=af("Frame",{
+Size=UDim2.new(1,0,0,52),
+BackgroundTransparency=1,
+},{
+af("UIListLayout",{
+FillDirection="Horizontal",
+Padding=UDim.new(0,14),
+VerticalAlignment="Center",
+}),
+az,
+aA,
+})
+
+
+local b="Key"
+
+local d
+local f
+
+local g=ae.NewRoundFrame(12,"Squircle",{
+Size=UDim2.new(1,0,0,38),
+ThemeTag={ImageColor3="LabelBackground"},
+ImageTransparency=0.5,
+},{
+af("UIPadding",{
+PaddingTop=UDim.new(0,3),
+PaddingBottom=UDim.new(0,3),
+PaddingLeft=UDim.new(0,3),
+PaddingRight=UDim.new(0,3),
+}),
+af("UIListLayout",{
+FillDirection="Horizontal",
+Padding=UDim.new(0,4),
+}),
+})
+
+d=ae.NewRoundFrame(9,"Squircle",{
+Size=UDim2.new(0.5,-2,1,0),
+ThemeTag={ImageColor3="Primary"},
+ImageTransparency=0,
+Parent=g,
+},{
+af("TextLabel",{
+Size=UDim2.new(1,0,1,0),
+BackgroundTransparency=1,
+Text="РџРѕ РєР»СЋС‡Сѓ",
+FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
+ThemeTag={TextColor3="Text"},
+TextSize=14,
+}),
+},true)
+
+f=ae.NewRoundFrame(9,"Squircle",{
+Size=UDim2.new(0.5,-2,1,0),
+ThemeTag={ImageColor3="Primary"},
+ImageTransparency=1,
+Parent=g,
+},{
+af("TextLabel",{
+Size=UDim2.new(1,0,1,0),
+BackgroundTransparency=1,
+Text="Р›РѕРіРёРЅ Рё РїР°СЂРѕР»СЊ",
+FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
+ThemeTag={TextColor3="Text"},
+TextTransparency=0.3,
+TextSize=14,
+}),
+},true)
+
+
+local h=af("Frame",{
+Size=UDim2.new(1,0,0,0),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+Visible=true,
+},{
+af("UIListLayout",{
+FillDirection="Vertical",
+Padding=UDim.new(0,10),
+}),
+})
+
+local i=af("Frame",{
+Size=UDim2.new(1,0,0,0),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+Visible=false,
+},{
+af("UIListLayout",{
+FillDirection="Vertical",
+Padding=UDim.new(0,10),
+}),
+})
+
+
+local l=CreateMaskedInput("Р’РІРµРґРёС‚Рµ РІР°С€ РєР»СЋС‡...","key",h,nil,ar,false)
+
+
+if aj.KeySystem and aj.KeySystem.URL then
+local m=af("Frame",{
+Size=UDim2.new(1,0,0,32),
+BackgroundTransparency=1,
+Parent=h,
+})
+
+local p=ah("РџРѕР»СѓС‡РёС‚СЊ РєР»СЋС‡","external-link",function()
+if setclipboard then
+setclipboard(aj.KeySystem.URL)
+al:Notify{
+Title="РЎСЃС‹Р»РєР° СЃРєРѕРїРёСЂРѕРІР°РЅР°",
+Content="РЎСЃС‹Р»РєР° РЅР° РїРѕР»СѓС‡РµРЅРёРµ РєР»СЋС‡Р° СЃРєРѕРїРёСЂРѕРІР°РЅР° РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°.",
+Icon="copy",
+}
+end
+end,"Secondary",m)
+p.Size=UDim2.new(1,0,1,0)
+end
+
+
+local m
+local p
+
+
+local r=af("Frame",{
+Size=UDim2.new(1,0,0,42),
+Parent=i,
+BackgroundTransparency=1,
+})
+
+ae.NewRoundFrame(10,"Squircle",{
+ThemeTag={ImageColor3="Placeholder"},
+Size=UDim2.new(1,0,1,0),
+ImageTransparency=0.85,
+Parent=r,
+})
+
+local u=ae.NewRoundFrame(10,"Squircle",{
+Size=UDim2.new(1,0,1,0),
+ThemeTag={
+ImageColor3="LabelBackground",
+ImageTransparency="LabelBackgroundTransparency",
+},
+Parent=r,
+},{
+af("UIPadding",{PaddingLeft=UDim.new(0,12),PaddingRight=UDim.new(0,12)}),
+af("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,8),VerticalAlignment="Center"}),
+af("ImageLabel",{
+Image=ae.Icon"user"[1],
+ImageRectSize=ae.Icon"user"[2].ImageRectSize,
+ImageRectOffset=ae.Icon"user"[2].ImageRectPosition,
+Size=UDim2.new(0,21,0,21),
+BackgroundTransparency=1,
+ThemeTag={ImageColor3="Icon"},
+}),
+})
+
+local v=af("TextBox",{
+BackgroundTransparency=1,
+TextSize=16,
+FontFace=Font.new(ae.Font,Enum.FontWeight.Regular),
+Size=UDim2.new(1,-29,1,0),
+PlaceholderText="Р›РѕРіРёРЅ РёР»Рё Email...",
+Text=as,
+TextXAlignment="Left",
+TextYAlignment="Center",
+ThemeTag={PlaceholderColor3="PlaceholderText",TextColor3="Text"},
+Parent=u,
+})
+
+m={
+GetValue=function()
+return v.Text
+end,
+}
+
+
+p=CreateMaskedInput("Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ...","lock",i,nil,"",false)
+
+
+local function SwitchMode(x)
+b=x
+if x=="Key"then
+ag(d,0.15,{ImageTransparency=0}):Play()
+d.TextLabel.TextTransparency=0
+d.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
+
+ag(f,0.15,{ImageTransparency=1}):Play()
+f.TextLabel.TextTransparency=0.3
+f.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
+
+h.Visible=true
+i.Visible=false
+else
+ag(d,0.15,{ImageTransparency=1}):Play()
+d.TextLabel.TextTransparency=0.3
+d.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
+
+ag(f,0.15,{ImageTransparency=0}):Play()
+f.TextLabel.TextTransparency=0
+f.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
+
+h.Visible=false
+i.Visible=true
+end
+end
+
+d.MouseButton1Click:Connect(function()
+SwitchMode"Key"
+end)
+f.MouseButton1Click:Connect(function()
+SwitchMode"Account"
+end)
+
+
+local x=af("Frame",{
+Size=UDim2.new(1,0,0,44),
+BackgroundTransparency=1,
+})
+
+local z=ah("РџСЂРѕРґРѕР»Р¶РёС‚СЊ","arrow-right",function()
+local z=false
+local A="РќРµРІРµСЂРЅС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РІС…РѕРґР°."
+
+if b=="Key"then
+local B=l.GetValue()
+if B==""then
+al:Notify{
+Title="РћС€РёР±РєР° РІС…РѕРґР°",
+Content="РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ РєР»СЋС‡.",
+Icon="triangle-alert",
+}
+return
+end
+
+if aj.KeySystem and aj.KeySystem.KeyValidator then
+z=aj.KeySystem.KeyValidator(B)
+elseif aj.KeySystem and aj.KeySystem.Key then
+local C=aj.KeySystem.Key
+if type(C)=="table"then
+z=table.find(C,B)~=nil
+else
+z=tostring(C)==tostring(B)
+end
+else
+z=true
+end
+
+if z then
+if(aj.SaveKey==nil or aj.SaveKey==true)and writefile then
+pcall(function()
+writefile(ap,B)
+end)
+end
+end
+else
+local B=m.GetValue()
+local C=p.GetValue()
+
+if B==""or C==""then
+al:Notify{
+Title="РћС€РёР±РєР° РІС…РѕРґР°",
+Content="Р—Р°РїРѕР»РЅРёС‚Рµ Р»РѕРіРёРЅ Рё РїР°СЂРѕР»СЊ.",
+Icon="triangle-alert",
+}
+return
+end
+
+if aj.AccountSystem and aj.AccountSystem.AccountValidator then
+z,A=aj.AccountSystem.AccountValidator(B,C)
+if z==nil then
+z=true
+end
+else
+z=true
+end
+
+if z then
+
+if(aj.SaveAccount==nil or aj.SaveAccount==true)and writefile then
+pcall(function()
+writefile(aq,B)
+end)
+end
+end
+end
+
+if z then
+at:Close()()
+task.wait(0.3)
+if ak then
+ak{
+Mode=b,
+Key=b=="Key"and l.GetValue()or nil,
+Login=b=="Account"and m.GetValue()or nil,
+}
+end
+else
+al:Notify{
+Title="РћС€РёР±РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё",
+Content=A or"РџСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РІРІРµРґРµРЅРЅС‹С… РґР°РЅРЅС‹С….",
+Icon="triangle-alert",
+}
+end
+end,"Primary",x)
+
+z.Size=UDim2.new(1,0,1,0)
+
+
+af("Frame",{
+Size=UDim2.new(1,0,1,0),
+BackgroundTransparency=1,
+Parent=at.UIElements.Main,
+},{
+af("UIPadding",{
+PaddingTop=UDim.new(0,18),
+PaddingLeft=UDim.new(0,18),
+PaddingRight=UDim.new(0,18),
+PaddingBottom=UDim.new(0,18),
+}),
+af("UIListLayout",{
+FillDirection="Vertical",
+Padding=UDim.new(0,16),
+}),
+aB,
+g,
+h,
+i,
+x,
+})
+
+at:Open()
+return at
+end
+
+return aa end function a.q():typeof(__modImpl())local aa=a.cache.q if not aa then aa={c=__modImpl()}a.cache.q=aa end return aa.c end end do local function __modImpl()
+
 
 
 
@@ -3541,7 +4098,7 @@ local ab=aa(game:GetService"Workspace").CurrentCamera.ViewportSize.Y
 return map(ab,0,2560,8,56)
 end
 
-return{viewportPointToWorld,getOffset}end function a.q():typeof(__modImpl())local aa=a.cache.q if not aa then aa={c=__modImpl()}a.cache.q=aa end return aa.c end end do local function __modImpl()
+return{viewportPointToWorld,getOffset}end function a.r():typeof(__modImpl())local aa=a.cache.r if not aa then aa={c=__modImpl()}a.cache.r=aa end return aa.c end end do local function __modImpl()
 
 
 
@@ -3552,7 +4109,7 @@ local ab=a.d()
 local ac=ab.New
 
 
-local ad,ae=unpack(a.q())
+local ad,ae=unpack(a.r())
 local af=Instance.new("Folder",aa(game:GetService"Workspace").CurrentCamera)
 
 
@@ -3688,11 +4245,11 @@ ah.Frame=ak
 ah.Model=aj
 
 return ah
-end end function a.r():typeof(__modImpl())local aa=a.cache.r if not aa then aa={c=__modImpl()}a.cache.r=aa end return aa.c end end do local function __modImpl()
+end end function a.s():typeof(__modImpl())local aa=a.cache.s if not aa then aa={c=__modImpl()}a.cache.s=aa end return aa.c end end do local function __modImpl()
 
 
 local aa=a.d()
-local ab=a.r()
+local ab=a.s()
 
 local ac=aa.New
 
@@ -3812,7 +4369,7 @@ ae.SetVisibility=af.SetVisibility
 end
 
 return ae,af
-end end function a.s():typeof(__modImpl())local aa=a.cache.s if not aa then aa={c=__modImpl()}a.cache.s=aa end return aa.c end end do local function __modImpl()
+end end function a.t():typeof(__modImpl())local aa=a.cache.t if not aa then aa={c=__modImpl()}a.cache.t=aa end return aa.c end end do local function __modImpl()
 
 
 
@@ -3820,9 +4377,9 @@ local aa=(cloneref or clonereference or function(aa)return aa end)
 
 
 local ab={
-AcrylicBlur=a.r(),
+AcrylicBlur=a.s(),
 
-AcrylicPaint=a.s(),
+AcrylicPaint=a.t(),
 }
 
 function ab.init()
@@ -3869,7 +4426,7 @@ registerDefaults()
 ab.Enable()
 end
 
-return ab end function a.t():typeof(__modImpl())local aa=a.cache.t if not aa then aa={c=__modImpl()}a.cache.t=aa end return aa.c end end do local function __modImpl()
+return ab end function a.u():typeof(__modImpl())local aa=a.cache.u if not aa then aa={c=__modImpl()}a.cache.u=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -4063,7 +4620,7 @@ ai:Open()
 return ag
 end
 
-return aa end function a.u():typeof(__modImpl())local aa=a.cache.u if not aa then aa={c=__modImpl()}a.cache.u=aa end return aa.c end end do local function __modImpl()
+return aa end function a.v():typeof(__modImpl())local aa=a.cache.v if not aa then aa={c=__modImpl()}a.cache.v=aa end return aa.c end end do local function __modImpl()
 return function(aa,ab)
 return{
 macOSDark={
@@ -4533,7 +5090,7 @@ Button=aa:Gradient({
 Icon=Color3.fromHex"#ffffff",
 },
 }
-end end function a.v():typeof(__modImpl())local aa=a.cache.v if not aa then aa={c=__modImpl()}a.cache.v=aa end return aa.c end end do local function __modImpl()
+end end function a.w():typeof(__modImpl())local aa=a.cache.w if not aa then aa={c=__modImpl()}a.cache.w=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -4624,7 +5181,7 @@ am,
 return an
 end
 
-return aa end function a.w():typeof(__modImpl())local aa=a.cache.w if not aa then aa={c=__modImpl()}a.cache.w=aa end return aa.c end end do local function __modImpl()
+return aa end function a.x():typeof(__modImpl())local aa=a.cache.x if not aa then aa={c=__modImpl()}a.cache.x=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -4773,7 +5330,7 @@ UpdateVisuals()
 return ak
 end
 
-return aa end function a.x():typeof(__modImpl())local aa=a.cache.x if not aa then aa={c=__modImpl()}a.cache.x=aa end return aa.c end end do local function __modImpl()
+return aa end function a.y():typeof(__modImpl())local aa=a.cache.y if not aa then aa={c=__modImpl()}a.cache.y=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -4942,7 +5499,7 @@ end)
 return ah
 end
 
-return aa end function a.y():typeof(__modImpl())local aa=a.cache.y if not aa then aa={c=__modImpl()}a.cache.y=aa end return aa.c end end do local function __modImpl()
+return aa end function a.z():typeof(__modImpl())local aa=a.cache.z if not aa then aa={c=__modImpl()}a.cache.z=aa end return aa.c end end do local function __modImpl()
 
 local aa=(cloneref or clonereference or function(aa)return aa end)
 
@@ -5323,7 +5880,7 @@ function ae.GetConfig(af,ag)
 return ae.Configs[ag]
 end
 
-return ae end function a.z():typeof(__modImpl())local aa=a.cache.z if not aa then aa={c=__modImpl()}a.cache.z=aa end return aa.c end end do local function __modImpl()
+return ae end function a.A():typeof(__modImpl())local aa=a.cache.A if not aa then aa={c=__modImpl()}a.cache.A=aa end return aa.c end end do local function __modImpl()
 local aa={}
 
 local ab=a.d()
@@ -5608,7 +6165,7 @@ end
 
 
 
-return aa end function a.A():typeof(__modImpl())local aa=a.cache.A if not aa then aa={c=__modImpl()}a.cache.A=aa end return aa.c end end do local function __modImpl()
+return aa end function a.B():typeof(__modImpl())local aa=a.cache.B if not aa then aa={c=__modImpl()}a.cache.B=aa end return aa.c end end do local function __modImpl()
 local aa={}
 
 local ab=a.d()
@@ -5770,7 +6327,7 @@ end
 
 
 
-return aa end function a.B():typeof(__modImpl())local aa=a.cache.B if not aa then aa={c=__modImpl()}a.cache.B=aa end return aa.c end end do local function __modImpl()
+return aa end function a.C():typeof(__modImpl())local aa=a.cache.C if not aa then aa={c=__modImpl()}a.cache.C=aa end return aa.c end end do local function __modImpl()
 game:GetService"ReplicatedStorage"
 local aa=a.d()
 local ab=aa.New
@@ -5783,7 +6340,7 @@ end)
 
 ae(game:GetService"UserInputService")
 
-local af=a.y()
+local af=a.z()
 
 local function Color3ToHSB(ag)
 local ah,ai,aj=ag.R,ag.G,ag.B
@@ -6487,7 +7044,7 @@ end
 
 
 return ah
-end end function a.C():typeof(__modImpl())local aa=a.cache.C if not aa then aa={c=__modImpl()}a.cache.C=aa end return aa.c end end do local function __modImpl()
+end end function a.D():typeof(__modImpl())local aa=a.cache.D if not aa then aa={c=__modImpl()}a.cache.D=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()
 local ab=aa.New
@@ -6509,7 +7066,7 @@ Desc=af.Desc or nil,
 
 Locked=af.Locked or false,
 }
-local ah=a.C()(af)
+local ah=a.D()(af)
 
 ag.ParagraphFrame=ah
 if af.Buttons and#af.Buttons>0 then
@@ -6544,7 +7101,7 @@ end
 return ag.__type,ag
 end
 
-return ac end function a.D():typeof(__modImpl())local aa=a.cache.D if not aa then aa={c=__modImpl()}a.cache.D=aa end return aa.c end end do local function __modImpl()
+return ac end function a.E():typeof(__modImpl())local aa=a.cache.E if not aa then aa={c=__modImpl()}a.cache.E=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()local ab=
 aa.New
@@ -6570,7 +7127,7 @@ UIElements={},
 
 local ag=true
 
-af.ButtonFrame=a.C(){
+af.ButtonFrame=a.D(){
 Title=af.Title,
 Desc=af.Desc,
 Parent=ae.Parent,
@@ -6653,7 +7210,7 @@ end)
 return af.__type,af
 end
 
-return ac end function a.E():typeof(__modImpl())local aa=a.cache.E if not aa then aa={c=__modImpl()}a.cache.E=aa end return aa.c end end do local function __modImpl()
+return ac end function a.F():typeof(__modImpl())local aa=a.cache.F if not aa then aa={c=__modImpl()}a.cache.F=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -7061,7 +7618,7 @@ end
 return ap,am
 end
 
-return aa end function a.F():typeof(__modImpl())local aa=a.cache.F if not aa then aa={c=__modImpl()}a.cache.F=aa end return aa.c end end do local function __modImpl()
+return aa end function a.G():typeof(__modImpl())local aa=a.cache.G if not aa then aa={c=__modImpl()}a.cache.G=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -7162,13 +7719,13 @@ return an,ak
 end
 
 
-return aa end function a.G():typeof(__modImpl())local aa=a.cache.G if not aa then aa={c=__modImpl()}a.cache.G=aa end return aa.c end end do local function __modImpl()
+return aa end function a.H():typeof(__modImpl())local aa=a.cache.H if not aa then aa={c=__modImpl()}a.cache.H=aa end return aa.c end end do local function __modImpl()
 local aa=a.d()local ab=
 aa.New local ac=
 aa.Tween
 
-local ad=a.F().New
-local ae=a.G().New
+local ad=a.G().New
+local ae=a.H().New
 
 local af={}
 
@@ -7186,7 +7743,7 @@ Type=ah.Type or"Toggle",
 Callback=ah.Callback or function()end,
 UIElements={},
 }
-ai.ToggleFrame=a.C(){
+ai.ToggleFrame=a.D(){
 Title=ai.Title,
 Desc=ai.Desc,
 
@@ -7305,7 +7862,7 @@ end
 return ai.__type,ai
 end
 
-return af end function a.H():typeof(__modImpl())local aa=a.cache.H if not aa then aa={c=__modImpl()}a.cache.H=aa end return aa.c end end do local function __modImpl()
+return af end function a.I():typeof(__modImpl())local aa=a.cache.I if not aa then aa={c=__modImpl()}a.cache.I=aa end return aa.c end end do local function __modImpl()
 
 local aa=(cloneref or clonereference or function(aa)
 return aa
@@ -7413,7 +7970,7 @@ av.Size=UDim2.new(0,al.IconSize,0,al.IconSize)
 aw=aw+al.IconSize-2
 end
 end
-al.SliderFrame=a.C(){
+al.SliderFrame=a.D(){
 Title=al.Title,
 Desc=al.Desc,
 Parent=ak.Parent,
@@ -7507,7 +8064,7 @@ Visible=al.IsTextbox,
 
 local ax
 if al.IsTooltip then
-ax=a.B().New(
+ax=a.C().New(
 ap,
 al.UIElements.SliderIcon.Frame.Thumb,
 true,
@@ -7730,7 +8287,7 @@ end)
 return al.__type,al
 end
 
-return ah end function a.I():typeof(__modImpl())local aa=a.cache.I if not aa then aa={c=__modImpl()}a.cache.I=aa end return aa.c end end do local function __modImpl()
+return ah end function a.J():typeof(__modImpl())local aa=a.cache.J if not aa then aa={c=__modImpl()}a.cache.J=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()
 local ac=aa.New
@@ -7836,7 +8393,7 @@ end
 return tostring(math.floor(ar+0.5)).."%"
 end
 
-ao.ProgressBarFrame=a.C(){
+ao.ProgressBarFrame=a.D(){
 Title=ao.Title,
 Desc=ao.Desc,
 Parent=ag.Parent,
@@ -8009,7 +8566,7 @@ Update(ao.Value.Default,true)
 return ao.__type,ao
 end
 
-return ae end function a.J():typeof(__modImpl())local aa=a.cache.J if not aa then aa={c=__modImpl()}a.cache.J=aa end return aa.c end end do local function __modImpl()
+return ae end function a.K():typeof(__modImpl())local aa=a.cache.K if not aa then aa={c=__modImpl()}a.cache.K=aa end return aa.c end end do local function __modImpl()
 
 local aa=(cloneref or clonereference or function(aa)
 return aa
@@ -8026,7 +8583,7 @@ UICorner=6,
 UIPadding=8,
 }
 
-local ah=a.w().New
+local ah=a.x().New
 
 function ag.New(ai,aj)
 local function NormalizeKeyCode(ak)
@@ -8062,7 +8619,7 @@ table.insert(al,Enum.KeyCode[NormalizeKeyCode"Escape"])
 
 local am=true
 
-ak.KeybindFrame=a.C(){
+ak.KeybindFrame=a.D(){
 Title=ak.Title,
 Desc=ak.Desc,
 Parent=aj.Parent,
@@ -8209,7 +8766,7 @@ end)
 return ak.__type,ak
 end
 
-return ag end function a.K():typeof(__modImpl())local aa=a.cache.K if not aa then aa={c=__modImpl()}a.cache.K=aa end return aa.c end end do local function __modImpl()
+return ag end function a.L():typeof(__modImpl())local aa=a.cache.L if not aa then aa={c=__modImpl()}a.cache.L=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()local ac=
 aa.New local ad=
@@ -8243,7 +8800,7 @@ Width=150,
 
 local ak=true
 
-aj.InputFrame=a.C(){
+aj.InputFrame=a.D(){
 Title=aj.Title,
 Desc=aj.Desc,
 Parent=ai.Parent,
@@ -8319,7 +8876,7 @@ end
 return aj.__type,aj
 end
 
-return ae end function a.L():typeof(__modImpl())local aa=a.cache.L if not aa then aa={c=__modImpl()}a.cache.L=aa end return aa.c end end do local function __modImpl()
+return ae end function a.M():typeof(__modImpl())local aa=a.cache.M if not aa then aa={c=__modImpl()}a.cache.M=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()
 local ae=aa.New
@@ -8347,7 +8904,7 @@ ai
 return"Divider",{__type="Divider",ElementFrame=aj}
 end
 
-return af end function a.M():typeof(__modImpl())local aa=a.cache.M if not aa then aa={c=__modImpl()}a.cache.M=aa end return aa.c end end do local function __modImpl()
+return af end function a.N():typeof(__modImpl())local aa=a.cache.N if not aa then aa={c=__modImpl()}a.cache.N=aa end return aa.c end end do local function __modImpl()
 local aa={}
 
 local ae=(cloneref or clonereference or function(ae)
@@ -8896,7 +9453,7 @@ end
 
 RecalculateCanvasSize()
 RecalculateListSize()
-else a.M()
+else a.N()
 :New{Parent=ap.UIElements.Menu.Frame.ScrollingFrame}
 end
 end
@@ -9029,7 +9586,7 @@ UpdatePosition
 return as
 end
 
-return aa end function a.N():typeof(__modImpl())local aa=a.cache.N if not aa then aa={c=__modImpl()}a.cache.N=aa end return aa.c end end do local function __modImpl()
+return aa end function a.O():typeof(__modImpl())local aa=a.cache.O if not aa then aa={c=__modImpl()}a.cache.O=aa end return aa.c end end do local function __modImpl()
 
 local aa=(cloneref or clonereference or function(aa)
 return aa
@@ -9043,9 +9600,9 @@ local af=a.d()
 local ag=af.New local ah=
 af.Tween
 
-local ai=a.w().New local aj=a.n()
+local ai=a.x().New local aj=a.n()
 .New
-local ak=a.N().New local al=
+local ak=a.O().New local al=
 
 workspace.CurrentCamera
 
@@ -9089,7 +9646,7 @@ if ap.Values and typeof(ap.Value)=="number"then
 ap.Value=ap.Values[ap.Value]
 end
 
-ap.DropdownFrame=a.C(){
+ap.DropdownFrame=a.D(){
 Title=ap.Title,
 Desc=ap.Desc,
 Parent=ao.Parent,
@@ -9162,7 +9719,7 @@ end
 return ap.__type,ap
 end
 
-return am end function a.O():typeof(__modImpl())local aa=a.cache.O if not aa then aa={c=__modImpl()}a.cache.O=aa end return aa.c end end do local function __modImpl()
+return am end function a.P():typeof(__modImpl())local aa=a.cache.P if not aa then aa={c=__modImpl()}a.cache.P=aa end return aa.c end end do local function __modImpl()
 
 
 
@@ -9411,7 +9968,7 @@ end
 return table.concat(at)
 end
 
-return aa end function a.P():typeof(__modImpl())local aa=a.cache.P if not aa then aa={c=__modImpl()}a.cache.P=aa end return aa.c end end do local function __modImpl()
+return aa end function a.Q():typeof(__modImpl())local aa=a.cache.Q if not aa then aa={c=__modImpl()}a.cache.Q=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -9419,7 +9976,7 @@ local af=a.d()
 local ag=af.New
 local ai=af.Tween
 
-local ak=a.P()
+local ak=a.Q()
 
 function aa.New(al,am,an,ao,ap)
 local aq={
@@ -9650,13 +10207,13 @@ end
 return aq
 end
 
-return aa end function a.Q():typeof(__modImpl())local aa=a.cache.Q if not aa then aa={c=__modImpl()}a.cache.Q=aa end return aa.c end end do local function __modImpl()
+return aa end function a.R():typeof(__modImpl())local aa=a.cache.R if not aa then aa={c=__modImpl()}a.cache.R=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()local af=
 aa.New
 
 
-local ag=a.Q()
+local ag=a.R()
 
 local ai={}
 
@@ -9752,7 +10309,7 @@ am.ElementFrame=ao.CodeFrame
 return am.__type,am
 end
 
-return ai end function a.R():typeof(__modImpl())local aa=a.cache.R if not aa then aa={c=__modImpl()}a.cache.R=aa end return aa.c end end do local function __modImpl()
+return ai end function a.S():typeof(__modImpl())local aa=a.cache.S if not aa then aa={c=__modImpl()}a.cache.S=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()
 local af=aa.New local ag=
@@ -10549,7 +11106,7 @@ local ax=true
 
 
 
-aw.ColorpickerFrame=a.C(){
+aw.ColorpickerFrame=a.D(){
 Title=aw.Title,
 Desc=aw.Desc,
 Parent=av.Parent,
@@ -10627,7 +11184,7 @@ end)
 return aw.__type,aw
 end
 
-return as end function a.S():typeof(__modImpl())local aa=a.cache.S if not aa then aa={c=__modImpl()}a.cache.S=aa end return aa.c end end do local function __modImpl()
+return as end function a.T():typeof(__modImpl())local aa=a.cache.T if not aa then aa={c=__modImpl()}a.cache.T=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()
 local af=aa.New
@@ -11006,7 +11563,7 @@ end)
 return an.__type,an
 end
 
-return ak end function a.T():typeof(__modImpl())local aa=a.cache.T if not aa then aa={c=__modImpl()}a.cache.T=aa end return aa.c end end do local function __modImpl()
+return ak end function a.U():typeof(__modImpl())local aa=a.cache.U if not aa then aa={c=__modImpl()}a.cache.U=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()
 local af=aa.New
@@ -11023,7 +11580,7 @@ BackgroundTransparency=1,
 return"Space",{__type="Space",ElementFrame=am}
 end
 
-return ai end function a.U():typeof(__modImpl())local aa=a.cache.U if not aa then aa={c=__modImpl()}a.cache.U=aa end return aa.c end end do local function __modImpl()
+return ai end function a.V():typeof(__modImpl())local aa=a.cache.V if not aa then aa={c=__modImpl()}a.cache.V=aa end return aa.c end end do local function __modImpl()
 local aa=a.d()
 local af=aa.New
 
@@ -11092,7 +11649,7 @@ end
 return am.__type,am
 end
 
-return ai end function a.V():typeof(__modImpl())local aa=a.cache.V if not aa then aa={c=__modImpl()}a.cache.V=aa end return aa.c end end do local function __modImpl()
+return ai end function a.W():typeof(__modImpl())local aa=a.cache.W if not aa then aa={c=__modImpl()}a.cache.W=aa end return aa.c end end do local function __modImpl()
 local aa=a.d()
 local af=aa.New
 
@@ -11177,7 +11734,7 @@ al.Tab
 return am.__type,am
 end
 
-return ai end function a.W():typeof(__modImpl())local aa=a.cache.W if not aa then aa={c=__modImpl()}a.cache.W=aa end return aa.c end end do local function __modImpl()
+return ai end function a.X():typeof(__modImpl())local aa=a.cache.X if not aa then aa={c=__modImpl()}a.cache.X=aa end return aa.c end end do local function __modImpl()
 local aa=a.d()
 local af=aa.New
 
@@ -11277,7 +11834,7 @@ end
 return am.__type,am
 end
 
-return ai end function a.X():typeof(__modImpl())local aa=a.cache.X if not aa then aa={c=__modImpl()}a.cache.X=aa end return aa.c end end do local function __modImpl()
+return ai end function a.Y():typeof(__modImpl())local aa=a.cache.Y if not aa then aa={c=__modImpl()}a.cache.Y=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()
 local af=aa.New
@@ -11364,7 +11921,7 @@ al.Tab
 return am.__type,am
 end
 
-return ai end function a.Y():typeof(__modImpl())local aa=a.cache.Y if not aa then aa={c=__modImpl()}a.cache.Y=aa end return aa.c end end do local function __modImpl()
+return ai end function a.Z():typeof(__modImpl())local aa=a.cache.Z if not aa then aa={c=__modImpl()}a.cache.Z=aa end return aa.c end end do local function __modImpl()
 local aa=(cloneref or clonereference or function(aa)
 return aa
 end)
@@ -11600,28 +12157,28 @@ ao.Main=at
 return ao.__type,ao
 end
 
-return al end function a.Z():typeof(__modImpl())local aa=a.cache.Z if not aa then aa={c=__modImpl()}a.cache.Z=aa end return aa.c end end do local function __modImpl()
+return al end function a._():typeof(__modImpl())local aa=a.cache._ if not aa then aa={c=__modImpl()}a.cache._=aa end return aa.c end end do local function __modImpl()
 
 return{
 Elements={
-Paragraph=a.D(),
-Button=a.E(),
-Toggle=a.H(),
-Slider=a.I(),
-ProgressBar=a.J(),
-Keybind=a.K(),
-Input=a.L(),
-Dropdown=a.O(),
-Code=a.R(),
-Colorpicker=a.S(),
-Section=a.T(),
-Divider=a.M(),
-Space=a.U(),
-Image=a.V(),
-Group=a.W(),
-HStack=a.X(),
-VStack=a.Y(),
-Viewport=a.Z(),
+Paragraph=a.E(),
+Button=a.F(),
+Toggle=a.I(),
+Slider=a.J(),
+ProgressBar=a.K(),
+Keybind=a.L(),
+Input=a.M(),
+Dropdown=a.P(),
+Code=a.S(),
+Colorpicker=a.T(),
+Section=a.U(),
+Divider=a.N(),
+Space=a.V(),
+Image=a.W(),
+Group=a.X(),
+HStack=a.Y(),
+VStack=a.Z(),
+Viewport=a._(),
 
 },
 Load=function(aa,af,ai,ak,al,am,an,ao,ap)
@@ -11750,7 +12307,7 @@ end
 end
 end
 end,
-}end function a._():typeof(__modImpl())local aa=a.cache._ if not aa then aa={c=__modImpl()}a.cache._=aa end return aa.c end end do local function __modImpl()
+}end function a.aa():typeof(__modImpl())local aa=a.cache.aa if not aa then aa={c=__modImpl()}a.cache.aa=aa end return aa.c end end do local function __modImpl()
 
 local aa=(cloneref or clonereference or function(aa)
 return aa
@@ -11764,8 +12321,8 @@ local ai=af.LocalPlayer:GetMouse()
 local ak=a.d()
 local al=ak.New
 
-local am=a.B().New
-local an=a.x().New
+local am=a.C().New
+local an=a.y().New
 
 
 
@@ -12204,7 +12761,7 @@ end
 
 
 
-local aA=a._()
+local aA=a.aa()
 
 aA.Load(
 ar,
@@ -12398,7 +12955,7 @@ ao.OnChangeFunc(aq)
 end
 end
 
-return ao end function a.aa():typeof(__modImpl())local aa=a.cache.aa if not aa then aa={c=__modImpl()}a.cache.aa=aa end return aa.c end end do local function __modImpl()
+return ao end function a.ab():typeof(__modImpl())local aa=a.cache.ab if not aa then aa={c=__modImpl()}a.cache.ab=aa end return aa.c end end do local function __modImpl()
 
 local aa={}
 
@@ -12407,7 +12964,7 @@ local af=a.d()
 local ai=af.New
 local ak=af.Tween
 
-local al=a.aa()
+local al=a.ab()
 
 function aa.New(am,an,ao,ap,aq)
 local ar={
@@ -12576,7 +13133,7 @@ return ar
 end
 
 
-return aa end function a.ab():typeof(__modImpl())local aa=a.cache.ab if not aa then aa={c=__modImpl()}a.cache.ab=aa end return aa.c end end do local function __modImpl()
+return aa end function a.ac():typeof(__modImpl())local aa=a.cache.ac if not aa then aa={c=__modImpl()}a.cache.ac=aa end return aa.c end end do local function __modImpl()
 return{
 Tab="table-of-contents",
 Paragraph="type",
@@ -12589,7 +13146,7 @@ Dropdown="chevrons-up-down",
 Code="terminal",
 Colorpicker="palette",
 ProgressBar="chart-bar",
-}end function a.ac():typeof(__modImpl())local aa=a.cache.ac if not aa then aa={c=__modImpl()}a.cache.ac=aa end return aa.c end end do local function __modImpl()
+}end function a.ad():typeof(__modImpl())local aa=a.cache.ad if not aa then aa={c=__modImpl()}a.cache.ad=aa end return aa.c end end do local function __modImpl()
 
 local aa=(cloneref or clonereference or function(aa)
 return aa
@@ -12614,7 +13171,7 @@ Radius=22,
 Width=400,
 MaxHeight=380,
 
-Icons=a.ac(),
+Icons=a.ad(),
 }
 
 local aq=ak("TextBox",{
@@ -13129,7 +13686,7 @@ end)
 return ap
 end
 
-return af end function a.ad():typeof(__modImpl())local aa=a.cache.ad if not aa then aa={c=__modImpl()}a.cache.ad=aa end return aa.c end end do local function __modImpl()
+return af end function a.ae():typeof(__modImpl())local aa=a.cache.ae if not aa then aa={c=__modImpl()}a.cache.ae=aa end return aa.c end end do local function __modImpl()
 
 
 
@@ -13143,19 +13700,19 @@ local ak=aa(game:GetService"Players")
 
 local al=workspace.CurrentCamera
 
-local am=a.t()
+local am=a.u()
 
 local an=a.d()
 local ao=an.New
 local ap=an.Tween
 
 
-local aq=a.w().New
+local aq=a.x().New
 local ar=a.m().New
-local as=a.x().New
-local at=a.y()
+local as=a.y().New
+local at=a.z()
 
-local au=a.z()
+local au=a.A()
 
 
 
@@ -14241,7 +14798,7 @@ end
 
 
 
-aw.OpenButtonMain=a.A().New(aw)
+aw.OpenButtonMain=a.B().New(aw)
 
 task.spawn(function()
 if aw.Icon then
@@ -14805,8 +15362,8 @@ if aw.OpenButton and typeof(aw.OpenButton)=="table"then
 aw:EditOpenButton(aw.OpenButton)
 end
 
-local C=a.aa()
-local F=a.ab()
+local C=a.ab()
+local F=a.ac()
 local G=C.Init(aw,av.WindUI,av.WindUI.TooltipGui)
 G:OnChange(function(H)
 aw.CurrentTab=H
@@ -15263,7 +15820,7 @@ end)
 
 
 if not aw.HideSearchBar then
-local Q=a.ad()
+local Q=a.ae()
 local R=false
 
 
@@ -15352,7 +15909,7 @@ end
 
 
 return aw
-end end function a.ae():typeof(__modImpl())local aa=a.cache.ae if not aa then aa={c=__modImpl()}a.cache.ae=aa end return aa.c end end end
+end end function a.af():typeof(__modImpl())local aa=a.cache.af if not aa then aa={c=__modImpl()}a.cache.af=aa end return aa.c end end end
 
 local aa={
 Window=nil,
@@ -15438,35 +15995,36 @@ aa.Version=aq.version
 end
 
 local ar=a.p()
+local as=a.q()
 
-local as=aa.Creator
+local at=aa.Creator
 
-local at=as.New
-
-
+local au=at.New
 
 
-local au=a.t()
 
-local av=protectgui or(syn and syn.protect_gui)or function()end
 
-local aw=gethui and gethui()or(al or ap:WaitForChild"PlayerGui")
+local av=a.u()
 
-local ax=at("UIScale",{
+local aw=protectgui or(syn and syn.protect_gui)or function()end
+
+local ax=gethui and gethui()or(al or ap:WaitForChild"PlayerGui")
+
+local ay=au("UIScale",{
 Scale=aa.UIScale,
 })
 
-aa.UIScaleObj=ax
+aa.UIScaleObj=ay
 
-aa.ScreenGui=at("ScreenGui",{
+aa.ScreenGui=au("ScreenGui",{
 Name="WindUI",
-Parent=aw,
+Parent=ax,
 IgnoreGuiInset=true,
 ScreenInsets="None",
 DisplayOrder=-99999,
 },{
 
-at("Folder",{
+au("Folder",{
 Name="Window",
 }),
 
@@ -15475,257 +16033,262 @@ Name="Window",
 
 
 
-at("Folder",{
+au("Folder",{
 Name="KeySystem",
 }),
-at("Folder",{
+au("Folder",{
 Name="Popups",
 }),
-at("Folder",{
+au("Folder",{
 Name="ToolTips",
 }),
 })
 
-aa.NotificationGui=at("ScreenGui",{
+aa.NotificationGui=au("ScreenGui",{
 Name="WindUI/Notifications",
-Parent=aw,
+Parent=ax,
 IgnoreGuiInset=true,
 })
-aa.DropdownGui=at("ScreenGui",{
+aa.DropdownGui=au("ScreenGui",{
 Name="WindUI/Dropdowns",
-Parent=aw,
+Parent=ax,
 IgnoreGuiInset=true,
 })
-aa.TooltipGui=at("ScreenGui",{
+aa.TooltipGui=au("ScreenGui",{
 Name="WindUI/Tooltips",
-Parent=aw,
+Parent=ax,
 IgnoreGuiInset=true,
 })
-av(aa.ScreenGui)
-av(aa.NotificationGui)
-av(aa.DropdownGui)
-av(aa.TooltipGui)
+aw(aa.ScreenGui)
+aw(aa.NotificationGui)
+aw(aa.DropdownGui)
+aw(aa.TooltipGui)
 
-as.Init(aa)
+at.Init(aa)
 
-function aa.SetParent(ay,az)
+function aa.SetParent(az,aA)
 if aa.ScreenGui then
-aa.ScreenGui.Parent=az
+aa.ScreenGui.Parent=aA
 end
 if aa.NotificationGui then
-aa.NotificationGui.Parent=az
+aa.NotificationGui.Parent=aA
 end
 if aa.DropdownGui then
-aa.DropdownGui.Parent=az
+aa.DropdownGui.Parent=aA
 end
 if aa.TooltipGui then
-aa.TooltipGui.Parent=az
+aa.TooltipGui.Parent=aA
 end
 end
 math.clamp(aa.TransparencyValue,0,1)
 
-local ay=aa.NotificationModule.Init(aa.NotificationGui)
+local az=aa.NotificationModule.Init(aa.NotificationGui)
 
-function aa.Notify(az,aA)
-aA.Holder=ay.Frame
-aA.Window=aa.Window
+function aa.Notify(aA,aB)
+aB.Holder=az.Frame
+aB.Window=aa.Window
 
-return aa.NotificationModule.New(aA)
+return aa.NotificationModule.New(aB)
 end
 
-function aa.SetNotificationLower(az,aA)
-ay.SetLower(aA)
+function aa.SetNotificationLower(aA,aB)
+az.SetLower(aB)
 end
 
-function aa.SetFont(az,aA)
-as.UpdateFont(aA)
+function aa.SetFont(aA,aB)
+at.UpdateFont(aB)
 end
 
-function aa.OnThemeChange(az,aA)
-aa.OnThemeChangeFunction=aA
+function aa.OnThemeChange(aA,aB)
+aa.OnThemeChangeFunction=aB
 end
 
-function aa.AddTheme(az,aA)
-aa.Themes[aA.Name]=aA
-return aA
+function aa.AddTheme(aA,aB)
+aa.Themes[aB.Name]=aB
+return aB
 end
 
-function aa.SetTheme(az,aA)
-if aa.Themes[aA]then
-aa.Theme=aa.Themes[aA]
-as.SetTheme(aa.Themes[aA])
+function aa.SetTheme(aA,aB)
+if aa.Themes[aB]then
+aa.Theme=aa.Themes[aB]
+at.SetTheme(aa.Themes[aB])
 
 if aa.OnThemeChangeFunction then
-aa.OnThemeChangeFunction(aA)
+aa.OnThemeChangeFunction(aB)
 end
 
-return aa.Themes[aA]
+return aa.Themes[aB]
 end
 return nil
 end
 
-function aa.GetThemes(az)
+function aa.GetThemes(aA)
 return aa.Themes
 end
-function aa.GetCurrentTheme(az)
+function aa.GetCurrentTheme(aA)
 return aa.Theme.Name
 end
-function aa.GetTransparency(az)
+function aa.GetTransparency(aA)
 return aa.Transparent or false
 end
-function aa.GetWindowSize(az)
+function aa.GetWindowSize(aA)
 return aa.Window.UIElements.Main.Size
 end
-function aa.Localization(az,aA)
-return aa.LocalizationModule:New(aA,as)
+function aa.Localization(aA,aB)
+return aa.LocalizationModule:New(aB,at)
 end
 
-function aa.SetLanguage(az,aA)
-if as.Localization then
-return as.SetLanguage(aA)
+function aa.SetLanguage(aA,aB)
+if at.Localization then
+return at.SetLanguage(aB)
 end
 return false
 end
 
-function aa.ToggleAcrylic(az,aA)
+function aa.ToggleAcrylic(aA,aB)
 if aa.Window and aa.Window.AcrylicPaint and aa.Window.AcrylicPaint.Model then
-aa.Window.Acrylic=aA
-aa.Window.AcrylicPaint.Model.Transparency=aA and 0.98 or 1
-if aA then
-au.Enable()
+aa.Window.Acrylic=aB
+aa.Window.AcrylicPaint.Model.Transparency=aB and 0.98 or 1
+if aB then
+av.Enable()
 else
-au.Disable()
+av.Disable()
 end
 end
 end
 
-function aa.Gradient(az,aA,aB)
-local b={}
+function aa.Gradient(aA,aB,b)
 local d={}
+local f={}
 
-for f,g in next,aA do
-local h=tonumber(f)
-if h then
-h=math.clamp(h/100,0,1)
+for g,h in next,aB do
+local i=tonumber(g)
+if i then
+i=math.clamp(i/100,0,1)
 
-local i=g.Color
-if typeof(i)=="string"and string.sub(i,1,1)=="#"then
-i=Color3.fromHex(i)
+local l=h.Color
+if typeof(l)=="string"and string.sub(l,1,1)=="#"then
+l=Color3.fromHex(l)
 end
 
-local l=g.Transparency or 0
+local m=h.Transparency or 0
 
-table.insert(b,ColorSequenceKeypoint.new(h,i))
-table.insert(d,NumberSequenceKeypoint.new(h,l))
+table.insert(d,ColorSequenceKeypoint.new(i,l))
+table.insert(f,NumberSequenceKeypoint.new(i,m))
 end
 end
 
-table.sort(b,function(f,g)
-return f.Time<g.Time
+table.sort(d,function(g,h)
+return g.Time<h.Time
 end)
-table.sort(d,function(f,g)
-return f.Time<g.Time
+table.sort(f,function(g,h)
+return g.Time<h.Time
 end)
 
-if#b<2 then
-table.insert(b,ColorSequenceKeypoint.new(1,b[1].Value))
-table.insert(d,NumberSequenceKeypoint.new(1,d[1].Value))
+if#d<2 then
+table.insert(d,ColorSequenceKeypoint.new(1,d[1].Value))
+table.insert(f,NumberSequenceKeypoint.new(1,f[1].Value))
 end
 
-local f={
-Color=ColorSequence.new(b),
-Transparency=NumberSequence.new(d),
+local g={
+Color=ColorSequence.new(d),
+Transparency=NumberSequence.new(f),
 }
 
-if aB then
-for g,h in pairs(aB)do
-f[g]=h
+if b then
+for h,i in pairs(b)do
+g[h]=i
 end
 end
 
-return f
+return g
 end
 
-function aa.Popup(az,aA)
-aA.WindUI=aa
-return a.u().new(aA,aa.ScreenGui.Popups)
+function aa.Popup(aA,aB)
+aB.WindUI=aa
+return a.v().new(aB,aa.ScreenGui.Popups)
 end
 
-aa.Themes=a.v()(aa,as)
+function aa.CreateAuthWindow(aA,aB,b)
+aB.WindUI=aa
+return as.new(aB,b)
+end
 
-as.Themes=aa.Themes
+aa.Themes=a.w()(aa,at)
+
+at.Themes=aa.Themes
 
 aa:SetTheme"Dark"
-aa:SetLanguage(as.Language)
+aa:SetLanguage(at.Language)
 
-function aa.CreateWindow(az,aA)
-local aB=a.ae()
+function aa.CreateWindow(aA,aB)
+local b=a.af()
 
 if not am:IsStudio()and writefile then
 if not isfolder"WindUI"then
 makefolder"WindUI"
 end
-if aA.Folder then
-makefolder(aA.Folder)
+if aB.Folder then
+makefolder(aB.Folder)
 else
-makefolder(aA.Title)
+makefolder(aB.Title)
 end
 end
 
-aA.WindUI=aa
-aA.Window=aa.Window
-aA.Parent=aa.ScreenGui.Window
+aB.WindUI=aa
+aB.Window=aa.Window
+aB.Parent=aa.ScreenGui.Window
 
 if aa.Window then
 warn"You cannot create more than one window"
 return
 end
 
-local b=true
+local d=true
 
-local d=aa.Themes[aA.Theme or"Dark"]
+local f=aa.Themes[aB.Theme or"Dark"]
 
 
-as.SetTheme(d)
+at.SetTheme(f)
 
-local f=gethwid or function()
+local g=gethwid or function()
 return ak.LocalPlayer.UserId
 end
 
-local g=f()
+local h=g()
 
-if aA.KeySystem then
-b=false
+if aB.KeySystem then
+d=false
 
 local function loadKeysystem()
-ar.new(aA,g,function(h)
-b=h
+ar.new(aB,h,function(i)
+d=i
 end)
 end
 
-local h=(aA.Folder or"Temp").."/"..g..".key"
+local i=(aB.Folder or"Temp").."/"..h..".key"
 
-if aA.KeySystem.KeyValidator then
-if aA.KeySystem.SaveKey and isfile(h)then
-local i=readfile(h)
-local l=aA.KeySystem.KeyValidator(i)
+if aB.KeySystem.KeyValidator then
+if aB.KeySystem.SaveKey and isfile(i)then
+local l=readfile(i)
+local m=aB.KeySystem.KeyValidator(l)
 
-if l then
-b=true
+if m then
+d=true
 else
 loadKeysystem()
 end
 else
 loadKeysystem()
 end
-elseif not aA.KeySystem.API then
-if aA.KeySystem.SaveKey and isfile(h)then
-local i=readfile(h)
-local l=(type(aA.KeySystem.Key)=="table")and table.find(aA.KeySystem.Key,i)
-or tostring(aA.KeySystem.Key)==tostring(i)
+elseif not aB.KeySystem.API then
+if aB.KeySystem.SaveKey and isfile(i)then
+local l=readfile(i)
+local m=(type(aB.KeySystem.Key)=="table")and table.find(aB.KeySystem.Key,l)
+or tostring(aB.KeySystem.Key)==tostring(l)
 
-if l then
-b=true
+if m then
+d=true
 else
 loadKeysystem()
 end
@@ -15733,29 +16296,29 @@ else
 loadKeysystem()
 end
 else
-if isfile(h)then
-local i=readfile(h)
-local l=false
+if isfile(i)then
+local l=readfile(i)
+local m=false
 
-for m,p in next,aA.KeySystem.API do
-local r=aa.Services[p.Type]
-if r then
-local u={}
-for v,x in next,r.Args do
-table.insert(u,p[x])
+for p,r in next,aB.KeySystem.API do
+local u=aa.Services[r.Type]
+if u then
+local v={}
+for x,z in next,u.Args do
+table.insert(v,r[z])
 end
 
-local v=r.New(table.unpack(u))
-local x=v.Verify(i)
-if x then
-l=true
+local x=u.New(table.unpack(v))
+local z=x.Verify(l)
+if z then
+m=true
 break
 end
 end
 end
 
-b=l
-if not l then
+d=m
+if not m then
 loadKeysystem()
 end
 else
@@ -15765,16 +16328,16 @@ end
 
 repeat
 task.wait()
-until b
+until d
 end
 
-local h=aB(aA)
+local i=b(aB)
 
-aa.Transparent=aA.Transparent
-aa.Window=h
+aa.Transparent=aB.Transparent
+aa.Window=i
 
-if aA.Acrylic then
-au.init()
+if aB.Acrylic then
+av.init()
 end
 
 
@@ -15789,7 +16352,7 @@ end
 
 
 
-return h
+return i
 end
 
 return aa
