@@ -6,11 +6,12 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "[ VendettaUI Build System ]" -ForegroundColor Cyan
 
-$packageJson = Get-Content -Raw "package.json"
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+
+$packageJson = [System.IO.File]::ReadAllText("$PWD/package.json", $utf8NoBom)
 $pkg = $packageJson | ConvertFrom-Json
 
 $packageLuaContent = "-- Generated from package.json | build.ps1`n`nreturn [[`n$packageJson`n]]"
-$utf8NoBom = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText("$PWD/build/package.lua", $packageLuaContent, $utf8NoBom)
 
 $config = "build/darklua.dev.config.json"
@@ -36,7 +37,7 @@ if ($LASTEXITCODE -ne 0 -or !(Test-Path $temp)) {
 
 $sw.Stop()
 
-$header = Get-Content -Raw "build/header.lua"
+$header = [System.IO.File]::ReadAllText("$PWD/build/header.lua", $utf8NoBom)
 $date = Get-Date -Format "yyyy-MM-dd"
 $header = $header -replace '\{\{VERSION\}\}', $pkg.version `
                   -replace '\{\{BUILD_DATE\}\}', $date `
@@ -44,7 +45,7 @@ $header = $header -replace '\{\{VERSION\}\}', $pkg.version `
                   -replace '\{\{REPOSITORY\}\}', $pkg.repository `
                   -replace '\{\{LICENSE\}\}', $pkg.license
 
-$bundleBody = Get-Content -Raw $temp
+$bundleBody = [System.IO.File]::ReadAllText("$PWD/$temp", $utf8NoBom)
 $finalContent = "$header`n`n$bundleBody"
 [System.IO.File]::WriteAllText("$PWD/$output", $finalContent, $utf8NoBom)
 Remove-Item $temp -Force

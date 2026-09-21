@@ -3506,6 +3506,40 @@ local ah=a.m().New
 local ai=a.o()
 
 
+local function AddTactileFeedback(aj,ak,al)
+ak=ak or 1.02
+al=al or 0.96
+
+local am=aj:FindFirstChildOfClass"UIScale"
+if not am then
+am=af("UIScale",{
+Scale=1,
+Parent=aj,
+})
+end
+
+ae.AddSignal(aj.MouseEnter,function()
+ag(am,0.15,{Scale=ak},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+end)
+
+ae.AddSignal(aj.MouseLeave,function()
+ag(am,0.15,{Scale=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+end)
+
+ae.AddSignal(aj.InputBegan,function(an)
+if an.UserInputType==Enum.UserInputType.MouseButton1 or an.UserInputType==Enum.UserInputType.Touch then
+ag(am,0.08,{Scale=al},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+end
+end)
+
+ae.AddSignal(aj.InputEnded,function(an)
+if an.UserInputType==Enum.UserInputType.MouseButton1 or an.UserInputType==Enum.UserInputType.Touch then
+ag(am,0.15,{Scale=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+end
+end)
+end
+
+
 local function CreateMaskedInput(aj,ak,al,am,an,ao)
 an=an or""
 local ap=an
@@ -3517,7 +3551,7 @@ Parent=al,
 BackgroundTransparency=1,
 })
 
-ae.NewRoundFrame(10,"Squircle",{
+local as=ae.NewRoundFrame(10,"Squircle",{
 ThemeTag={
 ImageColor3="Placeholder",
 },
@@ -3526,7 +3560,7 @@ ImageTransparency=0.85,
 Parent=ar,
 })
 
-ae.NewRoundFrame(9,"SquircleGlass",{
+local at=ae.NewRoundFrame(9,"SquircleGlass",{
 ThemeTag={
 ImageColor3="Outline",
 },
@@ -3537,7 +3571,7 @@ ImageTransparency=0.8,
 Parent=ar,
 })
 
-local as=ae.NewRoundFrame(10,"Squircle",{
+local au=ae.NewRoundFrame(10,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 Name="Frame",
 ThemeTag={
@@ -3560,9 +3594,9 @@ HorizontalAlignment="Left",
 }),
 })
 
-local at
+local av
 if ak and ak~=""then
-at=af("ImageLabel",{
+av=af("ImageLabel",{
 Image=ae.Icon(ak)[1],
 ImageRectSize=ae.Icon(ak)[2].ImageRectSize,
 ImageRectOffset=ae.Icon(ak)[2].ImageRectPosition,
@@ -3571,30 +3605,30 @@ BackgroundTransparency=1,
 ThemeTag={
 ImageColor3="Icon",
 },
-Parent=as,
+Parent=au,
 })
 end
 
-local au=af("TextBox",{
+local aw=af("TextBox",{
 BackgroundTransparency=1,
-TextSize=16,
+TextSize=15,
 FontFace=Font.new(ae.Font,Enum.FontWeight.Regular),
-Size=UDim2.new(1,(at and-29 or 0)-28,1,0),
+Size=UDim2.new(1,(av and-29 or 0)-28,1,0),
 PlaceholderText=aj,
 ClearTextOnFocus=ao or false,
 ClipsDescendants=true,
 TextXAlignment="Left",
 TextYAlignment="Center",
-Text=an~=""and(aq and string.rep("вЂў",#an)or an)or"",
+Text=an~=""and(aq and string.rep("•",#an)or an)or"",
 ThemeTag={
 PlaceholderColor3="PlaceholderText",
 TextColor3="Text",
 },
-Parent=as,
+Parent=au,
 })
 
 
-local av=af("ImageButton",{
+local ax=af("ImageButton",{
 Size=UDim2.new(0,20,0,20),
 BackgroundTransparency=1,
 Image=ae.Icon"eye-off"[1],
@@ -3603,33 +3637,45 @@ ImageRectOffset=ae.Icon"eye-off"[2].ImageRectPosition,
 ThemeTag={
 ImageColor3="Icon",
 },
-Parent=as,
+Parent=au,
 })
+
+AddTactileFeedback(ax,1.15,0.9)
+
+
+ae.AddSignal(aw.Focused,function()
+ag(at,0.2,{ImageTransparency=0.3}):Play()
+ag(as,0.2,{ImageTransparency=0.6}):Play()
+end)
+
+ae.AddSignal(aw.FocusLost,function()
+ag(at,0.25,{ImageTransparency=0.8}):Play()
+ag(as,0.25,{ImageTransparency=0.85}):Play()
+end)
 
 local function UpdateDisplayText()
 if aq then
-au.Text=string.rep("вЂў",#ap)
+aw.Text=string.rep("•",#ap)
 else
-au.Text=ap
+aw.Text=ap
 end
 end
 
-au:GetPropertyChangedSignal"Text":Connect(function()
-local aw=au.Text
+ae.AddSignal(aw:GetPropertyChangedSignal"Text",function()
+local ay=aw.Text
 if aq then
-
-local ax=string.rep("вЂў",#ap)
-if aw~=ax then
-if#aw>#ax then
-local ay=string.sub(aw,#ax+1)
-ap=ap..ay
-elseif#aw<#ax then
-ap=string.sub(ap,1,#aw)
+local az=string.rep("•",#ap)
+if ay~=az then
+if#ay>#az then
+local aA=string.sub(ay,#az+1)
+ap=ap..aA
+elseif#ay<#az then
+ap=string.sub(ap,1,#ay)
 end
 UpdateDisplayText()
 end
 else
-ap=aw
+ap=ay
 end
 
 if am then
@@ -3637,32 +3683,34 @@ ae.SafeCallback(am,ap)
 end
 end)
 
-av.MouseButton1Click:Connect(function()
+ae.AddSignal(ax.MouseButton1Click,function()
 aq=not aq
-local aw=aq and"eye-off"or"eye"
-local ax=ae.Icon(aw)
-av.Image=ax[1]
-av.ImageRectSize=ax[2].ImageRectSize
-av.ImageRectOffset=ax[2].ImageRectPosition
+local ay=aq and"eye-off"or"eye"
+local az=ae.Icon(ay)
+ax.Image=az[1]
+ax.ImageRectSize=az[2].ImageRectSize
+ax.ImageRectOffset=az[2].ImageRectPosition
 UpdateDisplayText()
+
+
+ax.Rotation=-15
+ag(ax,0.25,{Rotation=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end)
 
-local aw={
+return{
 Frame=ar,
-TextBox=au,
+TextBox=aw,
 GetValue=function()
 return ap
 end,
-SetValue=function(aw)
-ap=aw or""
+SetValue=function(ay)
+ap=ay or""
 UpdateDisplayText()
 if am then
 ae.SafeCallback(am,ap)
 end
 end,
 }
-
-return aw
 end
 
 function aa.new(aj,ak)
@@ -3758,11 +3806,8 @@ aA,
 
 local b="Key"
 
-local d
-local f
-
-local g=ae.NewRoundFrame(12,"Squircle",{
-Size=UDim2.new(1,0,0,38),
+local d=ae.NewRoundFrame(12,"Squircle",{
+Size=UDim2.new(1,0,0,40),
 ThemeTag={ImageColor3="LabelBackground"},
 ImageTransparency=0.5,
 },{
@@ -3772,47 +3817,49 @@ PaddingBottom=UDim.new(0,3),
 PaddingLeft=UDim.new(0,3),
 PaddingRight=UDim.new(0,3),
 }),
-af("UIListLayout",{
-FillDirection="Horizontal",
-Padding=UDim.new(0,4),
-}),
 })
 
-d=ae.NewRoundFrame(9,"Squircle",{
-Size=UDim2.new(0.5,-2,1,0),
+
+local f=ae.NewRoundFrame(9,"Squircle",{
+Size=UDim2.new(0.5,-3,1,0),
+Position=UDim2.new(0,0,0,0),
 ThemeTag={ImageColor3="Primary"},
 ImageTransparency=0,
-Parent=g,
-},{
-af("TextLabel",{
-Size=UDim2.new(1,0,1,0),
+Parent=d,
+})
+
+
+local g=af("TextButton",{
+Size=UDim2.new(0.5,0,1,0),
+Position=UDim2.new(0,0,0,0),
 BackgroundTransparency=1,
-Text="РџРѕ РєР»СЋС‡Сѓ",
+Text="По ключу",
 FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
-ThemeTag={TextColor3="Text"},
 TextSize=14,
-}),
-},true)
+ZIndex=3,
+ThemeTag={TextColor3="Text"},
+Parent=d,
+})
 
-f=ae.NewRoundFrame(9,"Squircle",{
-Size=UDim2.new(0.5,-2,1,0),
-ThemeTag={ImageColor3="Primary"},
-ImageTransparency=1,
-Parent=g,
-},{
-af("TextLabel",{
-Size=UDim2.new(1,0,1,0),
+
+local h=af("TextButton",{
+Size=UDim2.new(0.5,0,1,0),
+Position=UDim2.new(0.5,0,0,0),
 BackgroundTransparency=1,
-Text="Р›РѕРіРёРЅ Рё РїР°СЂРѕР»СЊ",
+Text="Логин и пароль",
 FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
-ThemeTag={TextColor3="Text"},
-TextTransparency=0.3,
 TextSize=14,
-}),
-},true)
+TextTransparency=0.35,
+ZIndex=3,
+ThemeTag={TextColor3="Text"},
+Parent=d,
+})
+
+AddTactileFeedback(g,1.01,0.97)
+AddTactileFeedback(h,1.01,0.97)
 
 
-local h=af("Frame",{
+local i=af("Frame",{
 Size=UDim2.new(1,0,0,0),
 AutomaticSize="Y",
 BackgroundTransparency=1,
@@ -3824,7 +3871,7 @@ Padding=UDim.new(0,10),
 }),
 })
 
-local i=af("Frame",{
+local l=af("Frame",{
 Size=UDim2.new(1,0,0,0),
 AutomaticSize="Y",
 BackgroundTransparency=1,
@@ -3837,54 +3884,60 @@ Padding=UDim.new(0,10),
 })
 
 
-local l=CreateMaskedInput("Р’РІРµРґРёС‚Рµ РІР°С€ РєР»СЋС‡...","key",h,nil,ar,false)
+local m=CreateMaskedInput("Введите ваш ключ...","key",i,nil,ar,false)
 
 
 if aj.KeySystem and aj.KeySystem.URL then
-local m=af("Frame",{
-Size=UDim2.new(1,0,0,32),
+local p=af("Frame",{
+Size=UDim2.new(1,0,0,34),
 BackgroundTransparency=1,
-Parent=h,
+Parent=i,
 })
 
-local p=ah("РџРѕР»СѓС‡РёС‚СЊ РєР»СЋС‡","external-link",function()
+local r=ah("Получить ключ","external-link",function()
 if setclipboard then
 setclipboard(aj.KeySystem.URL)
 al:Notify{
-Title="РЎСЃС‹Р»РєР° СЃРєРѕРїРёСЂРѕРІР°РЅР°",
-Content="РЎСЃС‹Р»РєР° РЅР° РїРѕР»СѓС‡РµРЅРёРµ РєР»СЋС‡Р° СЃРєРѕРїРёСЂРѕРІР°РЅР° РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°.",
+Title="Ссылка скопирована",
+Content="Ссылка для получения ключа скопирована в буфер обмена.",
 Icon="copy",
 }
 end
-end,"Secondary",m)
-p.Size=UDim2.new(1,0,1,0)
+end,"Secondary",p)
+r.Size=UDim2.new(1,0,1,0)
+AddTactileFeedback(r,1.015,0.97)
 end
 
 
-local m
-local p
-
-
-local r=af("Frame",{
+local p=af("Frame",{
 Size=UDim2.new(1,0,0,42),
-Parent=i,
+Parent=l,
 BackgroundTransparency=1,
 })
 
-ae.NewRoundFrame(10,"Squircle",{
+local r=ae.NewRoundFrame(10,"Squircle",{
 ThemeTag={ImageColor3="Placeholder"},
 Size=UDim2.new(1,0,1,0),
 ImageTransparency=0.85,
-Parent=r,
+Parent=p,
 })
 
-local u=ae.NewRoundFrame(10,"Squircle",{
+local u=ae.NewRoundFrame(9,"SquircleGlass",{
+ThemeTag={ImageColor3="Outline"},
+Size=UDim2.new(1,1,1,1),
+AnchorPoint=Vector2.new(0.5,0.5),
+Position=UDim2.new(0.5,0,0.5,0),
+ImageTransparency=0.8,
+Parent=p,
+})
+
+local v=ae.NewRoundFrame(10,"Squircle",{
 Size=UDim2.new(1,0,1,0),
 ThemeTag={
 ImageColor3="LabelBackground",
 ImageTransparency="LabelBackgroundTransparency",
 },
-Parent=r,
+Parent=p,
 },{
 af("UIPadding",{PaddingLeft=UDim.new(0,12),PaddingRight=UDim.new(0,12)}),
 af("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,8),VerticalAlignment="Center"}),
@@ -3898,156 +3951,188 @@ ThemeTag={ImageColor3="Icon"},
 }),
 })
 
-local v=af("TextBox",{
+local x=af("TextBox",{
 BackgroundTransparency=1,
-TextSize=16,
+TextSize=15,
 FontFace=Font.new(ae.Font,Enum.FontWeight.Regular),
 Size=UDim2.new(1,-29,1,0),
-PlaceholderText="Р›РѕРіРёРЅ РёР»Рё Email...",
+PlaceholderText="Логин или Email...",
 Text=as,
 TextXAlignment="Left",
 TextYAlignment="Center",
 ThemeTag={PlaceholderColor3="PlaceholderText",TextColor3="Text"},
-Parent=u,
+Parent=v,
 })
 
-m={
+ae.AddSignal(x.Focused,function()
+ag(u,0.2,{ImageTransparency=0.3}):Play()
+ag(r,0.2,{ImageTransparency=0.6}):Play()
+end)
+
+ae.AddSignal(x.FocusLost,function()
+ag(u,0.25,{ImageTransparency=0.8}):Play()
+ag(r,0.25,{ImageTransparency=0.85}):Play()
+end)
+
+local z={
 GetValue=function()
-return v.Text
+return x.Text
 end,
 }
 
+local A=CreateMaskedInput("Введите пароль...","lock",l,nil,"",false)
 
-p=CreateMaskedInput("Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ...","lock",i,nil,"",false)
 
+local function SwitchMode(B)
+if b==B then
+return
+end
+b=B
 
-local function SwitchMode(x)
-b=x
-if x=="Key"then
-ag(d,0.15,{ImageTransparency=0}):Play()
-d.TextLabel.TextTransparency=0
-d.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
+if B=="Key"then
+ag(f,0.25,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
-ag(f,0.15,{ImageTransparency=1}):Play()
-f.TextLabel.TextTransparency=0.3
-f.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
+ag(g,0.2,{TextTransparency=0}):Play()
+g.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
 
-h.Visible=true
-i.Visible=false
-else
-ag(d,0.15,{ImageTransparency=1}):Play()
-d.TextLabel.TextTransparency=0.3
-d.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
+ag(h,0.2,{TextTransparency=0.4}):Play()
+h.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
 
-ag(f,0.15,{ImageTransparency=0}):Play()
-f.TextLabel.TextTransparency=0
-f.TextLabel.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
-
-h.Visible=false
+l.Visible=false
 i.Visible=true
+else
+ag(f,0.25,{Position=UDim2.new(0.5,3,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+
+ag(g,0.2,{TextTransparency=0.4}):Play()
+g.FontFace=Font.new(ae.Font,Enum.FontWeight.Medium)
+
+ag(h,0.2,{TextTransparency=0}):Play()
+h.FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold)
+
+i.Visible=false
+l.Visible=true
 end
 end
 
-d.MouseButton1Click:Connect(function()
+ae.AddSignal(g.MouseButton1Click,function()
 SwitchMode"Key"
 end)
-f.MouseButton1Click:Connect(function()
+ae.AddSignal(h.MouseButton1Click,function()
 SwitchMode"Account"
 end)
 
 
-local x=af("Frame",{
+local function ShakeWindow()
+local B=at.UIElements.MainContainer
+local C=B.Position
+task.spawn(function()
+local F={-12,12,-8,8,-4,4,0}
+for G,H in ipairs(F)do
+ag(B,0.04,{
+Position=UDim2.new(C.X.Scale,C.X.Offset+H,C.Y.Scale,C.Y.Offset),
+}):Play()
+task.wait(0.04)
+end
+end)
+end
+
+
+local B=af("Frame",{
 Size=UDim2.new(1,0,0,44),
 BackgroundTransparency=1,
 })
 
-local z=ah("РџСЂРѕРґРѕР»Р¶РёС‚СЊ","arrow-right",function()
-local z=false
-local A="РќРµРІРµСЂРЅС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РІС…РѕРґР°."
+local C=ah("Продолжить","arrow-right",function()
+local C=false
+local F="Неверные данные для входа."
 
 if b=="Key"then
-local B=l.GetValue()
-if B==""then
+local G=m.GetValue()
+if G==""then
+ShakeWindow()
 al:Notify{
-Title="РћС€РёР±РєР° РІС…РѕРґР°",
-Content="РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ РєР»СЋС‡.",
+Title="Ошибка входа",
+Content="Пожалуйста, введите ключ.",
 Icon="triangle-alert",
 }
 return
 end
 
 if aj.KeySystem and aj.KeySystem.KeyValidator then
-z=aj.KeySystem.KeyValidator(B)
+C=aj.KeySystem.KeyValidator(G)
 elseif aj.KeySystem and aj.KeySystem.Key then
-local C=aj.KeySystem.Key
-if type(C)=="table"then
-z=table.find(C,B)~=nil
+local H=aj.KeySystem.Key
+if type(H)=="table"then
+C=table.find(H,G)~=nil
 else
-z=tostring(C)==tostring(B)
+C=tostring(H)==tostring(G)
 end
 else
-z=true
+C=true
 end
 
-if z then
+if C then
 if(aj.SaveKey==nil or aj.SaveKey==true)and writefile then
 pcall(function()
-writefile(ap,B)
+writefile(ap,G)
 end)
 end
 end
 else
-local B=m.GetValue()
-local C=p.GetValue()
+local G=z.GetValue()
+local H=A.GetValue()
 
-if B==""or C==""then
+if G==""or H==""then
+ShakeWindow()
 al:Notify{
-Title="РћС€РёР±РєР° РІС…РѕРґР°",
-Content="Р—Р°РїРѕР»РЅРёС‚Рµ Р»РѕРіРёРЅ Рё РїР°СЂРѕР»СЊ.",
+Title="Ошибка входа",
+Content="Заполните логин и пароль.",
 Icon="triangle-alert",
 }
 return
 end
 
 if aj.AccountSystem and aj.AccountSystem.AccountValidator then
-z,A=aj.AccountSystem.AccountValidator(B,C)
-if z==nil then
-z=true
+C,F=aj.AccountSystem.AccountValidator(G,H)
+if C==nil then
+C=true
 end
 else
-z=true
+C=true
 end
 
-if z then
+if C then
 
 if(aj.SaveAccount==nil or aj.SaveAccount==true)and writefile then
 pcall(function()
-writefile(aq,B)
+writefile(aq,G)
 end)
 end
 end
 end
 
-if z then
+if C then
 at:Close()()
 task.wait(0.3)
 if ak then
 ak{
 Mode=b,
-Key=b=="Key"and l.GetValue()or nil,
-Login=b=="Account"and m.GetValue()or nil,
+Key=b=="Key"and m.GetValue()or nil,
+Login=b=="Account"and z.GetValue()or nil,
 }
 end
 else
+ShakeWindow()
 al:Notify{
-Title="РћС€РёР±РєР° Р°РІС‚РѕСЂРёР·Р°С†РёРё",
-Content=A or"РџСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РІРІРµРґРµРЅРЅС‹С… РґР°РЅРЅС‹С….",
+Title="Ошибка авторизации",
+Content=F or"Проверьте правильность введенных данных.",
 Icon="triangle-alert",
 }
 end
-end,"Primary",x)
+end,"Primary",B)
 
-z.Size=UDim2.new(1,0,1,0)
+C.Size=UDim2.new(1,0,1,0)
+AddTactileFeedback(C,1.015,0.97)
 
 
 af("Frame",{
@@ -4066,10 +4151,10 @@ FillDirection="Vertical",
 Padding=UDim.new(0,16),
 }),
 aB,
-g,
-h,
+d,
 i,
-x,
+l,
+B,
 })
 
 at:Open()
