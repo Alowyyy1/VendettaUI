@@ -3595,8 +3595,16 @@ end)
 end
 
 
+local function SanitizeInputText(aj)
+if not aj then
+return""
+end
+return(aj:gsub("[^%w!@#$%^&*()%_%+%-%=%[%]%{%}\\|;:'\",%.%<%>%/%?%~%s]",""))
+end
+
+
 local function CreateMaskedInput(aj,ak,al,am,an,ao)
-an=an or""
+an=SanitizeInputText(an or"")
 local ap=an
 local aq=true
 
@@ -3674,7 +3682,7 @@ ClearTextOnFocus=ao or false,
 ClipsDescendants=true,
 TextXAlignment="Left",
 TextYAlignment="Center",
-Text=an~=""and(aq and string.rep("•",#an)or an)or"",
+Text=an~=""and(aq and string.rep("•",utf8.len(an)or#an)or an)or"",
 ThemeTag={
 PlaceholderColor3="PlaceholderText",
 TextColor3="Text",
@@ -3713,7 +3721,8 @@ end)
 
 local function UpdateDisplayText()
 if aq then
-aw.Text=string.rep("•",#ap)
+local ay=utf8.len(ap)or#ap
+aw.Text=string.rep("•",ay)
 else
 aw.Text=ap
 end
@@ -3721,19 +3730,34 @@ end
 
 ae.AddSignal(aw:GetPropertyChangedSignal"Text",function()
 local ay=aw.Text
+
 if aq then
-local az=string.rep("•",#ap)
-if ay~=az then
-if#ay>#az then
-local aA=string.sub(ay,#az+1)
-ap=ap..aA
-elseif#ay<#az then
-ap=string.sub(ap,1,#ay)
+local az=utf8.len(ap)or#ap
+local aA=string.rep("•",az)
+
+if ay~=aA then
+if#ay>#aA then
+local aB=string.sub(ay,#aA+1)
+local b=SanitizeInputText(aB)
+ap=ap..b
+elseif#ay<#aA then
+if az>0 then
+local aB=utf8.offset(ap,az)
+if aB then
+ap=string.sub(ap,1,aB-1)
+else
+ap=string.sub(ap,1,math.max(0,#ap-1))
+end
+end
 end
 UpdateDisplayText()
 end
 else
-ap=ay
+local az=SanitizeInputText(ay)
+ap=az
+if az~=ay then
+aw.Text=az
+end
 end
 
 if am then
@@ -3761,7 +3785,7 @@ GetValue=function()
 return ap
 end,
 SetValue=function(ay)
-ap=ay or""
+ap=SanitizeInputText(ay or"")
 UpdateDisplayText()
 if am then
 ae.SafeCallback(am,ap)
@@ -4040,6 +4064,13 @@ end)
 ae.AddSignal(B.FocusLost,function()
 ag(z,0.25,{ImageTransparency=0.8}):Play()
 ag(x,0.25,{ImageTransparency=0.85}):Play()
+end)
+
+ae.AddSignal(B:GetPropertyChangedSignal"Text",function()
+local C=SanitizeInputText(B.Text)
+if C~=B.Text then
+B.Text=C
+end
 end)
 
 local C={

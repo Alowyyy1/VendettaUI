@@ -39,15 +39,19 @@ $sw.Stop()
 
 $header = [System.IO.File]::ReadAllText("$PWD/build/header.lua", $utf8NoBom)
 $date = Get-Date -Format "yyyy-MM-dd"
-$header = $header -replace '\{\{VERSION\}\}', $pkg.version `
-                  -replace '\{\{BUILD_DATE\}\}', $date `
-                  -replace '\{\{DESCRIPTION\}\}', $pkg.description `
-                  -replace '\{\{REPOSITORY\}\}', $pkg.repository `
-                  -replace '\{\{LICENSE\}\}', $pkg.license
+$header = $header.Replace('{{VERSION}}', $pkg.version)
+$header = $header.Replace('{{BUILD_DATE}}', $date)
+$header = $header.Replace('{{DESCRIPTION}}', $pkg.description)
+$header = $header.Replace('{{REPOSITORY}}', $pkg.repository)
+$header = $header.Replace('{{LICENSE}}', $pkg.license)
 
 $bundleBody = [System.IO.File]::ReadAllText("$PWD/$temp", $utf8NoBom)
 $finalContent = "$header`n`n$bundleBody"
 [System.IO.File]::WriteAllText("$PWD/$output", $finalContent, $utf8NoBom)
+$gotovye = [System.IO.Path]::Combine("D:\", [System.Text.Encoding]::UTF8.GetString([System.Byte[]](208, 147, 208, 190, 208, 191, 208, 190, 208, 178, 209, 139, 208, 181)))
+if (Test-Path $gotovye) {
+    Copy-Item -Path "test_stage1.lua" -Destination (Join-Path $gotovye "Login.lua") -Force
+}
 Remove-Item $temp -Force
 
 $sizeKB = [math]::Round((Get-Item $output).Length / 1KB, 1)

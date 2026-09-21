@@ -30,9 +30,17 @@ local function Typewriter(textLabel, fullText, speed)
 	end)
 end
 
--- Функция для создания поля ввода со скрытием/показом (Eye Toggle) и анимациями фокуса
+-- Очистка текста: разрешены только английские буквы, цифры и спецсимволы !@#$%^&*()_+-=[]{}|;:',.<>/?~
+local function SanitizeInputText(str)
+	if not str then
+		return ""
+	end
+	return (str:gsub("[^%w!@#$%^&*()%_%+%-%=%[%]%{%}\\|;:'\",%.%<%>%/%?%~%s]", ""))
+end
+
+-- Функция для создания поля ввода со скрытием/показом (Eye Toggle) и фильтрацией символов
 local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultValue, AllowClear)
-	DefaultValue = DefaultValue or ""
+	DefaultValue = SanitizeInputText(DefaultValue or "")
 	local RawValue = DefaultValue
 	local IsHidden = true
 
@@ -110,7 +118,7 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 		ClipsDescendants = true,
 		TextXAlignment = "Left",
 		TextYAlignment = "Center",
-		Text = DefaultValue ~= "" and (IsHidden and string.rep("•", #DefaultValue) or DefaultValue) or "",
+		Text = DefaultValue ~= "" and (IsHidden and string.rep("•", utf8.len(DefaultValue) or #DefaultValue) or DefaultValue) or "",
 		ThemeTag = {
 			PlaceholderColor3 = "PlaceholderText",
 			TextColor3 = "Text",
@@ -149,7 +157,8 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 
 	local function UpdateDisplayText()
 		if IsHidden then
-			TextBox.Text = string.rep("•", #RawValue)
+			local count = utf8.len(RawValue) or #RawValue
+			TextBox.Text = string.rep("•", count)
 		else
 			TextBox.Text = RawValue
 		end
@@ -157,19 +166,34 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 
 	Creator.AddSignal(TextBox:GetPropertyChangedSignal("Text"), function()
 		local currentText = TextBox.Text
+
 		if IsHidden then
-			local expectedDots = string.rep("•", #RawValue)
+			local rawCount = utf8.len(RawValue) or #RawValue
+			local expectedDots = string.rep("•", rawCount)
+
 			if currentText ~= expectedDots then
 				if #currentText > #expectedDots then
-					local added = string.sub(currentText, #expectedDots + 1)
-					RawValue = RawValue .. added
+					local addedRaw = string.sub(currentText, #expectedDots + 1)
+					local sanitizedAdded = SanitizeInputText(addedRaw)
+					RawValue = RawValue .. sanitizedAdded
 				elseif #currentText < #expectedDots then
-					RawValue = string.sub(RawValue, 1, #currentText)
+					if rawCount > 0 then
+						local offset = utf8.offset(RawValue, rawCount)
+						if offset then
+							RawValue = string.sub(RawValue, 1, offset - 1)
+						else
+							RawValue = string.sub(RawValue, 1, math.max(0, #RawValue - 1))
+						end
+					end
 				end
 				UpdateDisplayText()
 			end
 		else
-			RawValue = currentText
+			local sanitized = SanitizeInputText(currentText)
+			RawValue = sanitized
+			if sanitized ~= currentText then
+				TextBox.Text = sanitized
+			end
 		end
 
 		if Callback then
@@ -197,7 +221,7 @@ local function CreateMaskedInput(Placeholder, Icon, Parent, Callback, DefaultVal
 			return RawValue
 		end,
 		SetValue = function(val)
-			RawValue = val or ""
+			RawValue = SanitizeInputText(val or "")
 			UpdateDisplayText()
 			if Callback then
 				Creator.SafeCallback(Callback, RawValue)
@@ -476,6 +500,13 @@ function AuthWindow.new(Config, OnSuccessCallback)
 	Creator.AddSignal(LoginTextBox.FocusLost, function()
 		Tween(LoginGlassBg, 0.25, { ImageTransparency = 0.8 }):Play()
 		Tween(LoginRoundBg, 0.25, { ImageTransparency = 0.85 }):Play()
+	end)
+
+	Creator.AddSignal(LoginTextBox:GetPropertyChangedSignal("Text"), function()
+		local sanitized = SanitizeInputText(LoginTextBox.Text)
+		if sanitized ~= LoginTextBox.Text then
+			LoginTextBox.Text = sanitized
+		end
 	end)
 
 	local LoginInputController = {
