@@ -50,7 +50,7 @@ $finalContent = "$header`n`n$bundleBody"
 [System.IO.File]::WriteAllText("$PWD/$output", $finalContent, $utf8NoBom)
 $gotovye = [System.IO.Path]::Combine("D:\", [System.Text.Encoding]::UTF8.GetString([System.Byte[]](208, 147, 208, 190, 208, 191, 208, 190, 208, 178, 209, 139, 208, 181)))
 if (Test-Path $gotovye) {
-    Copy-Item -Path "test_stage1.lua" -Destination (Join-Path $gotovye "Login.lua") -Force
+    Copy-Item -Path "examples/login.lua" -Destination (Join-Path $gotovye "Login.lua") -Force
 }
 Remove-Item $temp -Force
 
