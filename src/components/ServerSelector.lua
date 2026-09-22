@@ -58,7 +58,7 @@ function ServerSelector.new(Config, OnSelectCallback)
 		New("TextLabel", {
 			Text = Config.Title or "Choose Server",
 			TextSize = 20,
-			FontFace = Font.new(Creator.Font, Enum.FontWeight.Bold),
+			Font = Enum.Font.GothamBold,
 			ThemeTag = { TextColor3 = "Text" },
 			TextXAlignment = Enum.TextXAlignment.Left,
 			BackgroundTransparency = 1,
@@ -68,7 +68,7 @@ function ServerSelector.new(Config, OnSelectCallback)
 		New("TextLabel", {
 			Text = Config.SubTitle or "Select a target server endpoint to establish connection",
 			TextSize = 12,
-			FontFace = Font.new(Creator.Font, Enum.FontWeight.Medium),
+			Font = Enum.Font.Gotham,
 			ThemeTag = { TextColor3 = "Text" },
 			TextTransparency = 0.4,
 			TextXAlignment = Enum.TextXAlignment.Left,
@@ -115,7 +115,7 @@ function ServerSelector.new(Config, OnSelectCallback)
 	local LogTitle = New("TextLabel", {
 		Text = "Loader log",
 		TextSize = 13,
-		FontFace = Font.new(Creator.Font, Enum.FontWeight.Bold),
+		Font = Enum.Font.GothamBold,
 		TextColor3 = Color3.fromHex("#34C759"),
 		TextXAlignment = Enum.TextXAlignment.Left,
 		BackgroundTransparency = 1,
@@ -127,7 +127,7 @@ function ServerSelector.new(Config, OnSelectCallback)
 	local LogTextLabel = New("TextLabel", {
 		Text = "",
 		TextSize = 12,
-		FontFace = Font.new(Creator.Font, Enum.FontWeight.Regular),
+		Font = Enum.Font.Code,
 		ThemeTag = { TextColor3 = "Text" },
 		TextTransparency = 0.15,
 		TextXAlignment = Enum.TextXAlignment.Left,
