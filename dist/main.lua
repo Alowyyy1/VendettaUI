@@ -2887,7 +2887,7 @@ PaddingBottom=UDim.new(0,aj.UIPadding),
 aj.UIElements.MainContainer=aa.NewRoundFrame(aj.UICorner,"Squircle",{
 Visible=false,
 
-ImageTransparency=ae and 0.15 or 0,
+ImageTransparency=0.15,
 Parent=ai or aj.UIElements.FullScreen,
 Position=UDim2.new(0.5,0,0.5,0),
 AnchorPoint=Vector2.new(0.5,0.5),
@@ -2952,7 +2952,7 @@ aj.UIElements.Main.Visible=true
 
 ac(an,al,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
-local ao=ae and 0.15 or 0
+local ao=0.15
 am.ImageTransparency=1
 ac(am,al,{ImageTransparency=ao},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
 

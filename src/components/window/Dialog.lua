@@ -85,7 +85,7 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 	Dialog.UIElements.MainContainer = Creator.NewRoundFrame(Dialog.UICorner, "Squircle", {
 		Visible = false, -- true
 		--GroupTransparency = 1, -- 0
-		ImageTransparency = Key and 0.15 or 0,
+		ImageTransparency = 0.15,
 		Parent = Parent or Dialog.UIElements.FullScreen,
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -150,7 +150,7 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 
 		Tween(uiScale, duration, { Scale = 1.0 }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
 
-		local targetBgTrans = Key and 0.15 or 0
+		local targetBgTrans = 0.15
 		mainContainer.ImageTransparency = 1
 		Tween(mainContainer, duration, { ImageTransparency = targetBgTrans }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
 
