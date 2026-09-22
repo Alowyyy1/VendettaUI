@@ -52,6 +52,7 @@ $gotovye = [System.IO.Path]::Combine("D:\", [System.Text.Encoding]::UTF8.GetStri
 if (Test-Path $gotovye) {
     Copy-Item -Path "examples/login.lua" -Destination (Join-Path $gotovye "Login.lua") -Force
     Copy-Item -Path "examples/server_def.lua" -Destination (Join-Path $gotovye "server_def.lua") -Force
+    Copy-Item -Path "examples/main_menu.lua" -Destination (Join-Path $gotovye "main_menu.lua") -Force
 }
 Remove-Item $temp -Force
 
