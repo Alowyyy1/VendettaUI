@@ -32,7 +32,8 @@ end
 function MapSelector.new(Config, OnSelectCallback)
 	Config = Config or {}
 
-	local Dialog = DialogInit.Create("MapSelectorDialog", "Dialog", nil, Config.WindUI, nil)
+	local parentGui = Config.Parent or (Config.WindUI and Config.WindUI.ScreenGui and Config.WindUI.ScreenGui.Popups)
+	local Dialog = DialogInit.Create(nil, "Dialog", nil, Config.WindUI, parentGui)
 
 	local Main = Dialog.UIElements.Main
 	Main.Size = UDim2.new(0, 440, 0, 0)

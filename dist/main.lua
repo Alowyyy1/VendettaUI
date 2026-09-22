@@ -4320,19 +4320,20 @@ end
 function aa.new(ai,aj)
 ai=ai or{}
 
-local ak=ah.Create("MapSelectorDialog","Dialog",nil,ai.WindUI,nil)
+local ak=ai.Parent or(ai.WindUI and ai.WindUI.ScreenGui and ai.WindUI.ScreenGui.Popups)
+local al=ah.Create(nil,"Dialog",nil,ai.WindUI,ak)
 
-local al=ak.UIElements.Main
-al.Size=UDim2.new(0,440,0,0)
-al.AutomaticSize=Enum.AutomaticSize.Y
+local am=al.UIElements.Main
+am.Size=UDim2.new(0,440,0,0)
+am.AutomaticSize=Enum.AutomaticSize.Y
 
-local am=ad and ad.UserId or 1
-local an=ai.UserTitle or"Test Ник"
-local ao=ai.UserSubTitle or(ad and("@"..ad.Name)or"@username")
-local ap=ai.UserAvatar or("rbxthumb://type=AvatarHeadShot&id="..am.."&w=150&h=150")
+local an=ad and ad.UserId or 1
+local ao=ai.UserTitle or"Test Ник"
+local ap=ai.UserSubTitle or(ad and("@"..ad.Name)or"@username")
+local aq=ai.UserAvatar or("rbxthumb://type=AvatarHeadShot&id="..an.."&w=150&h=150")
 
 
-local aq=ae.NewRoundFrame(999,"Squircle",{
+local ar=ae.NewRoundFrame(999,"Squircle",{
 Size=UDim2.new(0,46,0,46),
 ImageTransparency=0,
 ThemeTag={
@@ -4343,11 +4344,11 @@ ClipsDescendants=true,
 af("ImageLabel",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
-Image=ap,
+Image=aq,
 }),
 })
 
-local ar=af("TextLabel",{
+local as=af("TextLabel",{
 Text="",
 TextSize=16,
 FontFace=Font.new(ae.Font,Enum.FontWeight.SemiBold),
@@ -4359,7 +4360,7 @@ BackgroundTransparency=1,
 AutomaticSize=Enum.AutomaticSize.XY,
 })
 
-local as=af("TextLabel",{
+local at=af("TextLabel",{
 Text="",
 TextSize=12,
 FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
@@ -4372,12 +4373,12 @@ BackgroundTransparency=1,
 AutomaticSize=Enum.AutomaticSize.XY,
 })
 
-Typewriter(ar,an,0.02)
-task.delay(0.12,function()
 Typewriter(as,ao,0.02)
+task.delay(0.12,function()
+Typewriter(at,ap,0.02)
 end)
 
-local at=af("Frame",{
+local au=af("Frame",{
 AutomaticSize=Enum.AutomaticSize.XY,
 BackgroundTransparency=1,
 },{
@@ -4386,11 +4387,11 @@ FillDirection=Enum.FillDirection.Vertical,
 Padding=UDim.new(0,2),
 VerticalAlignment=Enum.VerticalAlignment.Center,
 }),
-ar,
 as,
+at,
 })
 
-local au=af("Frame",{
+local av=af("Frame",{
 Size=UDim2.new(1,0,0,48),
 BackgroundTransparency=1,
 LayoutOrder=1,
@@ -4400,12 +4401,12 @@ FillDirection=Enum.FillDirection.Horizontal,
 Padding=UDim.new(0,12),
 VerticalAlignment=Enum.VerticalAlignment.Center,
 }),
-aq,
-at,
+ar,
+au,
 })
 
 
-local av=af("Frame",{
+local aw=af("Frame",{
 Size=UDim2.new(1,0,0,36),
 BackgroundTransparency=1,
 LayoutOrder=2,
@@ -4443,7 +4444,7 @@ LayoutOrder=2,
 })
 
 
-local aw=af("Frame",{
+local ax=af("Frame",{
 Size=UDim2.new(1,0,0,185),
 BackgroundTransparency=1,
 LayoutOrder=3,
@@ -4461,11 +4462,11 @@ PaddingBottom=UDim.new(0,6),
 }),
 })
 
-au.Parent=al
-av.Parent=al
-aw.Parent=al
+av.Parent=am
+aw.Parent=am
+ax.Parent=am
 
-local ax=ai.Cards or{
+local ay=ai.Cards or{
 {
 Title="Old",
 SubTitle="Классическая карта",
@@ -4480,43 +4481,43 @@ Icon="history",
 },
 }
 
-local ay=false
+local az=false
 
-for az,aA in ipairs(ax)do
-local aB=ae.NewRoundFrame(14,"Squircle",{
+for aA,aB in ipairs(ay)do
+local b=ae.NewRoundFrame(14,"Squircle",{
 Size=UDim2.new(0,190,0,172),
 ImageTransparency=0.85,
 ThemeTag={
 ImageColor3="ElementBackground",
 },
-Parent=aw,
-LayoutOrder=az,
+Parent=ax,
+LayoutOrder=aA,
 })
 
-local b=af("UIScale",{
+local d=af("UIScale",{
 Scale=1,
-Parent=aB,
+Parent=b,
 })
 
 ae.NewRoundFrame(13,"SquircleGlass",{
 Size=UDim2.new(1,0,1,0),
 ImageTransparency=0.95,
-Parent=aB,
+Parent=b,
 })
 
-local d=ae.NewRoundFrame(14,"SquircleOutline",{
+local f=ae.NewRoundFrame(14,"SquircleOutline",{
 Size=UDim2.new(1,0,1,0),
 ImageTransparency=0.8,
 ThemeTag={
 ImageColor3="Outline",
 },
-Parent=aB,
+Parent=b,
 })
 
-local f=af("Frame",{
+local g=af("Frame",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
-Parent=aB,
+Parent=b,
 },{
 af("UIPadding",{
 PaddingTop=UDim.new(0,8),
@@ -4533,13 +4534,13 @@ Padding=UDim.new(0,6),
 })
 
 
-local g=ae.NewRoundFrame(10,"Squircle",{
+local h=ae.NewRoundFrame(10,"Squircle",{
 Size=UDim2.new(1,0,0,100),
 ImageTransparency=0.6,
 ThemeTag={
 ImageColor3="InputBackground",
 },
-Parent=f,
+Parent=g,
 LayoutOrder=1,
 ClipsDescendants=true,
 })
@@ -4547,31 +4548,31 @@ ClipsDescendants=true,
 af("ImageLabel",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
-Image=aA.Image or"",
+Image=aB.Image or"",
 ScaleType=Enum.ScaleType.Crop,
-Parent=g,
+Parent=h,
 })
 
-local h=ae.Image(
-aA.Icon or"map-pin",
-aA.Title..":Icon",
+local i=ae.Image(
+aB.Icon or"map-pin",
+aB.Title..":Icon",
 0,
 "MapSelector",
 "Cards",
 true
 )
-h.Size=UDim2.new(0,30,0,30)
-h.AnchorPoint=Vector2.new(0.5,0.5)
-h.Position=UDim2.new(0.5,0,0.5,0)
-h.ImageLabel.ImageTransparency=0.4
-h.Parent=g
+i.Size=UDim2.new(0,30,0,30)
+i.AnchorPoint=Vector2.new(0.5,0.5)
+i.Position=UDim2.new(0.5,0,0.5,0)
+i.ImageLabel.ImageTransparency=0.4
+i.Parent=h
 
-if aA.Image and aA.Image~=""then
-h.Visible=false
+if aB.Image and aB.Image~=""then
+i.Visible=false
 end
 
 af("TextLabel",{
-Text=aA.Title,
+Text=aB.Title,
 TextSize=15,
 FontFace=Font.new(ae.Font,Enum.FontWeight.Bold),
 ThemeTag={
@@ -4580,12 +4581,12 @@ TextColor3="Text",
 TextXAlignment=Enum.TextXAlignment.Center,
 BackgroundTransparency=1,
 Size=UDim2.new(1,0,0,18),
-Parent=f,
+Parent=g,
 LayoutOrder=2,
 })
 
 af("TextLabel",{
-Text=aA.SubTitle or"Нажмите для выбора",
+Text=aB.SubTitle or"Нажмите для выбора",
 TextSize=11,
 FontFace=Font.new(ae.Font,Enum.FontWeight.Medium),
 ThemeTag={
@@ -4595,95 +4596,95 @@ TextTransparency=0.4,
 TextXAlignment=Enum.TextXAlignment.Center,
 BackgroundTransparency=1,
 Size=UDim2.new(1,0,0,14),
-Parent=f,
+Parent=g,
 LayoutOrder=3,
 })
 
-local i=af("TextButton",{
+local l=af("TextButton",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
 Text="",
-Parent=aB,
+Parent=b,
 ZIndex=10,
 })
 
 
-ae.AddSignal(i.MouseEnter,function()
-if ay then return end
-ag(b,0.2,{Scale=1.03},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ag(aB,0.2,{ImageTransparency=0.7}):Play()
-ag(d,0.2,{ImageTransparency=0.4}):Play()
+ae.AddSignal(l.MouseEnter,function()
+if az then return end
+ag(d,0.2,{Scale=1.03},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ag(b,0.2,{ImageTransparency=0.7}):Play()
+ag(f,0.2,{ImageTransparency=0.4}):Play()
 end)
 
-ae.AddSignal(i.MouseLeave,function()
-if ay then return end
-ag(b,0.2,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ag(aB,0.2,{ImageTransparency=0.85}):Play()
-ag(d,0.2,{ImageTransparency=0.8}):Play()
+ae.AddSignal(l.MouseLeave,function()
+if az then return end
+ag(d,0.2,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ag(b,0.2,{ImageTransparency=0.85}):Play()
+ag(f,0.2,{ImageTransparency=0.8}):Play()
 end)
 
-ae.AddSignal(i.MouseButton1Click,function()
-if ay then return end
-ay=true
+ae.AddSignal(l.MouseButton1Click,function()
+if az then return end
+az=true
 
-ag(b,0.1,{Scale=0.96},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ag(d,0.1,{Scale=0.96},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 task.wait(0.08)
-ag(b,0.15,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ag(d,0.15,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
 
-ak:GenieClose(0.35)
+al:GenieClose(0.35)
 task.spawn(function()
 task.wait(0.35)
-if aA.Callback then
-aA.Callback(aA.Title)
+if aB.Callback then
+aB.Callback(aB.Title)
 end
 if aj then
-aj(aA.Title,aA)
+aj(aB.Title,aB)
 end
 end)
 end)
 end
 
 
-ak:Open()
+al:Open()
 
-local az=ak.UIElements.MainContainer
-local aA=az.Parent
+local aA=al.UIElements.MainContainer
+local aB=aA.Parent
 
-if aA then
-local aB=Instance.new"CanvasGroup"
-aB.Name="OpenCanvas"
-aB.BackgroundTransparency=1
-aB.Size=az.Size
-aB.Position=az.Position
-aB.AnchorPoint=az.AnchorPoint
-aB.ZIndex=az.ZIndex or 9999
-aB.GroupTransparency=1
-aB.Parent=aA
-
-local b=Instance.new"UIScale"
-b.Scale=0.92
+if aB then
+local b=Instance.new"CanvasGroup"
+b.Name="OpenCanvas"
+b.BackgroundTransparency=1
+b.Size=aA.Size
+b.Position=aA.Position
+b.AnchorPoint=aA.AnchorPoint
+b.ZIndex=aA.ZIndex or 9999
+b.GroupTransparency=1
 b.Parent=aB
 
-az.Position=UDim2.new(0.5,0,0.5,0)
-az.AnchorPoint=Vector2.new(0.5,0.5)
-az.Parent=aB
+local d=Instance.new"UIScale"
+d.Scale=0.92
+d.Parent=b
 
-ag(aB,0.35,{GroupTransparency=0},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
-ag(b,0.35,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+aA.Position=UDim2.new(0.5,0,0.5,0)
+aA.AnchorPoint=Vector2.new(0.5,0.5)
+aA.Parent=b
+
+ag(b,0.35,{GroupTransparency=0},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+ag(d,0.35,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
 task.spawn(function()
 task.wait(0.36)
-if az and az.Parent==aB then
-az.Position=aB.Position
-az.AnchorPoint=aB.AnchorPoint
-az.Parent=aA
-aB:Destroy()
+if aA and aA.Parent==b then
+aA.Position=b.Position
+aA.AnchorPoint=b.AnchorPoint
+aA.Parent=aB
+b:Destroy()
 end
 end)
 end
 
-return ak
+return al
 end
 
 return aa end function a.r():typeof(__modImpl())local aa=a.cache.r if not aa then aa={c=__modImpl()}a.cache.r=aa end return aa.c end end do local function __modImpl()
