@@ -1,8 +1,12 @@
 --[[
     ========================================================================
-    🎮 VENDETTA UI: СТАДИЯ 1 (АВТОРИЗАЦИЯ) ➔ СТАДИЯ 2 (ВЫБОР КАРТЫ) ➔ СТАДИЯ 3 (ХАБ)
+    🔑 VENDETTA UI: СТАДИЯ 1 (АВТОРИЗАЦИЯ) ➔ СТАДИЯ 2 (ВЫБОР КАРТЫ)
     ========================================================================
-    GitHub Raw Link:
+    Данные для входа в тест-режимах:
+    • По ключу: 12345 (или WINDUI-VIP)
+    • Логин и пароль: admin / admin123
+    ========================================================================
+    Ссылка для загрузки:
     https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/examples/login.lua
 --]]
 
@@ -13,111 +17,8 @@ end)
 local Players = cloneref(game:GetService("Players"))
 local LocalPlayer = Players.LocalPlayer
 
--- Загрузка библиотеки строго с GitHub VendettaUI (Ветка Test)
+-- 1. Загрузка собранной библиотеки с GitHub
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/dist/main.lua"))()
-
-local SelectedMap = nil
-local CurrentWindow = nil
-local Connections = {}
-
--- Функция выгрузки (Unload)
-local function UnloadHub()
-	for _, conn in ipairs(Connections) do
-		if conn and conn.Disconnect then
-			pcall(function() conn:Disconnect() end)
-		end
-	end
-	table.clear(Connections)
-
-	if CurrentWindow and CurrentWindow.Destroy then
-		pcall(function() CurrentWindow:Destroy() end)
-	end
-
-	if WindUI.ScreenGui then
-		pcall(function() WindUI.ScreenGui:Destroy() end)
-	end
-
-	print("[VendettaUI] Скрипт выгружен.")
-end
-
--- -------------------------------------------------------------
--- СТАДИЯ 3: ГЛАВНОЕ МЕНЮ (MAIN MENU)
--- -------------------------------------------------------------
-local function StartStage3()
-	local Window = WindUI:CreateWindow({
-		Title = "VendettaUI Hub",
-		SubTitle = "Карта: " .. (SelectedMap or "Old"),
-		Icon = "shield-check",
-		Size = UDim2.fromOffset(660, 440),
-		Theme = "Dark",
-		Transparent = true,
-		Acrylic = true,
-		Topbar = {
-			Height = 44,
-			ButtonsType = "Mac",
-		},
-		User = {
-			Enabled = true,
-			Title = LocalPlayer and LocalPlayer.DisplayName or "User",
-			SubTitle = "@" .. (LocalPlayer and LocalPlayer.Name or "username"),
-			Icon = "rbxthumb://type=AvatarHeadShot&id=" .. (LocalPlayer and LocalPlayer.UserId or 1) .. "&w=150&h=150",
-		},
-	})
-
-	CurrentWindow = Window
-
-	-- Вкладка "Главная"
-	local MainTab = Window:CreateTab({
-		Title = "Главная",
-		Icon = "home",
-	})
-
-	local MainSection = MainTab:CreateSection("Информация и Функционал")
-
-	MainSection:CreateParagraph({
-		Title = "Текущая карта",
-		Desc = "Выбранная локация: " .. tostring(SelectedMap),
-	})
-
-	MainSection:CreateToggle({
-		Title = "Авто-фарм / Включить функцию",
-		Desc = "Запуск основного скрипта для карты " .. tostring(SelectedMap),
-		Default = false,
-		Callback = function(state)
-			print("Auto-farm status:", state)
-		end,
-	})
-
-	-- Вкладка "Настройки"
-	local SettingsTab = Window:CreateTab({
-		Title = "Настройки",
-		Icon = "settings",
-	})
-
-	local SettingsSection = SettingsTab:CreateSection("Язык и Управление")
-
-	SettingsSection:CreateDropdown({
-		Title = "Язык интерфейса / Language",
-		Values = { "🇷🇺 Русский", "🇺🇸 English" },
-		Default = "🇷🇺 Русский",
-		Callback = function(selected)
-			if selected == "🇷🇺 Русский" then
-				WindUI:SetLanguage("ru")
-			elseif selected == "🇺🇸 English" then
-				WindUI:SetLanguage("en")
-			end
-		end,
-	})
-
-	SettingsSection:CreateButton({
-		Title = "Полная выгрузка (Unload)",
-		Desc = "Безопасная очистка памяти и удаление GUI",
-		Icon = "log-out",
-		Callback = function()
-			UnloadHub()
-		end,
-	})
-end
 
 -- -------------------------------------------------------------
 -- СТАДИЯ 2: ВЫБОР КАРТЫ (MAP SELECTOR)
@@ -141,9 +42,16 @@ local function StartStage2()
 			},
 		},
 	}, function(selectedMapName)
-		print("[Stage 2] Успешно выбрана карта:", selectedMapName)
-		SelectedMap = selectedMapName
-		StartStage3()
+		print("--------------------------------------------------")
+		print("✅ [Стадия 2] ВЫБРАНА КАРТА:", selectedMapName)
+		print("--------------------------------------------------")
+
+		WindUI:Notify({
+			Title = "Карта выбрана!",
+			Content = "Вы успешно выбрали локацию: " .. tostring(selectedMapName),
+			Icon = "check-circle",
+			Duration = 5,
+		})
 	end)
 end
 
@@ -154,8 +62,8 @@ local function StartStage1()
 	WindUI:CreateAuthWindow({
 		Title = "Авторизация",
 		Folder = "AuthData",
-		SaveKey = true,
-		SaveAccount = true,
+		SaveKey = false,     -- Для теста отключаем автосохранение, чтобы окно входа открывалось всегда
+		SaveAccount = false,
 		KeySystem = {
 			URL = "https://example.com/getkey",
 			KeyValidator = function(enteredKey)
@@ -172,10 +80,14 @@ local function StartStage1()
 			end,
 		},
 	}, function(authResult)
-		print("[Stage 1] Вход выполнен через:", authResult.Mode)
+		print("--------------------------------------------------")
+		print("✅ [Стадия 1] УСПЕШНЫЙ ВХОД! Режим:", authResult.Mode)
+		print("--------------------------------------------------")
+		
+		-- Переход к Стадии 2 (Выбор карты)
 		StartStage2()
 	end)
 end
 
--- Запуск с 1 стадии
+-- Запуск скрипта
 StartStage1()

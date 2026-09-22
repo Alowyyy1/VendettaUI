@@ -4220,6 +4220,7 @@ end
 if J then
 
 at:GenieClose(0.35)
+task.spawn(function()
 task.wait(0.35)
 if ak then
 ak{
@@ -4228,6 +4229,7 @@ Key=f=="Key"and u.GetValue()or nil,
 Login=f=="Account"and C.GetValue()or nil,
 }
 end
+end)
 else
 ShakeWindow()
 al:Notify{
@@ -4630,14 +4632,15 @@ ag(b,0.15,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
 
 ak:GenieClose(0.35)
+task.spawn(function()
 task.wait(0.35)
-
 if aA.Callback then
 aA.Callback(aA.Title)
 end
 if aj then
 aj(aA.Title,aA)
 end
+end)
 end)
 end
 

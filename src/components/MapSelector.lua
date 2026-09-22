@@ -344,14 +344,15 @@ function MapSelector.new(Config, OnSelectCallback)
 
 			-- Запуск плавной анимации закрытия (0.35с)
 			Dialog:GenieClose(0.35)
-			task.wait(0.35)
-
-			if cardData.Callback then
-				cardData.Callback(cardData.Title)
-			end
-			if OnSelectCallback then
-				OnSelectCallback(cardData.Title, cardData)
-			end
+			task.spawn(function()
+				task.wait(0.35)
+				if cardData.Callback then
+					cardData.Callback(cardData.Title)
+				end
+				if OnSelectCallback then
+					OnSelectCallback(cardData.Title, cardData)
+				end
+			end)
 		end)
 	end
 

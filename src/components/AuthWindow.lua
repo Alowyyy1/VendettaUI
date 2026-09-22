@@ -663,14 +663,16 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		if isSuccess then
 			-- Плавное затухание окна (0.35с)
 			Dialog:GenieClose(0.35)
-			task.wait(0.35)
-			if OnSuccessCallback then
-				OnSuccessCallback({
-					Mode = ActiveMode,
-					Key = ActiveMode == "Key" and KeyInput.GetValue() or nil,
-					Login = ActiveMode == "Account" and LoginInputController.GetValue() or nil,
-				})
-			end
+			task.spawn(function()
+				task.wait(0.35)
+				if OnSuccessCallback then
+					OnSuccessCallback({
+						Mode = ActiveMode,
+						Key = ActiveMode == "Key" and KeyInput.GetValue() or nil,
+						Login = ActiveMode == "Account" and LoginInputController.GetValue() or nil,
+					})
+				end
+			end)
 		else
 			ShakeWindow()
 			WindUI:Notify({
