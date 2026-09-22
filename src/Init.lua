@@ -83,6 +83,7 @@ end
 
 local KeySystem = require("./components/KeySystem")
 local AuthWindow = require("./components/AuthWindow")
+local MapSelector = require("./components/MapSelector")
 
 local Creator = WindUI.Creator
 
@@ -299,6 +300,12 @@ end
 function WindUI:CreateAuthWindow(Config, OnSuccess)
 	Config.WindUI = WindUI
 	return AuthWindow.new(Config, OnSuccess)
+end
+
+function WindUI:CreateMapSelector(Config, OnSelect)
+	Config = Config or {}
+	Config.WindUI = WindUI
+	return MapSelector.new(Config, OnSelect)
 end
 
 WindUI.Themes = require("./themes/Init")(WindUI, Creator)

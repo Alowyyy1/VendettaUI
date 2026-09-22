@@ -117,53 +117,31 @@ local function StartStage3()
 end
 
 -- -------------------------------------------------------------
--- СТАДИЯ 2: СЕЛЕКТОР РЕЖИМОВ (MODE SELECTOR)
+-- СТАДИЯ 2: ВЫБОР КАРТЫ (MAP SELECTOR)
 -- -------------------------------------------------------------
 local function StartStage2()
-    local SelectorWindow = WindUI:CreateWindow({
-        Title = "Выбор режима",
-        SubTitle = "Выберите нужный игровой модуль",
-        Icon = "layers",
-        Size = UDim2.fromOffset(540, 360),
-        Theme = "Dark",
-        Transparent = true,
-        Acrylic = true,
-    })
-
-    CurrentWindow = SelectorWindow
-
-    local Tab = SelectorWindow:CreateTab({
-        Title = "Режимы",
-        Icon = "grid",
-    })
-
-    local Section = Tab:CreateSection("Доступные варианты")
-
-    -- Кнопка-карточка 1: Легкий / Основной режим
-    Section:CreateButton({
-        Title = "🔥 Основной режим (Main Mode)",
-        Desc = "Полный функционал для фарма и автоматизации",
-        Icon = "zap",
-        Callback = function()
-            SelectedMode = "Main Mode"
-            SelectorWindow:Destroy()
-            task.wait(0.2)
-            StartStage3()
-        end,
-    })
-
-    -- Кнопка-карточка 2: Безопасный / Легитный режим
-    Section:CreateButton({
-        Title = "🛡️ Легит режим (Legit Mode)",
-        Desc = "Минимальный риск, незаметный функционал для визуалов",
-        Icon = "shield-alert",
-        Callback = function()
-            SelectedMode = "Legit Mode"
-            SelectorWindow:Destroy()
-            task.wait(0.2)
-            StartStage3()
-        end,
-    })
+    WindUI:CreateMapSelector({
+        Title = "Выбор карты",
+        SubTitle = "Выберите нужную локацию для продолжения",
+        UserTitle = "Test Ник",
+        UserSubTitle = "@" .. (game.Players.LocalPlayer and game.Players.LocalPlayer.Name or "username"),
+        Cards = {
+            {
+                Title = "Old",
+                SubTitle = "Классическая карта",
+                Icon = "map",
+            },
+            {
+                Title = "Oldest",
+                SubTitle = "Старейшая карта",
+                Icon = "history",
+            },
+        },
+    }, function(selectedMap)
+        print("[Stage 2] Выбрана карта:", selectedMap)
+        SelectedMode = "Карта: " .. selectedMap
+        StartStage3()
+    end)
 end
 
 -- -------------------------------------------------------------
