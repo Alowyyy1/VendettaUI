@@ -4544,7 +4544,7 @@ LayoutOrder=1,
 ClipsDescendants=true,
 })
 
-local h=af("ImageLabel",{
+af("ImageLabel",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
 Image=aA.Image or"",
@@ -4552,7 +4552,7 @@ ScaleType=Enum.ScaleType.Crop,
 Parent=g,
 })
 
-local i=ae.Image(
+local h=ae.Image(
 aA.Icon or"map-pin",
 aA.Title..":Icon",
 0,
@@ -4560,15 +4560,15 @@ aA.Title..":Icon",
 "Cards",
 true
 )
-i.Size=UDim2.new(0,30,0,30)
-i.AnchorPoint=Vector2.new(0.5,0.5)
-i.Position=UDim2.new(0.5,0,0.5,0)
-i.ImageLabel.ImageTransparency=0.4
-i.Parent=g
+h.Size=UDim2.new(0,30,0,30)
+h.AnchorPoint=Vector2.new(0.5,0.5)
+h.Position=UDim2.new(0.5,0,0.5,0)
+h.ImageLabel.ImageTransparency=0.4
+h.Parent=g
 
-h.Loaded:Connect(function()
-i.Visible=false
-end)
+if aA.Image and aA.Image~=""then
+h.Visible=false
+end
 
 af("TextLabel",{
 Text=aA.Title,
@@ -4599,7 +4599,7 @@ Parent=f,
 LayoutOrder=3,
 })
 
-local l=af("TextButton",{
+local i=af("TextButton",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
 Text="",
@@ -4608,21 +4608,21 @@ ZIndex=10,
 })
 
 
-ae.AddSignal(l.MouseEnter,function()
+ae.AddSignal(i.MouseEnter,function()
 if ay then return end
 ag(b,0.2,{Scale=1.03},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 ag(aB,0.2,{ImageTransparency=0.7}):Play()
 ag(d,0.2,{ImageTransparency=0.4}):Play()
 end)
 
-ae.AddSignal(l.MouseLeave,function()
+ae.AddSignal(i.MouseLeave,function()
 if ay then return end
 ag(b,0.2,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 ag(aB,0.2,{ImageTransparency=0.85}):Play()
 ag(d,0.2,{ImageTransparency=0.8}):Play()
 end)
 
-ae.AddSignal(l.MouseButton1Click,function()
+ae.AddSignal(i.MouseButton1Click,function()
 if ay then return end
 ay=true
 

@@ -278,9 +278,9 @@ function MapSelector.new(Config, OnSelectCallback)
 		FallbackIcon.ImageLabel.ImageTransparency = 0.4
 		FallbackIcon.Parent = ImageContainer
 
-		MapImage.Loaded:Connect(function()
+		if cardData.Image and cardData.Image ~= "" then
 			FallbackIcon.Visible = false
-		end)
+		end
 
 		local TitleLabel = New("TextLabel", {
 			Text = cardData.Title,
