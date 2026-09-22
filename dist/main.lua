@@ -2845,7 +2845,7 @@ Parent=ad.Parent
 or(ag and ag.UIElements and ag.UIElements.Main and ag.UIElements.Main.Main),
 },{
 ab("UICorner",{
-CornerRadius=UDim.new(0,ag.UICorner),
+CornerRadius=UDim.new(0,(ag and ag.UICorner)or 16),
 }),
 })
 end
