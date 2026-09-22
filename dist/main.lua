@@ -2929,85 +2929,48 @@ aj.UIElements.Main,
 
 function aj.Open(ak,al)
 al=al or 0.35
-if not ae and aj.UIElements.FullScreen then
-aj.UIElements.FullScreen.Visible=true
-aj.UIElements.FullScreen.Active=true
-ac(aj.UIElements.FullScreen,al,{BackgroundTransparency=0.65},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
-end
-
 local am=aj.UIElements.MainContainer
 if not am then return end
 
+if not ae and aj.UIElements.FullScreen then
+aj.UIElements.FullScreen.Visible=true
+aj.UIElements.FullScreen.Active=true
+aj.UIElements.FullScreen.BackgroundTransparency=1
+ac(aj.UIElements.FullScreen,al,{BackgroundTransparency=0.65},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+end
+
+local an=am:FindFirstChildOfClass"UIScale"
+if not an then
+an=Instance.new"UIScale"
+an.Name="DialogScale"
+an.Parent=am
+end
+
+an.Scale=0.88
 am.Visible=true
 aj.UIElements.Main.Visible=true
 
-local an=false
-local ao
-pcall(function()
-local ap=am.Parent
-ao=Instance.new"CanvasGroup"
-ao.Name="OpenCanvas"
-ao.BackgroundTransparency=1
-ao.Size=am.Size
-ao.Position=am.Position
-ao.AnchorPoint=am.AnchorPoint
-ao.ZIndex=am.ZIndex or 9999
-ao.GroupTransparency=1
-ao.Parent=ap
+ac(an,al,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
-local aq=Instance.new"UIScale"
-aq.Scale=0.92
-aq.Parent=ao
+local ao=ae and 0.15 or 0
+am.ImageTransparency=1
+ac(am,al,{ImageTransparency=ao},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
 
-am.Position=UDim2.new(0.5,0,0.5,0)
-am.AnchorPoint=Vector2.new(0.5,0.5)
-am.Parent=ao
-
-ac(ao,al,{GroupTransparency=0},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
-ac(aq,al,{Scale=1.0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-an=true
-end)
-
-if not an then
-ac(am,al,{ImageTransparency=0},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
-else
-task.spawn(function()
-task.wait(al+0.02)
-if am and am.Parent==ao then
-local ap=ao.Parent
-am.Position=ao.Position
-am.AnchorPoint=ao.AnchorPoint
-am.Parent=ap
-pcall(function()ao:Destroy()end)
-end
-end)
+for ap,aq in ipairs(am:GetDescendants())do
+if aq:IsA"TextLabel"or aq:IsA"TextBox"or aq:IsA"TextButton"then
+local ar=aq.TextTransparency
+aq.TextTransparency=1
+ac(aq,al,{TextTransparency=ar},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+elseif aq:IsA"ImageLabel"and aq~=am then
+local ar=aq.ImageTransparency
+aq.ImageTransparency=1
+ac(aq,al,{ImageTransparency=ar},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
 end
 end
+end
+
 function aj.Close(ak)
-if not ae then
-ac(aj.UIElements.FullScreen,0.1,{BackgroundTransparency=1}):Play()
-aj.UIElements.FullScreen.Active=false
-task.spawn(function()
-task.wait(0.1)
-aj.UIElements.FullScreen.Visible=false
-end)
-end
-aj.UIElements.Main.Visible=false
-
-ac(aj.UIElements.MainContainer,0.1,{ImageTransparency=1}):Play()
-
-
-
-task.spawn(function()
-task.wait(0.1)
-if not ae then
-aj.UIElements.FullScreen:Destroy()
-else
-aj.UIElements.MainContainer:Destroy()
-end
-end)
-
-return function()end
+return aj:GenieClose(0.35)
 end
 
 function aj.CollapseClose(ak)
@@ -3028,36 +2991,22 @@ an.Active=false
 ac(an,al,{BackgroundTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
 end
 
-local ao=false
-local ap
-pcall(function()
-local aq=am.Parent
-ap=Instance.new"CanvasGroup"
-ap.Name="FadeCanvas"
-ap.BackgroundTransparency=1
-ap.Size=am.Size
-ap.Position=am.Position
-ap.AnchorPoint=am.AnchorPoint
-ap.ZIndex=am.ZIndex or 9999
-ap.GroupTransparency=0
-ap.Parent=aq
-
-local ar=Instance.new"UIScale"
-ar.Scale=1
-ar.Parent=ap
-
-am.Position=UDim2.new(0.5,0,0.5,0)
-am.AnchorPoint=Vector2.new(0.5,0.5)
-am.Parent=ap
-
-ac(ap,al,{GroupTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
-ac(ar,al,{Scale=0.92},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ao=true
-end)
-
+local ao=am:FindFirstChildOfClass"UIScale"
 if not ao then
+ao=Instance.new"UIScale"
+ao.Name="DialogScale"
+ao.Parent=am
+end
 
+ac(ao,al,{Scale=0.88},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 ac(am,al,{ImageTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+
+for ap,aq in ipairs(am:GetDescendants())do
+if aq:IsA"TextLabel"or aq:IsA"TextBox"or aq:IsA"TextButton"then
+ac(aq,al,{TextTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+elseif aq:IsA"ImageLabel"and aq~=am then
+ac(aq,al,{ImageTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+end
 end
 
 task.spawn(function()
@@ -3065,11 +3014,7 @@ task.wait(al+0.05)
 if not ae and an then
 pcall(function()an:Destroy()end)
 else
-if ap then
-pcall(function()ap:Destroy()end)
-else
 pcall(function()am:Destroy()end)
-end
 end
 end)
 
