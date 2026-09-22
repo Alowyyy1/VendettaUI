@@ -4743,11 +4743,31 @@ LayoutOrder=2,
 })
 
 
-local aq=ae.NewRoundFrame(12,"Squircle",{
+local aq=aj.Servers or{
+{Name="Server 1",Host="alowyy1.com"},
+{Name="Server 2",Host="130.61.221.37"},
+}
+
+local ar=(#aq*42)+((#aq-1)*8)
+local as=af("Frame",{
+Size=UDim2.new(1,0,0,ar),
+BackgroundTransparency=1,
+LayoutOrder=2,
+Parent=ap,
+},{
+af("UIListLayout",{
+FillDirection=Enum.FillDirection.Vertical,
+Padding=UDim.new(0,8),
+SortOrder=Enum.SortOrder.LayoutOrder,
+}),
+})
+
+
+local at=ae.NewRoundFrame(12,"Squircle",{
 Size=UDim2.new(1,0,0,125),
 ImageTransparency=0.8,
 ThemeTag={ImageColor3="InputBackground"},
-LayoutOrder=2,
+LayoutOrder=3,
 Parent=ap,
 })
 
@@ -4755,13 +4775,13 @@ ae.NewRoundFrame(12,"SquircleOutline",{
 Size=UDim2.new(1,0,1,0),
 ImageTransparency=0.75,
 ThemeTag={ImageColor3="Outline"},
-Parent=aq,
+Parent=at,
 })
 
-local ar=af("Frame",{
+local au=af("Frame",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
-Parent=aq,
+Parent=at,
 },{
 af("UIPadding",{
 PaddingTop=UDim.new(0,10),
@@ -4777,7 +4797,7 @@ Padding=UDim.new(0,6),
 })
 
 af("TextLabel",{
-Text="Loader log",
+Text="Console log",
 TextSize=13,
 Font=Enum.Font.GothamBold,
 TextColor3=Color3.fromHex"#34C759",
@@ -4785,10 +4805,10 @@ TextXAlignment=Enum.TextXAlignment.Left,
 BackgroundTransparency=1,
 Size=UDim2.new(1,0,0,16),
 LayoutOrder=1,
-Parent=ar,
+Parent=au,
 })
 
-local as=af("TextLabel",{
+local av=af("TextLabel",{
 Text="",
 TextSize=12,
 Font=Enum.Font.Code,
@@ -4800,66 +4820,38 @@ BackgroundTransparency=1,
 Size=UDim2.new(1,0,1,-22),
 TextWrapped=true,
 LayoutOrder=2,
-Parent=ar,
+Parent=au,
 })
 
-local at={}
+local aw={}
 
-local function AppendLog(au,av)
-local aw=av and"❌ "or"🔹 "
-local ax=aw..au
-table.insert(at,ax)
-if#at>5 then
-table.remove(at,1)
+local function AppendLog(ax)
+local ay="> "..ax
+table.insert(aw,ay)
+if#aw>5 then
+table.remove(aw,1)
 end
-as.Text=table.concat(at,"\n")
-
-local ay=os.date"%H:%M:%S"
-local az=string.format("[%s] 🕹️ [ServerDef Log]: %s",ay,au)
-print(az)
-if rconsoleprint then
-pcall(function()rconsoleprint(az.."\n")end)
+av.Text=table.concat(aw,"\n")
 end
-end
-
-
-local au=aj.Servers or{
-{Name="Server 1",Host="alowyy1.com"},
-{Name="Server 2",Host="130.61.221.37"},
-}
-
-local av=(#au*42)+((#au-1)*8)
-local aw=af("Frame",{
-Size=UDim2.new(1,0,0,av),
-BackgroundTransparency=1,
-LayoutOrder=3,
-Parent=ap,
-},{
-af("UIListLayout",{
-FillDirection=Enum.FillDirection.Vertical,
-Padding=UDim.new(0,8),
-SortOrder=Enum.SortOrder.LayoutOrder,
-}),
-})
 
 local ax=false
 
-for ay,az in ipairs(au)do
+for ay,az in ipairs(aq)do
 local aA=af("Frame",{
 Size=UDim2.new(1,0,0,42),
 BackgroundTransparency=1,
 LayoutOrder=ay,
-Parent=aw,
+Parent=as,
 })
 
 local aB=(ay==1)and"Primary"or"Secondary"
 local b=string.format("%s - %s",az.Name,az.Host)
 
-local d=ai(b,"server",function()
+local d=ai(b,nil,function()
 if ax then return end
 ax=true
 
-AppendLog(string.format("Action: Clicked %s (%s)",az.Name,az.Host))
+AppendLog(string.format("Selected %s (%s)",az.Name,az.Host))
 task.wait(0.15)
 
 am:GenieClose(0.35)
@@ -4891,50 +4883,38 @@ task.defer(UpdateCardHeight)
 am:Open(0.35)
 
 
-local function CheckServerPing(az)
+local function MeasurePing(az)
 local aA=(request or http_request or(syn and syn.request))
 local aB=az.Host
 local b=aB:find"http"and aB or("http://"..aB)
 local d=os.clock()
 
-local f,g
 if aA then
-f,g=pcall(function()
-return aA{
+pcall(function()
+aA{
 Url=b,
 Method="GET",
 }
 end)
 else
-f,g=pcall(function()
-return game:HttpGet(b)
+pcall(function()
+game:HttpGet(b)
 end)
 end
 
-local h=math.floor((os.clock()-d)*1000)
-
-if f then
-local i=(type(g)=="table"and g.StatusCode)or 200
-if i>=200 and i<400 then
-AppendLog(string.format("[%s] %s | Ping: %dms (Code %d OK)",az.Name,aB,h,i))
-else
-AppendLog(string.format("Connection Error (code %d - HTTP status failure)",i),true)
-end
-else
-local i=tostring(g or"Connection failed")
-AppendLog(string.format("Connection Error (code 0 - %s)",i),true)
-end
+local f=math.floor((os.clock()-d)*1000)
+AppendLog(string.format("[%s] %s | Ping: %dms",az.Name,aB,f))
 end
 
 
 task.spawn(function()
 task.wait(0.1)
 AppendLog"Hi! It`s log window."
-task.wait(0.3)
-AppendLog"[Launcher] Checking server status..."
-for az,aA in ipairs(au)do
-task.wait(0.25)
-CheckServerPing(aA)
+task.wait(0.2)
+AppendLog"Checking server ping..."
+for az,aA in ipairs(aq)do
+task.wait(0.2)
+MeasurePing(aA)
 end
 end)
 

@@ -1,15 +1,13 @@
 --[[
     ========================================================================
-    🌐 SERVER DEF - ИЗОЛИРОВАННЫЙ ВЫБОР СЕРВЕРА С LOADER LOG
+    SERVER DEF - ИЗОЛИРОВАННЫЙ ВЫБОР СЕРВЕРА С МИНИ-КОНСОЛЬЮ
     ========================================================================
     Файл: examples/server_def.lua
     
     Особенности:
-    • Абсолютно независимый автономный скрипт.
-    • Стеклянное оформление VendettaUI (полупрозрачный 15% Glass).
-    • Окно Loader Log с результатом проверки пинга.
-    • Оповещение об ошибках сети: Connection Error (code + описание).
-    • Все действия логируются в консоль (F9 / Executor Console).
+    - Автономный скрипт без лишних зависимостей.
+    - Стеклянный стиль VendettaUI (15% Glass).
+    - Мини-консоль с пингом расположена ПОД основным окном выбора.
     ========================================================================
     Ссылка для запуска:
     https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/examples/server_def.lua
@@ -22,10 +20,10 @@ end)
 local Players = cloneref(game:GetService("Players"))
 local LocalPlayer = Players.LocalPlayer
 
--- 1. Загрузка собранной библиотеки VendettaUI с GitHub
+-- 1. Загрузка библиотеки VendettaUI с GitHub
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/dist/main.lua"))()
 
--- 2. Запуск самостоятельного окна выбора серверов
+-- 2. Запуск окна выбора серверов
 WindUI:CreateServerSelector({
 	Title = "Choose Server",
 	SubTitle = "Select a target server endpoint to establish connection",
@@ -34,13 +32,11 @@ WindUI:CreateServerSelector({
 		{ Name = "Server 2", Host = "130.61.221.37" },
 	},
 }, function(selectedServer)
-	print("--------------------------------------------------")
-	print("✅ [ServerDef] Выбран сервер:", selectedServer.Name, "(" .. selectedServer.Host .. ")")
-	print("--------------------------------------------------")
+	print("[ServerDef] Selected server: " .. selectedServer.Name .. " (" .. selectedServer.Host .. ")")
 
 	WindUI:Notify({
-		Title = "Подключение...",
-		Content = "Выбран сервер: " .. selectedServer.Name .. " (" .. selectedServer.Host .. ")",
+		Title = "Connecting...",
+		Content = "Selected: " .. selectedServer.Name .. " (" .. selectedServer.Host .. ")",
 		Icon = "server",
 		Duration = 5,
 	})
