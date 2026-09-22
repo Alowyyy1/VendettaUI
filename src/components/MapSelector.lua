@@ -13,7 +13,7 @@ local Tween = Creator.Tween
 
 local DialogInit = require("./window/Dialog")
 
--- Эффект печати (Typewriter Effect)
+-- Функция эффекта печати (Typewriter Effect)
 local function Typewriter(textLabel, fullText, speed)
 	speed = speed or 0.025
 	textLabel.Text = fullText
@@ -35,18 +35,18 @@ function MapSelector.new(Config, OnSelectCallback)
 	local parentGui = Config.Parent or (Config.WindUI and Config.WindUI.ScreenGui and Config.WindUI.ScreenGui.Popups)
 	local Dialog = DialogInit.Create(nil, "Dialog", nil, Config.WindUI, parentGui)
 
+	local UISize = 460
 	local Main = Dialog.UIElements.Main
-	Main.Size = UDim2.new(0, 440, 0, 0)
-	Main.AutomaticSize = Enum.AutomaticSize.Y
+	Main.Size = UDim2.new(0, UISize, 0, 0)
 
 	local userId = LocalPlayer and LocalPlayer.UserId or 1
 	local displayName = Config.UserTitle or "Test Ник"
 	local username = Config.UserSubTitle or (LocalPlayer and ("@" .. LocalPlayer.Name) or "@username")
 	local avatarThumb = Config.UserAvatar or ("rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=150&h=150")
 
-	-- 1. Профиль пользователя (Аватарка + Плашка с текстом)
+	-- 1. Аватарка + Никнейм (Профиль пользователя)
 	local AvatarImageFrame = Creator.NewRoundFrame(999, "Squircle", {
-		Size = UDim2.new(0, 46, 0, 46),
+		Size = UDim2.new(0, 44, 0, 44),
 		ImageTransparency = 0,
 		ThemeTag = {
 			ImageColor3 = "ElementBackground",
@@ -62,7 +62,7 @@ function MapSelector.new(Config, OnSelectCallback)
 
 	local DisplayNameLabel = New("TextLabel", {
 		Text = "",
-		TextSize = 16,
+		TextSize = 15,
 		FontFace = Font.new(Creator.Font, Enum.FontWeight.SemiBold),
 		ThemeTag = {
 			TextColor3 = "Text",
@@ -90,7 +90,7 @@ function MapSelector.new(Config, OnSelectCallback)
 		Typewriter(UsernameLabel, username, 0.02)
 	end)
 
-	local ProfileInfo = New("Frame", {
+	local ProfileInfoContainer = New("Frame", {
 		AutomaticSize = Enum.AutomaticSize.XY,
 		BackgroundTransparency = 1,
 	}, {
@@ -104,7 +104,7 @@ function MapSelector.new(Config, OnSelectCallback)
 	})
 
 	local UserHeaderContainer = New("Frame", {
-		Size = UDim2.new(1, 0, 0, 48),
+		Size = UDim2.new(1, 0, 0, 44),
 		BackgroundTransparency = 1,
 		LayoutOrder = 1,
 	}, {
@@ -114,12 +114,12 @@ function MapSelector.new(Config, OnSelectCallback)
 			VerticalAlignment = Enum.VerticalAlignment.Center,
 		}),
 		AvatarImageFrame,
-		ProfileInfo,
+		ProfileInfoContainer,
 	})
 
-	-- 2. Заголовок "Выбор карты"
-	local TitleHeaderContainer = New("Frame", {
-		Size = UDim2.new(1, 0, 0, 36),
+	-- 2. Секция Заголовка "Выбор карты"
+	local TitleSection = New("Frame", {
+		Size = UDim2.new(1, 0, 0, 38),
 		BackgroundTransparency = 1,
 		LayoutOrder = 2,
 	}, {
@@ -155,9 +155,9 @@ function MapSelector.new(Config, OnSelectCallback)
 		}),
 	})
 
-	-- 3. Контейнер карточек (Old & Oldest)
+	-- 3. Карточки под выбор (Old & Oldest)
 	local CardsContainer = New("Frame", {
-		Size = UDim2.new(1, 0, 0, 185),
+		Size = UDim2.new(1, 0, 0, 180),
 		BackgroundTransparency = 1,
 		LayoutOrder = 3,
 	}, {
@@ -168,15 +168,7 @@ function MapSelector.new(Config, OnSelectCallback)
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			Padding = UDim.new(0, 14),
 		}),
-		New("UIPadding", {
-			PaddingTop = UDim.new(0, 6),
-			PaddingBottom = UDim.new(0, 6),
-		}),
 	})
-
-	UserHeaderContainer.Parent = Main
-	TitleHeaderContainer.Parent = Main
-	CardsContainer.Parent = Main
 
 	local cardsData = Config.Cards or {
 		{
@@ -320,7 +312,7 @@ function MapSelector.new(Config, OnSelectCallback)
 			ZIndex = 10,
 		})
 
-		-- Анимация наведения
+		-- Анимация наведения (Hover)
 		Creator.AddSignal(ButtonOverlay.MouseEnter, function()
 			if isSelecting then return end
 			Tween(CardScale, 0.2, { Scale = 1.03 }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
@@ -343,7 +335,7 @@ function MapSelector.new(Config, OnSelectCallback)
 			task.wait(0.08)
 			Tween(CardScale, 0.15, { Scale = 1.0 }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
 
-			-- Запуск плавной анимации закрытия (0.35с)
+			-- Плавная анимация закрытия (0.35с)
 			Dialog:GenieClose(0.35)
 			task.spawn(function()
 				task.wait(0.35)
@@ -357,44 +349,45 @@ function MapSelector.new(Config, OnSelectCallback)
 		end)
 	end
 
-	-- Открытие окна с анимацией старта ("как закрытие в логине, только наоборот")
-	Dialog:Open()
+	-- Единственная управляющая рамка MainFrame для идеальной верстки без наложения текста
+	local MainFrame = New("Frame", {
+		Size = UDim2.new(1, 0, 0, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
+		BackgroundTransparency = 1,
+		Parent = Dialog.UIElements.Main,
+	}, {
+		New("UIPadding", {
+			PaddingTop = UDim.new(0, 18),
+			PaddingLeft = UDim.new(0, 18),
+			PaddingRight = UDim.new(0, 18),
+			PaddingBottom = UDim.new(0, 20),
+		}),
+		New("UIListLayout", {
+			FillDirection = Enum.FillDirection.Vertical,
+			Padding = UDim.new(0, 14),
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
+		UserHeaderContainer,
+		TitleSection,
+		CardsContainer,
+	})
 
-	local mainContainer = Dialog.UIElements.MainContainer
-	local parentGroup = mainContainer.Parent
-
-	if parentGroup then
-		local startCanvasGroup = Instance.new("CanvasGroup")
-		startCanvasGroup.Name = "OpenCanvas"
-		startCanvasGroup.BackgroundTransparency = 1
-		startCanvasGroup.Size = mainContainer.Size
-		startCanvasGroup.Position = mainContainer.Position
-		startCanvasGroup.AnchorPoint = mainContainer.AnchorPoint
-		startCanvasGroup.ZIndex = mainContainer.ZIndex or 9999
-		startCanvasGroup.GroupTransparency = 1
-		startCanvasGroup.Parent = parentGroup
-
-		local startScale = Instance.new("UIScale")
-		startScale.Scale = 0.92
-		startScale.Parent = startCanvasGroup
-
-		mainContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
-		mainContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-		mainContainer.Parent = startCanvasGroup
-
-		Tween(startCanvasGroup, 0.35, { GroupTransparency = 0 }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
-		Tween(startScale, 0.35, { Scale = 1.0 }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
-
-		task.spawn(function()
-			task.wait(0.36)
-			if mainContainer and mainContainer.Parent == startCanvasGroup then
-				mainContainer.Position = startCanvasGroup.Position
-				mainContainer.AnchorPoint = startCanvasGroup.AnchorPoint
-				mainContainer.Parent = parentGroup
-				startCanvasGroup:Destroy()
-			end
-		end)
+	-- Автоматический математический расчет высоты подложки без переполнения
+	local listLayout = MainFrame:FindFirstChildOfClass("UIListLayout")
+	local function UpdateCardHeight()
+		if listLayout then
+			local contentY = listLayout.AbsoluteContentSize.Y
+			local totalHeight = contentY + 38
+			Dialog.UIElements.Main.Size = UDim2.new(0, UISize, 0, totalHeight)
+			Dialog.UIElements.MainContainer.Size = UDim2.new(0, UISize, 0, totalHeight)
+		end
 	end
+
+	Creator.AddSignal(listLayout:GetPropertyChangedSignal("AbsoluteContentSize"), UpdateCardHeight)
+	task.defer(UpdateCardHeight)
+
+	-- Открытие окна с анимацией старта
+	Dialog:Open(0.35)
 
 	return Dialog
 end

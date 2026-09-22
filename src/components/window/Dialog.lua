@@ -125,26 +125,61 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 		-- })
 	})
 
-	function Dialog:Open()
-		if not Key then
+	function Dialog:Open(duration)
+		duration = duration or 0.35
+		if not Key and Dialog.UIElements.FullScreen then
 			Dialog.UIElements.FullScreen.Visible = true
 			Dialog.UIElements.FullScreen.Active = true
+			Tween(Dialog.UIElements.FullScreen, duration, { BackgroundTransparency = 0.65 }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
 		end
 
-		task.spawn(function()
-			Dialog.UIElements.MainContainer.Visible = true
+		local mainContainer = Dialog.UIElements.MainContainer
+		if not mainContainer then return end
 
-			if not Key then
-				Tween(Dialog.UIElements.FullScreen, 0.1, { BackgroundTransparency = 0.65 }):Play()
-			end
-			Tween(Dialog.UIElements.MainContainer, 0.1, { ImageTransparency = 0 }):Play()
-			--Tween(Dialog.UIElements.MainContainer.UIScale, 0.1, {Scale = 1}):Play()
-			--Tween(Dialog.UIElements.MainContainer.UIStroke, 0.1, {Transparency = 1}):Play()
-			task.spawn(function()
-				task.wait(0.05)
-				Dialog.UIElements.Main.Visible = true
-			end)
+		mainContainer.Visible = true
+		Dialog.UIElements.Main.Visible = true
+
+		local canvasGroupCreated = false
+		local canvasGroup
+		pcall(function()
+			local parent = mainContainer.Parent
+			canvasGroup = Instance.new("CanvasGroup")
+			canvasGroup.Name = "OpenCanvas"
+			canvasGroup.BackgroundTransparency = 1
+			canvasGroup.Size = mainContainer.Size
+			canvasGroup.Position = mainContainer.Position
+			canvasGroup.AnchorPoint = mainContainer.AnchorPoint
+			canvasGroup.ZIndex = mainContainer.ZIndex or 9999
+			canvasGroup.GroupTransparency = 1
+			canvasGroup.Parent = parent
+
+			local uiScale = Instance.new("UIScale")
+			uiScale.Scale = 0.92
+			uiScale.Parent = canvasGroup
+
+			mainContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
+			mainContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+			mainContainer.Parent = canvasGroup
+
+			Tween(canvasGroup, duration, { GroupTransparency = 0 }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
+			Tween(uiScale, duration, { Scale = 1.0 }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
+			canvasGroupCreated = true
 		end)
+
+		if not canvasGroupCreated then
+			Tween(mainContainer, duration, { ImageTransparency = 0 }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
+		else
+			task.spawn(function()
+				task.wait(duration + 0.02)
+				if mainContainer and mainContainer.Parent == canvasGroup then
+					local parent = canvasGroup.Parent
+					mainContainer.Position = canvasGroup.Position
+					mainContainer.AnchorPoint = canvasGroup.AnchorPoint
+					mainContainer.Parent = parent
+					pcall(function() canvasGroup:Destroy() end)
+				end
+			end)
+		end
 	end
 	function Dialog:Close()
 		if not Key then
