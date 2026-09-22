@@ -84,6 +84,7 @@ end
 local KeySystem = require("./components/KeySystem")
 local AuthWindow = require("./components/AuthWindow")
 local MapSelector = require("./components/MapSelector")
+local ServerSelector = require("./components/ServerSelector")
 
 local Creator = WindUI.Creator
 
@@ -306,6 +307,12 @@ function WindUI:CreateMapSelector(Config, OnSelect)
 	Config = Config or {}
 	Config.WindUI = WindUI
 	return MapSelector.new(Config, OnSelect)
+end
+
+function WindUI:CreateServerSelector(Config, OnSelect)
+	Config = Config or {}
+	Config.WindUI = WindUI
+	return ServerSelector.new(Config, OnSelect)
 end
 
 WindUI.Themes = require("./themes/Init")(WindUI, Creator)
