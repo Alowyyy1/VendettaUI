@@ -14,15 +14,9 @@
     ---------------------------------------------------
 --]]
 
--- Загрузка собранной библиотеки с функцией CreateAuthWindow
-local WindUI
-if isfile and isfile("dist/main.lua") then
-    WindUI = loadstring(readfile("dist/main.lua"))()
-elseif isfile and isfile("WindUI/dist/main.lua") then
-    WindUI = loadstring(readfile("WindUI/dist/main.lua"))()
-else
-    WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/dist/main.lua"))()
-end
+-- Загрузка библиотеки строго с GitHub VendettaUI
+local cloneref = (cloneref or function(obj) return obj end)
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/dist/main.lua"))()
 
 -- Запуск Стадии 1 (Окно входа)
 WindUI:CreateAuthWindow({
