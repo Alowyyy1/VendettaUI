@@ -5,7 +5,7 @@
       \ V /  __/ | | | (_| |  __/ |_| || (_| | | |_| || | 
        \_/ \___|_| |_|\__,_|\___|\__|\__\__,_|  \___/|___|
     
-    v1.0.0  |  2026-09-21  |  Apple-inspired Roblox UI Library with SF Symbols and macOS/iOS controls
+    v1.0.0  |  2026-09-22  |  Apple-inspired Roblox UI Library with SF Symbols and macOS/iOS controls
     
     To view the source code, see the `src/` folder on the official GitHub repository.
     
@@ -2976,72 +2976,65 @@ return function()end
 end
 
 function aj.CollapseClose(ak)
-return aj:GenieClose(0.6)
+return aj:GenieClose(0.35)
 end
 
 function aj.GenieClose(ak,al)
-al=al or 0.6
-local am=cloneref(game:GetService"RunService")
-local an=aj.UIElements.MainContainer
-local ao=aj.UIElements.FullScreen
+al=al or 0.35
+local am=aj.UIElements.MainContainer
+local an=aj.UIElements.FullScreen
 
-if not an or not an.Parent then
+if not am or not am.Parent then
 return function()end
 end
 
-local ap=an.Position
-local aq=an.Size
-local ar=an.AnchorPoint
-
-local function EaseInOutQuad(as)
-return as<0.5 and(2*as*as)or(1-math.pow(-2*as+2,2)/2)
+if not ae and an then
+an.Active=false
+ac(an,al,{BackgroundTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
 end
 
-if not ae and ao then
-ao.Active=false
-ac(ao,al,{BackgroundTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.InOut):Play()
+local ao=false
+local ap
+pcall(function()
+local aq=am.Parent
+ap=Instance.new"CanvasGroup"
+ap.Name="FadeCanvas"
+ap.BackgroundTransparency=1
+ap.Size=am.Size
+ap.Position=am.Position
+ap.AnchorPoint=am.AnchorPoint
+ap.ZIndex=am.ZIndex or 9999
+ap.GroupTransparency=0
+ap.Parent=aq
+
+local ar=Instance.new"UIScale"
+ar.Scale=1
+ar.Parent=ap
+
+am.Position=UDim2.new(0.5,0,0.5,0)
+am.AnchorPoint=Vector2.new(0.5,0.5)
+am.Parent=ap
+
+ac(ap,al,{GroupTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+ac(ar,al,{Scale=0.92},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ao=true
+end)
+
+if not ao then
+
+ac(am,al,{ImageTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
 end
 
-local as=0
-local at
-
-at=am.RenderStepped:Connect(function(au)
-as=as+au
-local av=math.clamp(as/al,0,1)
-local aw=EaseInOutQuad(av)
-
-local ax=(ap.Y.Scale*(1-aw))+(0.0*aw)
-local ay=(ar.Y*(1-aw))+(0.0*aw)
-an.AnchorPoint=Vector2.new(0.5,ay)
-
-local az=(1-aw)
-local aA=1+(0.2*math.sin(aw*math.pi))
-local aB=aq.X.Offset*az
-local b=aq.Y.Offset*(1-aw)*aA
-
-an.Position=UDim2.new(0.5,0,ax,ap.Y.Offset*(1-aw))
-an.Size=UDim2.new(0,math.max(0,aB),0,math.max(0,b))
-
-
-local d=math.clamp(av^1.2,0,1)
-an.ImageTransparency=d
-
-for f,g in ipairs(an:GetDescendants())do
-if g:IsA"TextLabel"or g:IsA"TextButton"or g:IsA"TextBox"then
-g.TextTransparency=d
-elseif g:IsA"ImageLabel"or g:IsA"ImageButton"then
-g.ImageTransparency=d
-end
-end
-
-if av>=1 then
-if at then
-at:Disconnect()
-end
-if not ae and ao then
-pcall(function()ao:Destroy()end)
-end
+task.spawn(function()
+task.wait(al+0.05)
+if not ae and an then
 pcall(function()an:Destroy()end)
+else
+if ap then
+pcall(function()ap:Destroy()end)
+else
+pcall(function()am:Destroy()end)
+end
 end
 end)
 
@@ -4226,8 +4219,8 @@ end
 
 if J then
 
-at:GenieClose(0.6)
-task.wait(0.6)
+at:GenieClose(0.35)
+task.wait(0.35)
 if ak then
 ak{
 Mode=f,

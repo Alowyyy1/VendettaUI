@@ -661,9 +661,9 @@ function AuthWindow.new(Config, OnSuccessCallback)
 		end
 
 		if isSuccess then
-			-- Запуск вертикально-перевернутого macOS Genie Effect (0.6с)
-			Dialog:GenieClose(0.6)
-			task.wait(0.6)
+			-- Плавное затухание окна (0.35с)
+			Dialog:GenieClose(0.35)
+			task.wait(0.35)
 			if OnSuccessCallback then
 				OnSuccessCallback({
 					Mode = ActiveMode,

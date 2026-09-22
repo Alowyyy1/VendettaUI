@@ -174,12 +174,11 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 	end
 
 	function Dialog:CollapseClose()
-		return Dialog:GenieClose(0.6)
+		return Dialog:GenieClose(0.35)
 	end
 
 	function Dialog:GenieClose(duration)
-		duration = duration or 0.6
-		local RunService = cloneref(game:GetService("RunService"))
+		duration = duration or 0.35
 		local mainContainer = Dialog.UIElements.MainContainer
 		local fullScreen = Dialog.UIElements.FullScreen
 
@@ -187,59 +186,53 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 			return function() end
 		end
 
-		local startPos = mainContainer.Position
-		local startSize = mainContainer.Size
-		local startAnchor = mainContainer.AnchorPoint
-
-		local function EaseInOutQuad(t)
-			return t < 0.5 and (2 * t * t) or (1 - math.pow(-2 * t + 2, 2) / 2)
-		end
-
 		if not Key and fullScreen then
 			fullScreen.Active = false
-			Tween(fullScreen, duration, { BackgroundTransparency = 1 }, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut):Play()
+			Tween(fullScreen, duration, { BackgroundTransparency = 1 }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
 		end
 
-		local elapsedTime = 0
-		local connection
+		local canvasGroupCreated = false
+		local canvasGroup
+		pcall(function()
+			local parent = mainContainer.Parent
+			canvasGroup = Instance.new("CanvasGroup")
+			canvasGroup.Name = "FadeCanvas"
+			canvasGroup.BackgroundTransparency = 1
+			canvasGroup.Size = mainContainer.Size
+			canvasGroup.Position = mainContainer.Position
+			canvasGroup.AnchorPoint = mainContainer.AnchorPoint
+			canvasGroup.ZIndex = mainContainer.ZIndex or 9999
+			canvasGroup.GroupTransparency = 0
+			canvasGroup.Parent = parent
 
-		connection = RunService.RenderStepped:Connect(function(deltaTime)
-			elapsedTime = elapsedTime + deltaTime
-			local linearProgress = math.clamp(elapsedTime / duration, 0, 1)
-			local p = EaseInOutQuad(linearProgress)
+			local uiScale = Instance.new("UIScale")
+			uiScale.Scale = 1
+			uiScale.Parent = canvasGroup
 
-			local curPosY = (startPos.Y.Scale * (1 - p)) + (0.0 * p)
-			local curAnchorY = (startAnchor.Y * (1 - p)) + (0.0 * p)
-			mainContainer.AnchorPoint = Vector2.new(0.5, curAnchorY)
+			mainContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
+			mainContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+			mainContainer.Parent = canvasGroup
 
-			local widthFactor = (1 - p)
-			local stretchFactor = 1 + (0.2 * math.sin(p * math.pi))
-			local curWidthOffset = startSize.X.Offset * widthFactor
-			local curHeightOffset = startSize.Y.Offset * (1 - p) * stretchFactor
+			Tween(canvasGroup, duration, { GroupTransparency = 1 }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
+			Tween(uiScale, duration, { Scale = 0.92 }, Enum.EasingStyle.Quint, Enum.EasingDirection.Out):Play()
+			canvasGroupCreated = true
+		end)
 
-			mainContainer.Position = UDim2.new(0.5, 0, curPosY, startPos.Y.Offset * (1 - p))
-			mainContainer.Size = UDim2.new(0, math.max(0, curWidthOffset), 0, math.max(0, curHeightOffset))
+		if not canvasGroupCreated then
+			-- Fallback для старых окружений без CanvasGroup
+			Tween(mainContainer, duration, { ImageTransparency = 1 }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out):Play()
+		end
 
-			-- Плавное непрерывное испарение / затухание (fade progress) на протяжении всего полета
-			local fadeProgress = math.clamp(linearProgress ^ 1.2, 0, 1)
-			mainContainer.ImageTransparency = fadeProgress
-
-			for _, child in ipairs(mainContainer:GetDescendants()) do
-				if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
-					child.TextTransparency = fadeProgress
-				elseif child:IsA("ImageLabel") or child:IsA("ImageButton") then
-					child.ImageTransparency = fadeProgress
+		task.spawn(function()
+			task.wait(duration + 0.05)
+			if not Key and fullScreen then
+				pcall(function() fullScreen:Destroy() end)
+			else
+				if canvasGroup then
+					pcall(function() canvasGroup:Destroy() end)
+				else
+					pcall(function() mainContainer:Destroy() end)
 				end
-			end
-
-			if linearProgress >= 1 then
-				if connection then
-					connection:Disconnect()
-				end
-				if not Key and fullScreen then
-					pcall(function() fullScreen:Destroy() end)
-				end
-				pcall(function() mainContainer:Destroy() end)
 			end
 		end)
 
