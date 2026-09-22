@@ -51,6 +51,7 @@ $finalContent = "$header`n`n$bundleBody"
 $gotovye = [System.IO.Path]::Combine("D:\", [System.Text.Encoding]::UTF8.GetString([System.Byte[]](208, 147, 208, 190, 208, 191, 208, 190, 208, 178, 209, 139, 208, 181)))
 if (Test-Path $gotovye) {
     Copy-Item -Path "examples/login.lua" -Destination (Join-Path $gotovye "Login.lua") -Force
+    Copy-Item -Path "examples/server_def.lua" -Destination (Join-Path $gotovye "server_def.lua") -Force
 }
 Remove-Item $temp -Force
 
