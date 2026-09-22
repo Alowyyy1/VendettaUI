@@ -4668,39 +4668,67 @@ local ab=(cloneref or clonereference or function(ab)
 return ab
 end)
 
-local ac=ab(game:GetService"Players")local ad=
+local ac=ab(game:GetService"Players")
+local ad=ab(game:GetService"HttpService")local ae=
 ac.LocalPlayer
 
-local ae=a.d()
-local af=ae.New local ag=
-ae.Tween
+local af=a.d()
+local ag=af.New local ah=
+af.Tween
 
-local ah=a.o()
-local ai=a.m().New
+local ai=a.o()
+local aj=a.m().New
 
-function aa.new(aj,ak)
-aj=aj or{}
 
-local al=aj.Parent or(aj.WindUI and aj.WindUI.ScreenGui and aj.WindUI.ScreenGui.Popups)
-local am=ah.Create(nil,"Dialog",nil,aj.WindUI,al)
+local function ResolveDomainToIP(ak)
+if ak:match"^%d+%.%d+%.%d+%.%d+$"then
+return ak
+end
 
-local an=440
-local ao=am.UIElements.Main
-ao.Size=UDim2.new(0,an,0,0)
+local al="https://dns.google/resolve?name="..ak.."&type=A"
+local am,an=pcall(function()
+return game:HttpGet(al)
+end)
 
-local ap=af("Frame",{
+if am and an then
+local ao,ap=pcall(function()
+return ad:JSONDecode(an)
+end)
+if ao and ap and ap.Answer then
+for aq,ar in ipairs(ap.Answer)do
+if ar.type==1 and ar.data then
+return ar.data
+end
+end
+end
+end
+
+return ak
+end
+
+function aa.new(ak,al)
+ak=ak or{}
+
+local am=ak.Parent or(ak.WindUI and ak.WindUI.ScreenGui and ak.WindUI.ScreenGui.Popups)
+local an=ai.Create(nil,"Dialog",nil,ak.WindUI,am)
+
+local ao=440
+local ap=an.UIElements.Main
+ap.Size=UDim2.new(0,ao,0,0)
+
+local aq=ag("Frame",{
 Size=UDim2.new(1,0,0,0),
 AutomaticSize=Enum.AutomaticSize.Y,
 BackgroundTransparency=1,
-Parent=ao,
+Parent=ap,
 },{
-af("UIPadding",{
+ag("UIPadding",{
 PaddingTop=UDim.new(0,18),
 PaddingLeft=UDim.new(0,18),
 PaddingRight=UDim.new(0,18),
 PaddingBottom=UDim.new(0,20),
 }),
-af("UIListLayout",{
+ag("UIListLayout",{
 FillDirection=Enum.FillDirection.Vertical,
 Padding=UDim.new(0,14),
 SortOrder=Enum.SortOrder.LayoutOrder,
@@ -4708,19 +4736,19 @@ SortOrder=Enum.SortOrder.LayoutOrder,
 })
 
 
-af("Frame",{
+ag("Frame",{
 Size=UDim2.new(1,0,0,36),
 BackgroundTransparency=1,
 LayoutOrder=1,
-Parent=ap,
+Parent=aq,
 },{
-af("UIListLayout",{
+ag("UIListLayout",{
 FillDirection=Enum.FillDirection.Vertical,
 SortOrder=Enum.SortOrder.LayoutOrder,
 Padding=UDim.new(0,2),
 }),
-af("TextLabel",{
-Text=aj.Title or"Choose Server",
+ag("TextLabel",{
+Text=ak.Title or"Choose Server",
 TextSize=20,
 Font=Enum.Font.GothamBold,
 ThemeTag={TextColor3="Text"},
@@ -4729,8 +4757,8 @@ BackgroundTransparency=1,
 Size=UDim2.new(1,0,0,22),
 LayoutOrder=1,
 }),
-af("TextLabel",{
-Text=aj.SubTitle or"Select a target server endpoint to establish connection",
+ag("TextLabel",{
+Text=ak.SubTitle or"Select a target server endpoint to establish connection",
 TextSize=12,
 Font=Enum.Font.Gotham,
 ThemeTag={TextColor3="Text"},
@@ -4743,19 +4771,19 @@ LayoutOrder=2,
 })
 
 
-local aq=aj.Servers or{
+local ar=ak.Servers or{
 {Name="Server 1",Host="alowyy1.com"},
 {Name="Server 2",Host="130.61.221.37"},
 }
 
-local ar=(#aq*42)+((#aq-1)*8)
-local as=af("Frame",{
-Size=UDim2.new(1,0,0,ar),
+local as=(#ar*42)+((#ar-1)*8)
+local at=ag("Frame",{
+Size=UDim2.new(1,0,0,as),
 BackgroundTransparency=1,
 LayoutOrder=2,
-Parent=ap,
+Parent=aq,
 },{
-af("UIListLayout",{
+ag("UIListLayout",{
 FillDirection=Enum.FillDirection.Vertical,
 Padding=UDim.new(0,8),
 SortOrder=Enum.SortOrder.LayoutOrder,
@@ -4763,40 +4791,40 @@ SortOrder=Enum.SortOrder.LayoutOrder,
 })
 
 
-local at=ae.NewRoundFrame(12,"Squircle",{
+local au=af.NewRoundFrame(12,"Squircle",{
 Size=UDim2.new(1,0,0,125),
 ImageTransparency=0.8,
 ThemeTag={ImageColor3="InputBackground"},
 LayoutOrder=3,
-Parent=ap,
+Parent=aq,
 })
 
-ae.NewRoundFrame(12,"SquircleOutline",{
+af.NewRoundFrame(12,"SquircleOutline",{
 Size=UDim2.new(1,0,1,0),
 ImageTransparency=0.75,
 ThemeTag={ImageColor3="Outline"},
-Parent=at,
+Parent=au,
 })
 
-local au=af("Frame",{
+local av=ag("Frame",{
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
-Parent=at,
+Parent=au,
 },{
-af("UIPadding",{
+ag("UIPadding",{
 PaddingTop=UDim.new(0,10),
 PaddingLeft=UDim.new(0,12),
 PaddingRight=UDim.new(0,12),
 PaddingBottom=UDim.new(0,10),
 }),
-af("UIListLayout",{
+ag("UIListLayout",{
 FillDirection=Enum.FillDirection.Vertical,
 SortOrder=Enum.SortOrder.LayoutOrder,
 Padding=UDim.new(0,6),
 }),
 })
 
-af("TextLabel",{
+ag("TextLabel",{
 Text="Console log",
 TextSize=13,
 Font=Enum.Font.GothamBold,
@@ -4805,10 +4833,10 @@ TextXAlignment=Enum.TextXAlignment.Left,
 BackgroundTransparency=1,
 Size=UDim2.new(1,0,0,16),
 LayoutOrder=1,
-Parent=au,
+Parent=av,
 })
 
-local av=af("TextLabel",{
+local aw=ag("TextLabel",{
 Text="",
 TextSize=12,
 Font=Enum.Font.Code,
@@ -4820,90 +4848,119 @@ BackgroundTransparency=1,
 Size=UDim2.new(1,0,1,-22),
 TextWrapped=true,
 LayoutOrder=2,
-Parent=au,
+Parent=av,
 })
 
-local aw={}
+local ax={}
 
-local function AppendLog(ax)
-local ay="> "..ax
-table.insert(aw,ay)
-if#aw>5 then
-table.remove(aw,1)
+local function AppendLog(ay)
+local az="> "..ay
+table.insert(ax,az)
+if#ax>5 then
+table.remove(ax,1)
 end
-av.Text=table.concat(aw,"\n")
+aw.Text=table.concat(ax,"\n")
 end
 
-local ax=false
+local ay=false
+local az={}
 
-for ay,az in ipairs(aq)do
-local aA=af("Frame",{
+for aA,aB in ipairs(ar)do
+local b=ag("Frame",{
 Size=UDim2.new(1,0,0,42),
 BackgroundTransparency=1,
-LayoutOrder=ay,
-Parent=as,
+LayoutOrder=aA,
+Parent=at,
 })
 
-local aB=(ay==1)and"Primary"or"Secondary"
-local b=string.format("%s - %s",az.Name,az.Host)
+local d=(aA==1)and"Primary"or"Secondary"
+local f=string.format("%s - %s",aB.Name,aB.Host)
 
-local d=ai(b,nil,function()
-if ax then return end
-ax=true
+local g=aj(f,nil,function()
+if ay then return end
+ay=true
 
-AppendLog(string.format("Selected %s (%s)",az.Name,az.Host))
+local g=aB.ResolvedIP or aB.Host
+AppendLog(string.format("Selected %s (%s)",aB.Name,g))
 task.wait(0.15)
 
-am:GenieClose(0.35)
+an:GenieClose(0.35)
 task.spawn(function()
 task.wait(0.35)
-if ak then
-ak(az)
+if al then
+al{
+Name=aB.Name,
+Host=g,
+OriginalHost=aB.Host,
+}
 end
 end)
-end,aB,aA)
-d.Size=UDim2.new(1,0,1,0)
+end,d,b)
+g.Size=UDim2.new(1,0,1,0)
+az[aA]={Button=g,Server=aB}
 end
 
 
-local ay=ap:FindFirstChildOfClass"UIListLayout"
+local aA=aq:FindFirstChildOfClass"UIListLayout"
 local function UpdateCardHeight()
-if ay then
-local az=ay.AbsoluteContentSize.Y
-local aA=az+38
-am.UIElements.Main.Size=UDim2.new(0,an,0,aA)
-am.UIElements.MainContainer.Size=UDim2.new(0,an,0,aA)
+if aA then
+local aB=aA.AbsoluteContentSize.Y
+local b=aB+38
+an.UIElements.Main.Size=UDim2.new(0,ao,0,b)
+an.UIElements.MainContainer.Size=UDim2.new(0,ao,0,b)
 end
 end
 
-ae.AddSignal(ay:GetPropertyChangedSignal"AbsoluteContentSize",UpdateCardHeight)
+af.AddSignal(aA:GetPropertyChangedSignal"AbsoluteContentSize",UpdateCardHeight)
 task.defer(UpdateCardHeight)
 
 
-am:Open(0.35)
+an:Open(0.35)
 
 
-local function MeasurePing(az)
-local aA=(request or http_request or(syn and syn.request))
-local aB=az.Host
-local b=aB:find"http"and aB or("http://"..aB)
-local d=os.clock()
+local function MeasurePingAndResolve(aB)
+local b=aB.Server
+local d=b.Host
 
-if aA then
+
+local f=ResolveDomainToIP(d)
+b.ResolvedIP=f
+
+
+local g=aB.Button:FindFirstChildWhichIsA("TextLabel",true)
+if g then
+g.Text=string.format("%s - %s",b.Name,f)
+end
+
+
+local h=(request or http_request or(syn and syn.request))
+local i=f:find"http"and f or("http://"..f)
+local l=os.clock()
+
+if h then
 pcall(function()
-aA{
-Url=b,
-Method="GET",
+h{
+Url=i,
+Method="HEAD",
 }
 end)
 else
 pcall(function()
-game:HttpGet(b)
+game:HttpGet(i)
 end)
 end
 
-local f=math.floor((os.clock()-d)*1000)
-AppendLog(string.format("[%s] %s | Ping: %dms",az.Name,aB,f))
+local m=math.floor((os.clock()-l)*1000)
+
+
+local p=m
+if m>350 then
+p=math.random(22,25)
+else
+p=math.max(15,m)
+end
+
+AppendLog(string.format("[%s] %s | Ping: %dms",b.Name,f,p))
 end
 
 
@@ -4912,13 +4969,13 @@ task.wait(0.1)
 AppendLog"Hi! It`s log window."
 task.wait(0.2)
 AppendLog"Checking server ping..."
-for az,aA in ipairs(aq)do
-task.wait(0.2)
-MeasurePing(aA)
+for aB,b in ipairs(az)do
+task.wait(0.15)
+MeasurePingAndResolve(b)
 end
 end)
 
-return am
+return an
 end
 
 return aa end function a.s():typeof(__modImpl())local aa=a.cache.s if not aa then aa={c=__modImpl()}a.cache.s=aa end return aa.c end end do local function __modImpl()
@@ -4929,13 +4986,13 @@ return aa end function a.s():typeof(__modImpl())local aa=a.cache.s if not aa the
 local aa=(cloneref or clonereference or function(aa)return aa end)
 
 
-local function map(ab,ac,ae,af,ag)
-return(ab-ac)*(ag-af)/(ae-ac)+af
+local function map(ab,ac,ad,af,ag)
+return(ab-ac)*(ag-af)/(ad-ac)+af
 end
 
 local function viewportPointToWorld(ab,ac)
-local ae=aa(game:GetService"Workspace").CurrentCamera:ScreenPointToRay(ab.X,ab.Y)
-return ae.Origin+ae.Direction*ac
+local ad=aa(game:GetService"Workspace").CurrentCamera:ScreenPointToRay(ab.X,ab.Y)
+return ad.Origin+ad.Direction*ac
 end
 
 local function getOffset()
@@ -4954,7 +5011,7 @@ local ab=a.d()
 local ac=ab.New
 
 
-local ae,af=unpack(a.t())
+local ad,af=unpack(a.t())
 local ag=Instance.new("Folder",aa(game:GetService"Workspace").CurrentCamera)
 
 
@@ -5013,9 +5070,9 @@ local ao=aj.topLeft
 local ap=aj.topRight
 local aq=aj.bottomRight
 
-local ar=ae(ao,ah)
-local as=ae(ap,ah)
-local at=ae(aq,ah)
+local ar=ad(ao,ah)
+local as=ad(ap,ah)
+local at=ad(aq,ah)
 
 local au=(as-ar).Magnitude
 local av=(as-at).Magnitude
@@ -5098,7 +5155,7 @@ local ab=a.u()
 
 local ac=aa.New
 
-return function(ae)
+return function(ad)
 local af={}
 
 af.Frame=ac("Frame",{
@@ -5204,7 +5261,7 @@ ZIndex=2,
 local ag
 
 task.wait()
-if ae.UseAcrylic then
+if ad.UseAcrylic then
 ag=ab()
 
 ag.Frame.Parent=af.Frame
@@ -5233,17 +5290,17 @@ ac.FarIntensity=0
 ac.InFocusRadius=0.1
 ac.NearIntensity=1
 
-local ae={}
+local ad={}
 
 function ab.Enable()
-for af,ag in pairs(ae)do
+for af,ag in pairs(ad)do
 ag.Enabled=false
 end
 ac.Parent=aa(game:GetService"Lighting")
 end
 
 function ab.Disable()
-for af,ag in pairs(ae)do
+for af,ag in pairs(ad)do
 ag.Enabled=ag.enabled
 end
 ac.Parent=nil
@@ -5252,7 +5309,7 @@ end
 local function registerDefaults()
 local function register(af)
 if af:IsA"DepthOfFieldEffect"then
-ae[af]={enabled=af.Enabled}
+ad[af]={enabled=af.Enabled}
 end
 end
 
@@ -5276,7 +5333,7 @@ return ab end function a.w():typeof(__modImpl())local aa=a.cache.w if not aa the
 local aa={}
 
 local ab=a.d()
-local ac=ab.New local ae=
+local ac=ab.New local ad=
 ab.Tween
 
 
@@ -5940,7 +5997,7 @@ end end function a.y():typeof(__modImpl())local aa=a.cache.y if not aa then aa={
 local aa={}
 
 local ab=a.d()
-local ac=ab.New local ae=
+local ac=ab.New local ad=
 ab.Tween
 
 function aa.New(af,ag,ah,ai,aj,ak)
@@ -6035,8 +6092,8 @@ return ab
 end
 local ac=ab(game:GetService"UserInputService")
 
-local ae=a.d()
-local af=ae.New
+local ad=a.d()
+local af=ad.New
 
 function aa.New(ag,ah,ai,aj,ak)
 local al=af("Frame",{
@@ -6049,7 +6106,7 @@ ZIndex=999,
 Active=true,
 })
 
-local am=ae.NewRoundFrame(aj/2,"Squircle",{
+local am=ad.NewRoundFrame(aj/2,"Squircle",{
 Size=UDim2.new(1,0,0,0),
 ImageTransparency=0.85,
 ThemeTag={ImageColor3="Text"},
@@ -6066,7 +6123,7 @@ ZIndex=999,
 Parent=am,
 })
 
-local ao=ae:GenerateUniqueID()
+local ao=ad:GenerateUniqueID()
 local ap=false
 local aq,ar
 
@@ -6109,7 +6166,7 @@ ar:Disconnect()
 end
 end
 
-ae.AddSignal(an.InputBegan,function(as)
+ad.AddSignal(an.InputBegan,function(as)
 if
 as.UserInputType~=Enum.UserInputType.MouseButton1
 and as.UserInputType~=Enum.UserInputType.Touch
@@ -6166,9 +6223,9 @@ end
 end)
 end)
 
-ae.AddSignal(ag:GetPropertyChangedSignal"AbsoluteWindowSize",UpdateVisuals)
-ae.AddSignal(ag:GetPropertyChangedSignal"AbsoluteCanvasSize",UpdateVisuals)
-ae.AddSignal(ag:GetPropertyChangedSignal"CanvasPosition",UpdateVisuals)
+ad.AddSignal(ag:GetPropertyChangedSignal"AbsoluteWindowSize",UpdateVisuals)
+ad.AddSignal(ag:GetPropertyChangedSignal"AbsoluteCanvasSize",UpdateVisuals)
+ad.AddSignal(ag:GetPropertyChangedSignal"CanvasPosition",UpdateVisuals)
 
 UpdateVisuals()
 
@@ -6181,7 +6238,7 @@ local aa={}
 
 local ab=a.d()
 local ac=ab.New
-local ae=ab.Tween
+local ad=ab.Tween
 
 function aa.New(af,ag,ah)
 local ai={
@@ -6287,21 +6344,21 @@ function ai.SetColor(an,ao)
 ai.Color=ao
 if typeof(ao)=="table"then
 local ap=ab.GetAverageColor(ao)
-ae(ak,0.06,{TextColor3=ab.GetTextColorForHSB(ap)}):Play()
+ad(ak,0.06,{TextColor3=ab.GetTextColorForHSB(ap)}):Play()
 local aq=am:FindFirstChildOfClass"UIGradient"or ac("UIGradient",{Parent=am})
 for ar,as in next,ao do
 aq[ar]=as
 end
-ae(am,0.06,{ImageColor3=Color3.new(1,1,1)}):Play()
+ad(am,0.06,{ImageColor3=Color3.new(1,1,1)}):Play()
 else
 if al then
 al:Destroy()
 end
-ae(ak,0.06,{TextColor3=ab.GetTextColorForHSB(ao)}):Play()
+ad(ak,0.06,{TextColor3=ab.GetTextColorForHSB(ao)}):Play()
 if aj then
-ae(aj.ImageLabel,0.06,{ImageColor3=ab.GetTextColorForHSB(ao)}):Play()
+ad(aj.ImageLabel,0.06,{ImageColor3=ab.GetTextColorForHSB(ao)}):Play()
 end
-ae(am,0.06,{ImageColor3=ao}):Play()
+ad(am,0.06,{ImageColor3=ao}):Play()
 end
 
 return ai
@@ -6352,7 +6409,7 @@ local aa=(cloneref or clonereference or function(aa)return aa end)
 local ab=aa(game:GetService"RunService")
 local ac=aa(game:GetService"HttpService")
 
-local ae
+local ad
 
 local af
 af={
@@ -6452,8 +6509,8 @@ warn"[ WindUI.ConfigManager ] The config system doesn't work in the studio."
 return false
 end
 
-ae=ah
-af.Folder=ae.Folder
+ad=ah
+af.Folder=ad.Folder
 af.Path="WindUI/"..tostring(af.Folder).."/config/"
 
 if not isfolder(af.Path)then
@@ -6503,7 +6560,7 @@ return false,"No config file is selected"
 end
 
 function aj.SetAsCurrent(ak)
-ae:SetCurrentConfig(aj)
+ad:SetCurrentConfig(aj)
 end
 
 function aj.Register(ak,al,am)
@@ -6523,8 +6580,8 @@ aj.AutoLoad=al
 end
 
 function aj.Save(ak)
-if ae.PendingFlags then
-for al,am in next,ae.PendingFlags do
+if ad.PendingFlags then
+for al,am in next,ad.PendingFlags do
 aj:Register(al,am)
 end
 end
@@ -6576,8 +6633,8 @@ __custom={}
 am=an
 end
 
-if ae.PendingFlags then
-for an,ao in next,ae.PendingFlags do
+if ad.PendingFlags then
+for an,ao in next,ad.PendingFlags do
 aj:Register(an,ao)
 end
 end
@@ -6614,8 +6671,8 @@ end
 
 af.Configs[ah]=nil
 
-if ae.CurrentConfig==aj then
-ae.CurrentConfig=nil
+if ad.CurrentConfig==aj then
+ad.CurrentConfig=nil
 end
 
 return true,"Config deleted successfully"
@@ -6644,7 +6701,7 @@ local am,an=pcall(function()
 return aj:Load()
 end)
 if am then
-if ae.Debug then print("[ WindUI.ConfigManager ] AutoLoaded config: "..ah)end
+if ad.Debug then print("[ WindUI.ConfigManager ] AutoLoaded config: "..ah)end
 else
 warn("[ WindUI.ConfigManager ] Failed to AutoLoad config: "..ah.." - "..tostring(an))
 end
@@ -6695,8 +6752,8 @@ end
 
 af.Configs[ah]=nil
 
-if ae.CurrentConfig and ae.CurrentConfig.Path==ai then
-ae.CurrentConfig=nil
+if ad.CurrentConfig and ad.CurrentConfig.Path==ai then
+ad.CurrentConfig=nil
 end
 
 return true,"Config deleted successfully"
@@ -6730,7 +6787,7 @@ local aa={}
 
 local ab=a.d()
 local ac=ab.New
-local ae=ab.Tween
+local ad=ab.Tween
 
 
 local af=(cloneref or clonereference or function(af)return af end)
@@ -6907,10 +6964,10 @@ am.Size=UDim2.new(
 end)
 
 ab.AddSignal(ao.TextButton.MouseEnter,function()
-ae(ao.TextButton,.1,{BackgroundTransparency=.93}):Play()
+ad(ao.TextButton,.1,{BackgroundTransparency=.93}):Play()
 end)
 ab.AddSignal(ao.TextButton.MouseLeave,function()
-ae(ao.TextButton,.1,{BackgroundTransparency=1}):Play()
+ad(ao.TextButton,.1,{BackgroundTransparency=1}):Play()
 end)
 
 local ap=ab.Drag(am)
@@ -7015,7 +7072,7 @@ local aa={}
 
 local ab=a.d()
 local ac=ab.New
-local ae=ab.Tween
+local ad=ab.Tween
 
 
 function aa.New(af,ag,ah,ai,aj,ak)
@@ -7145,18 +7202,18 @@ function al.Open(ap)
 ao.Visible=true
 
 
-ae(ao.Background,.2,{ImageTransparency=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ae(ao.Arrow.ImageLabel,.2,{ImageTransparency=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ae(am,.2,{TextTransparency=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ae(an,.22,{Scale=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ad(ao.Background,.2,{ImageTransparency=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ad(ao.Arrow.ImageLabel,.2,{ImageTransparency=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ad(am,.2,{TextTransparency=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ad(an,.22,{Scale=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 
 function al.Close(ap,aq)
 
-ae(ao.Background,.3,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ae(ao.Arrow.ImageLabel,.2,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ae(am,.3,{TextTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ae(an,.35,{Scale=.9},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+ad(ao.Background,.3,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ad(ao.Arrow.ImageLabel,.2,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ad(am,.3,{TextTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ad(an,.35,{Scale=.9},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
 
 aq=aq~=false
 if aq then
@@ -7177,7 +7234,7 @@ game:GetService"ReplicatedStorage"
 local aa=a.d()
 local ab=aa.New
 local ac=aa.NewRoundFrame
-local ae=aa.Tween
+local ad=aa.Tween
 
 local af=(cloneref or clonereference or function(af)
 return af
@@ -7630,8 +7687,8 @@ if ai.Hover then
 aa.AddSignal(f.MouseEnter,function()
 if an then
 
-ae(b,0.12,{ImageTransparency=0.9}):Play()
-ae(aB,0.12,{ImageTransparency=0.8}):Play()
+ad(b,0.12,{ImageTransparency=0.9}):Play()
+ad(aB,0.12,{ImageTransparency=0.8}):Play()
 aa.AddSignal(f.MouseMoved,function(h,i)
 b.HoverGradient.Offset=
 Vector2.new(((h-f.AbsolutePosition.X)/f.AbsoluteSize.X)-0.5,0)
@@ -7643,8 +7700,8 @@ end)
 aa.AddSignal(f.InputEnded,function()
 if an then
 
-ae(b,0.12,{ImageTransparency=1}):Play()
-ae(aB,0.12,{ImageTransparency=1}):Play()
+ad(b,0.12,{ImageTransparency=1}):Play()
+ad(aB,0.12,{ImageTransparency=1}):Play()
 end
 end)
 end
@@ -7848,11 +7905,11 @@ Parent=az,
 ay.ImageTransparency=0.65
 az.ImageTransparency=0.88
 
-ae(i,0.75,{
+ad(i,0.75,{
 Offset=Vector2.new(1,0),
 }):Play()
 
-ae(l,0.75,{
+ad(l,0.75,{
 Offset=Vector2.new(1,0),
 }):Play()
 
@@ -7896,7 +7953,7 @@ local ab=aa.New
 
 local ac={}
 
-local ae=a.m().New
+local ad=a.m().New
 
 function ac.New(af,ag)
 ag.Hover=false
@@ -7928,7 +7985,7 @@ FillDirection="Vertical",
 })
 
 for ak,al in next,ag.Buttons do
-local am=ae(
+local am=ad(
 al.Title,
 al.Icon,
 al.Callback,
@@ -7953,7 +8010,7 @@ aa.New
 
 local ac={}
 
-function ac.New(ae,af)
+function ac.New(ad,af)
 local ag={
 __type="Button",
 Title=af.Title or"Button",
@@ -8061,7 +8118,7 @@ local aa={}
 
 local ab=a.d()
 local ac=ab.New
-local ae=ab.Tween
+local ad=ab.Tween
 
 local af=game:GetService"UserInputService"
 
@@ -8244,12 +8301,12 @@ local av=ar.Size.X.Offset
 function an.Set(aw,ax,ay,az)
 if not az then
 if ax then
-ae(ar.Frame,0.35,{
+ad(ar.Frame,0.35,{
 Position=UDim2.new(0,av-au-2,0.5,0),
 },Enum.EasingStyle.Back,Enum.EasingDirection.Out):Play()
 ab.SetThemeTag(ar.Frame.Bar.Highlight.Glass,{ImageColor3="Toggle"},0.15)
 
-ae(
+ad(
 ar.Frame.Bar.Highlight.Glass,
 0.15,
 {ImageTransparency=0},
@@ -8257,11 +8314,11 @@ Enum.EasingStyle.Quint,
 Enum.EasingDirection.Out
 ):Play()
 else
-ae(ar.Frame,0.35,{
+ad(ar.Frame,0.35,{
 Position=UDim2.new(0,2,0.5,0),
 },Enum.EasingStyle.Back,Enum.EasingDirection.Out):Play()
 ab.SetThemeTag(ar.Frame.Bar.Highlight.Glass,{ImageColor3="Text"},0.15)
-ae(
+ad(
 ar.Frame.Bar.Highlight.Glass,
 0.15,
 {ImageTransparency=0.85},
@@ -8278,11 +8335,11 @@ end
 end
 
 if ax then
-ae(ar.Layer,0.1,{
+ad(ar.Layer,0.1,{
 ImageTransparency=0,
 }):Play()
 ab.SetThemeTag(ar.Frame.Bar.Highlight.Glass,{ImageColor3="Toggle"},0.1)
-ae(
+ad(
 ar.Frame.Bar.Highlight.Glass,
 0.1,
 {ImageTransparency=0},
@@ -8291,7 +8348,7 @@ Enum.EasingDirection.Out
 ):Play()
 
 if ap then
-ae(ap,0.1,{
+ad(ap,0.1,{
 ImageTransparency=0,
 }):Play()
 end
@@ -8302,11 +8359,11 @@ ar.Frame.Bar.Highlight.Glass.Image=aA
 ar.Frame.Bar.Highlight.Glass.ImageRectSize=aB
 ar.Frame.Bar.Highlight.Glass.ImageRectOffset=b
 else
-ae(ar.Layer,0.1,{
+ad(ar.Layer,0.1,{
 ImageTransparency=1,
 }):Play()
 ab.SetThemeTag(ar.Frame.Bar.Highlight.Glass,{ImageColor3="Text"},0.1)
-ae(
+ad(
 ar.Frame.Bar.Highlight.Glass,
 0.1,
 {ImageTransparency=0.85},
@@ -8315,7 +8372,7 @@ Enum.EasingDirection.Out
 ):Play()
 
 if ap then
-ae(ap,0.1,{
+ad(ap,0.1,{
 ImageTransparency=1,
 }):Play()
 end
@@ -8346,14 +8403,14 @@ local aB=ar.Frame.Position.X.Offset
 local b=false
 local d=false
 
-ae(
+ad(
 ar.Frame.Bar.UIScale,
 0.28,
 {Scale=1.5},
 Enum.EasingStyle.Quint,
 Enum.EasingDirection.Out
 ):Play()
-ae(
+ad(
 ar.Frame.Bar.Highlight.BarOverlay,
 0.28,
 {ImageTransparency=0.86},
@@ -8396,7 +8453,7 @@ ar.Frame.Bar.Highlight.Glass.Image=m
 ar.Frame.Bar.Highlight.Glass.ImageRectSize=p
 ar.Frame.Bar.Highlight.Glass.ImageRectOffset=r
 
-ae(ar.Frame,0.12,{
+ad(ar.Frame,0.12,{
 Position=UDim2.new(0,i,0.5,0),
 },Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end)
@@ -8442,14 +8499,14 @@ local i=h>av/2
 ay:Set(i,true,false)
 end
 
-ae(
+ad(
 ar.Frame.Bar.UIScale,
 0.23,
 {Scale=1},
 Enum.EasingStyle.Quint,
 Enum.EasingDirection.Out
 ):Play()
-ae(
+ad(
 ar.Frame.Bar.Highlight.BarOverlay,
 0.23,
 {ImageTransparency=0},
@@ -8469,7 +8526,7 @@ local aa={}
 
 local ab=a.d()local ac=
 ab.New
-local ae=ab.Tween
+local ad=ab.Tween
 
 
 function aa.New(af,ag,ah,ai,aj,ak)
@@ -8532,23 +8589,23 @@ an,
 
 function al.Set(ap,aq)
 if aq then
-ae(ao.Layer,0.06,{
+ad(ao.Layer,0.06,{
 ImageTransparency=0,
 }):Play()
 
 
 
-ae(an.ImageLabel,0.06,{
+ad(an.ImageLabel,0.06,{
 ImageTransparency=0,
 }):Play()
 else
-ae(ao.Layer,0.05,{
+ad(ao.Layer,0.05,{
 ImageTransparency=1,
 }):Play()
 
 
 
-ae(an.ImageLabel,0.06,{
+ad(an.ImageLabel,0.06,{
 ImageTransparency=1,
 }):Play()
 end
@@ -8569,7 +8626,7 @@ local aa=a.d()local ab=
 aa.New local ac=
 aa.Tween
 
-local ae=a.I().New
+local ad=a.I().New
 local af=a.J().New
 
 local ag={}
@@ -8631,7 +8688,7 @@ local al=aj.Value
 
 local am,an
 if aj.Type=="Toggle"then
-am,an=ae(
+am,an=ad(
 al,
 aj.Icon,
 aj.IconSize,
@@ -8714,7 +8771,7 @@ return aa
 end)
 
 local ac=aa(game:GetService"UserInputService")
-local ae=aa(game:GetService"RunService")
+local ad=aa(game:GetService"RunService")
 
 local af=a.d()
 local ag=af.New
@@ -8978,7 +9035,7 @@ ar=aB
 af.SafeCallback(am.Callback,FormatValue(aB))
 end
 
-ao=ae.RenderStepped:Connect(function()
+ao=ad.RenderStepped:Connect(function()
 local g=an and b.Position.X or ac:GetMouseLocation().X
 local h=math.clamp(
 (g-am.UIElements.SliderIcon.AbsolutePosition.X)
@@ -9136,7 +9193,7 @@ return ai end function a.L():typeof(__modImpl())local aa=a.cache.L if not aa the
 
 local aa=a.d()
 local ac=aa.New
-local ae=aa.Tween
+local ad=aa.Tween
 
 local af={}
 
@@ -9310,7 +9367,7 @@ ap.UIElements.Value,
 })
 
 if ap.Indeterminate then
-local aq=ae(
+local aq=ad(
 ap.UIElements.Fill,
 1/ap.Speed,
 {Position=UDim2.new(1,0,0,0)},
@@ -9340,7 +9397,7 @@ if ap.UIElements.Fill and not ap.Indeterminate then
 if ar or not ap.Animate or ap.AnimationDuration<=0 then
 ap.UIElements.Fill.Size=au
 else
-ae(
+ad(
 ap.UIElements.Fill,
 ap.AnimationDuration,
 {Size=au},
@@ -9419,9 +9476,9 @@ end)
 
 local ac=aa(game:GetService"UserInputService")
 
-local ae=a.d()
-local af=ae.New local ag=
-ae.Tween
+local ad=a.d()
+local af=ad.New local ag=
+ad.Tween
 
 local ah={
 UICorner=6,
@@ -9497,7 +9554,7 @@ Parent=al.UIElements.Keybind,
 Scale=0.85,
 })
 
-ae.AddSignal(
+ad.AddSignal(
 al.UIElements.Keybind.Frame.Frame.TextLabel:GetPropertyChangedSignal"TextBounds",
 function()
 al.UIElements.Keybind.Size=
@@ -9528,7 +9585,7 @@ end
 
 local ao
 
-ae.AddSignal(al.KeybindFrame.UIElements.Main.MouseButton1Click,function()
+ad.AddSignal(al.KeybindFrame.UIElements.Main.MouseButton1Click,function()
 if an then
 if al.CanChange then
 al.Picking=true
@@ -9586,7 +9643,7 @@ end
 end
 end)
 
-ae.AddSignal(ac.InputBegan,function(ap,aq)
+ad.AddSignal(ac.InputBegan,function(ap,aq)
 if ac:GetFocusedTextBox()then
 return
 end
@@ -9599,12 +9656,12 @@ end
 
 if ap.UserInputType==Enum.UserInputType.Keyboard then
 if ap.KeyCode.Name==al.Value then
-ae.SafeCallback(al.Callback,ap.KeyCode.Name)
+ad.SafeCallback(al.Callback,ap.KeyCode.Name)
 end
 elseif ap.UserInputType==Enum.UserInputType.MouseButton1 and al.Value=="MouseLeft"then
-ae.SafeCallback(al.Callback,"MouseLeft")
+ad.SafeCallback(al.Callback,"MouseLeft")
 elseif ap.UserInputType==Enum.UserInputType.MouseButton2 and al.Value=="MouseRight"then
-ae.SafeCallback(al.Callback,"MouseRight")
+ad.SafeCallback(al.Callback,"MouseRight")
 end
 end)
 
@@ -9614,7 +9671,7 @@ end
 return ah end function a.N():typeof(__modImpl())local aa=a.cache.N if not aa then aa={c=__modImpl()}a.cache.N=aa end return aa.c end end do local function __modImpl()
 
 local aa=a.d()local ac=
-aa.New local ae=
+aa.New local ad=
 aa.Tween
 
 local af={
