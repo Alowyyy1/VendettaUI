@@ -127,7 +127,7 @@ function ServerSelector.new(Config, OnSelectCallback)
 	local LogTextLabel = New("TextLabel", {
 		Text = "",
 		TextSize = 12,
-		FontFace = Font.new(Enum.Font.Code, Enum.FontWeight.Regular),
+		FontFace = Font.new(Creator.Font, Enum.FontWeight.Regular),
 		ThemeTag = { TextColor3 = "Text" },
 		TextTransparency = 0.15,
 		TextXAlignment = Enum.TextXAlignment.Left,

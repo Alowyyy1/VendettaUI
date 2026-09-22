@@ -4791,7 +4791,7 @@ Parent=ar,
 local as=af("TextLabel",{
 Text="",
 TextSize=12,
-FontFace=Font.new(Enum.Font.Code,Enum.FontWeight.Regular),
+FontFace=Font.new(ae.Font,Enum.FontWeight.Regular),
 ThemeTag={TextColor3="Text"},
 TextTransparency=0.15,
 TextXAlignment=Enum.TextXAlignment.Left,
