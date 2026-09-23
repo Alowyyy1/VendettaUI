@@ -5,11 +5,11 @@
     Файл: examples/main_menu.lua
     
     Особенности:
-    - Модальное окно с левым боковым меню (стиль Apple / VendettaUI).
+    - Модальное окно с левым боковым меню.
     - Вкладка "Settings": Скрытый бинд на RightShift (hardcoded, locked) 
       + Кастомный бинд пользователя.
     - Тестовые вкладки "Tab 1" и "Tab 2" со всеми элементами управления.
-    - Иконки SF Symbols (Apple style).
+    - Стандартный набор четких векторных иконок Lucide (из оригинального WindUI).
     - 100% совместимость с API элементов VendettaUI.
     - Полное отсутствие эмодзи в тексте и интерфейсе.
     ========================================================================
@@ -29,11 +29,11 @@ local LocalPlayer = Players.LocalPlayer
 -- 1. Загрузка библиотеки VendettaUI (ветка Test)
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/dist/main.lua"))()
 
--- 2. Создание главного окна (стиль Apple / SF Symbols)
+-- 2. Создание главного окна (стандартные четкие иконки Lucide)
 local Window = WindUI:CreateWindow({
 	Title = "Vendetta UI",
 	Author = "Main Menu",
-	Icon = "sfsymbols:gearshape",
+	Icon = "square-terminal",
 	Size = UDim2.fromOffset(680, 460),
 	MinSize = Vector2.new(580, 380),
 	MaxSize = Vector2.new(900, 600),
@@ -65,7 +65,7 @@ end)
 -- =========================================================================
 local SettingsTab = Window:Tab({
 	Title = "Settings",
-	Icon = "sfsymbols:gearshape",
+	Icon = "settings",
 	Desc = "Keybinds and Interface Settings",
 })
 
@@ -94,7 +94,7 @@ SettingsTab:Keybind({
 		WindUI:Notify({
 			Title = "Keybind Updated",
 			Content = "Menu toggle key set to: " .. tostring(keyName),
-			Icon = "sfsymbols:keyboard",
+			Icon = "keyboard",
 			Duration = 3,
 		})
 	end,
@@ -119,7 +119,7 @@ SettingsTab:Slider({
 -- =========================================================================
 local Tab1 = Window:Tab({
 	Title = "Tab 1",
-	Icon = "sfsymbols:slider.horizontal.3",
+	Icon = "sliders",
 	Desc = "Controls, Inputs and Selection",
 })
 
@@ -133,7 +133,7 @@ Tab1:Toggle({
 		WindUI:Notify({
 			Title = "Speed Boost",
 			Content = "State changed to: " .. tostring(state),
-			Icon = "sfsymbols:bolt",
+			Icon = "zap",
 			Duration = 2,
 		})
 	end,
@@ -179,7 +179,7 @@ Tab1:Button({
 		WindUI:Notify({
 			Title = "Stats Reset",
 			Content = "Movement parameters restored to default",
-			Icon = "sfsymbols:arrow.counterclockwise",
+			Icon = "rotate-ccw",
 			Duration = 3,
 		})
 	end,
@@ -222,7 +222,7 @@ Tab1:Dropdown({
 -- =========================================================================
 local Tab2 = Window:Tab({
 	Title = "Tab 2",
-	Icon = "sfsymbols:paintbrush",
+	Icon = "palette",
 	Desc = "Visuals, Status and Utility",
 })
 
@@ -272,7 +272,7 @@ Tab2:Button({
 		WindUI:Notify({
 			Title = "Logs Cleared",
 			Content = "Console log buffer flushed successfully.",
-			Icon = "sfsymbols:trash",
+			Icon = "trash-2",
 			Duration = 2,
 		})
 	end,
@@ -287,7 +287,7 @@ Tab2:Button({
 		WindUI:Notify({
 			Title = "Copied",
 			Content = "State copied to clipboard.",
-			Icon = "sfsymbols:doc.on.doc",
+			Icon = "copy",
 			Duration = 2,
 		})
 	end,
