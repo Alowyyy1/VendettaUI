@@ -10,7 +10,7 @@ function Element:New(Config)
 	local Code = {
 		__type = "Code",
 		Title = Config.Title,
-		Code = Config.Code,
+		Code = Config.Code or Config.Value or Config.Default or "",
 		CodeSize = Config.CodeSize or 18,
 		Height = Config.Height,
 		CodeTheme = Config.CodeTheme,

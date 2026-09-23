@@ -11136,7 +11136,7 @@ function aj.New(al,am)
 local an={
 __type="Code",
 Title=am.Title,
-Code=am.Code,
+Code=am.Code or am.Value or am.Default or"",
 CodeSize=am.CodeSize or 18,
 Height=am.Height,
 CodeTheme=am.CodeTheme,

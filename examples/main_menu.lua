@@ -288,7 +288,7 @@ Tab2:Button({
 Tab2:Code({
 	Title = "Configuration Snippet",
 	Desc = "Sample script snippet display",
-	Value = [[-- Target Configuration
+	Code = [[-- Target Configuration
 local Config = {
     AutoTarget = true,
     MaxDistance = 500,
