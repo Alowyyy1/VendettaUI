@@ -5,11 +5,12 @@
     Файл: examples/main_menu.lua
     
     Особенности:
-    - Модальное окно с боковым меню слева.
+    - Модальное окно с левым боковым меню (стиль Apple / VendettaUI).
     - Вкладка "Settings": Скрытый бинд на RightShift (hardcoded, locked) 
       + Кастомный бинд пользователя.
-    - Тестовые вкладки "Tab1" и "Tab2" со всеми элементами управления.
-    - Стеклянный стиль (Glass Theme / VendettaUI).
+    - Тестовые вкладки "Tab 1" и "Tab 2" со всеми элементами управления.
+    - Иконки SF Symbols (Apple style).
+    - 100% совместимость с API элементов VendettaUI.
     - Полное отсутствие эмодзи в тексте и интерфейсе.
     ========================================================================
     Ссылка для запуска:
@@ -25,31 +26,41 @@ local UserInputService = cloneref(game:GetService("UserInputService"))
 local Players = cloneref(game:GetService("Players"))
 local LocalPlayer = Players.LocalPlayer
 
--- 1. Загрузка библиотеки VendettaUI
+-- 1. Загрузка библиотеки VendettaUI (ветка Test)
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Alowyyy1/VendettaUI/Test/dist/main.lua"))()
 
--- 2. Создание главного окна
+-- 2. Создание главного окна (стиль Apple / SF Symbols)
 local Window = WindUI:CreateWindow({
 	Title = "Vendetta UI",
 	Author = "Main Menu",
-	Icon = "square-terminal",
+	Icon = "sfsymbols:gearshape",
 	Size = UDim2.fromOffset(680, 460),
 	MinSize = Vector2.new(580, 380),
 	MaxSize = Vector2.new(900, 600),
 	Transparent = true,
-	Theme = "Dark",
+	Theme = "macOSDark",
 	Folder = "VendettaUI",
 	OpenButton = {
 		Title = "Open Menu",
-		Icon = "layout-grid",
+		Icon = "sfsymbols:slider.horizontal.3",
 		CornerRadius = UDim.new(0, 10),
 	},
 })
 
--- 3. Скрытый глобальный бинд на RightShift (нельзя снять или изменить)
+-- 3. Скрытый системный бинд на RightShift (нельзя снять или изменить)
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if gameProcessed then return end
 	if input.KeyCode == Enum.KeyCode.RightShift then
+		Window:Toggle()
+	end
+end)
+
+-- Переменная для сохранения пользовательского бинда
+local userKeyName = "RightControl"
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if userKeyName and userKeyName ~= "" and input.KeyCode.Name == userKeyName then
 		Window:Toggle()
 	end
 end)
@@ -59,7 +70,7 @@ end)
 -- =========================================================================
 local SettingsTab = Window:Tab({
 	Title = "Settings",
-	Icon = "settings",
+	Icon = "sfsymbols:gearshape",
 	Desc = "Keybinds and Interface Settings",
 })
 
@@ -68,8 +79,9 @@ SettingsTab:Section({ Title = "Keybinds" })
 -- Заблокированный системный бинд на RightShift
 local SystemBind = SettingsTab:Keybind({
 	Title = "System Toggle Key",
-	Desc = "Hardcoded keybind (RightShift). Cannot be changed or removed.",
-	Default = Enum.KeyCode.RightShift,
+	Desc = "Hardcoded keybind (RightShift). Cannot be changed.",
+	Value = Enum.KeyCode.RightShift,
+	CanChange = false,
 	Callback = function() end,
 })
 if SystemBind and SystemBind.Lock then
@@ -77,38 +89,29 @@ if SystemBind and SystemBind.Lock then
 end
 
 -- Пользовательский изменяемый бинд
-local userToggleKey = Enum.KeyCode.RightControl
-
 SettingsTab:Keybind({
 	Title = "User Toggle Key",
 	Desc = "Custom keybind to show or hide the menu.",
-	Default = userToggleKey,
-	Callback = function(key)
-		userToggleKey = key
+	Value = Enum.KeyCode.RightControl,
+	CanChange = true,
+	Callback = function(keyName)
+		userKeyName = keyName
 		WindUI:Notify({
 			Title = "Keybind Updated",
-			Content = "Menu toggle key set to: " .. tostring(key.Name),
-			Icon = "keyboard",
+			Content = "Menu toggle key set to: " .. tostring(keyName),
+			Icon = "sfsymbols:keyboard",
 			Duration = 3,
 		})
 	end,
 })
-
--- Отслеживание нажатия пользовательского бинда
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	if userToggleKey and input.KeyCode == userToggleKey then
-		Window:Toggle()
-	end
-end)
 
 SettingsTab:Section({ Title = "Interface" })
 
 SettingsTab:Dropdown({
 	Title = "Color Theme",
 	Desc = "Select interface theme palette",
-	Options = { "Dark", "Light", "Rose", "Midnight", "MonokaiPro", "Indigo", "Emerald", "Crimson" },
-	Default = "Dark",
+	Values = { "macOSDark", "macOSLight", "visionOS", "Dark", "Light", "Rose", "Midnight", "MonokaiPro" },
+	Value = "macOSDark",
 	Callback = function(themeName)
 		WindUI:SetTheme(themeName)
 	end,
@@ -127,11 +130,11 @@ SettingsTab:Slider({
 })
 
 -- =========================================================================
--- ВКЛАДКА 2: TAB1 (ТЕСТ ВОЗМОЖНОСТЕЙ 1)
+-- ВКЛАДКА 2: TAB 1 (ТЕСТ ВОЗМОЖНОСТЕЙ 1)
 -- =========================================================================
 local Tab1 = Window:Tab({
 	Title = "Tab 1",
-	Icon = "sliders",
+	Icon = "sfsymbols:slider.horizontal.3",
 	Desc = "Controls, Inputs and Selection",
 })
 
@@ -145,7 +148,7 @@ Tab1:Toggle({
 		WindUI:Notify({
 			Title = "Speed Boost",
 			Content = "State changed to: " .. tostring(state),
-			Icon = "zap",
+			Icon = "sfsymbols:bolt",
 			Duration = 2,
 		})
 	end,
@@ -191,7 +194,7 @@ Tab1:Button({
 		WindUI:Notify({
 			Title = "Stats Reset",
 			Content = "Movement parameters restored to default",
-			Icon = "rotate-ccw",
+			Icon = "sfsymbols:arrow.counterclockwise",
 			Duration = 3,
 		})
 	end,
@@ -204,15 +207,15 @@ Tab1:Input({
 	Desc = "Enter nickname to filter targets",
 	Placeholder = "Enter username...",
 	Callback = function(text)
-		print("[Main Menu] Input target: " .. text)
+		print("[Main Menu] Input target: " .. tostring(text))
 	end,
 })
 
 Tab1:Dropdown({
 	Title = "Target Selection Mode",
 	Desc = "Choose targeting prioritization logic",
-	Options = { "Closest Distance", "Lowest Health", "Highest Threat", "Priority List" },
-	Default = "Closest Distance",
+	Values = { "Closest Distance", "Lowest Health", "Highest Threat", "Priority List" },
+	Value = "Closest Distance",
 	Callback = function(selected)
 		print("[Main Menu] Selected mode: " .. tostring(selected))
 	end,
@@ -221,8 +224,8 @@ Tab1:Dropdown({
 Tab1:Dropdown({
 	Title = "Enabled Modules",
 	Desc = "Multi-selection example for active features",
-	Options = { "Aimbot", "Triggerbot", "ESP Box", "Chams", "Radar" },
-	Default = { "ESP Box", "Chams" },
+	Values = { "Aimbot", "Triggerbot", "ESP Box", "Chams", "Radar" },
+	Value = { "ESP Box", "Chams" },
 	Multi = true,
 	Callback = function(selectedTable)
 		print("[Main Menu] Active modules updated")
@@ -230,11 +233,11 @@ Tab1:Dropdown({
 })
 
 -- =========================================================================
--- ВКЛАДКА 3: TAB2 (ТЕСТ ВОЗМОЖНОСТЕЙ 2)
+-- ВКЛАДКА 3: TAB 2 (ТЕСТ ВОЗМОЖНОСТЕЙ 2)
 -- =========================================================================
 local Tab2 = Window:Tab({
 	Title = "Tab 2",
-	Icon = "palette",
+	Icon = "sfsymbols:paintbrush",
 	Desc = "Visuals, Status and Utility",
 })
 
@@ -244,8 +247,8 @@ Tab2:Colorpicker({
 	Title = "ESP Box Color",
 	Desc = "Set bounding box highlight color",
 	Default = Color3.fromRGB(0, 170, 255),
-	Callback = function(color)
-		print("[Main Menu] ESP Color changed: ", color)
+	Callback = function(color, transparency)
+		print("[Main Menu] ESP Color changed: ", color, transparency)
 	end,
 })
 
@@ -253,8 +256,8 @@ Tab2:Colorpicker({
 	Title = "Chams Glow Color",
 	Desc = "Set player mesh glow color",
 	Default = Color3.fromRGB(255, 50, 90),
-	Callback = function(color)
-		print("[Main Menu] Chams Color changed: ", color)
+	Callback = function(color, transparency)
+		print("[Main Menu] Chams Color changed: ", color, transparency)
 	end,
 })
 
@@ -284,7 +287,7 @@ Tab2:Button({
 		WindUI:Notify({
 			Title = "Logs Cleared",
 			Content = "Console log buffer flushed successfully.",
-			Icon = "trash-2",
+			Icon = "sfsymbols:trash",
 			Duration = 2,
 		})
 	end,
@@ -299,7 +302,7 @@ Tab2:Button({
 		WindUI:Notify({
 			Title = "Copied",
 			Content = "State copied to clipboard.",
-			Icon = "copy",
+			Icon = "sfsymbols:doc.on.doc",
 			Duration = 2,
 		})
 	end,
@@ -308,7 +311,7 @@ Tab2:Button({
 Tab2:Code({
 	Title = "Configuration Snippet",
 	Desc = "Sample script snippet display",
-	Default = [[-- Target Configuration
+	Value = [[-- Target Configuration
 local Config = {
     AutoTarget = true,
     MaxDistance = 500,
