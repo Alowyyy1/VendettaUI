@@ -14,17 +14,27 @@ local Element = {}
 local IsSliderHolding = false
 
 function Element:New(Config)
+	local sliderValue = {}
+	if type(Config.Value) == "table" then
+		sliderValue = Config.Value
+	elseif type(Config.Value) == "number" then
+		sliderValue.Default = Config.Value
+	end
+	sliderValue.Min = sliderValue.Min or Config.Min or 0
+	sliderValue.Max = sliderValue.Max or Config.Max or 100
+	sliderValue.Default = sliderValue.Default or Config.Default or sliderValue.Min
+
 	local Slider = {
 		__type = "Slider",
 		Title = Config.Title or nil,
 		Desc = Config.Desc or nil,
 		Locked = Config.Locked or nil,
 		LockedTitle = Config.LockedTitle,
-		Value = Config.Value or {},
+		Value = sliderValue,
 		Icons = Config.Icons or nil,
 		IsTooltip = Config.IsTooltip or false,
 		IsTextbox = Config.IsTextbox,
-		Step = Config.Step or 1,
+		Step = Config.Step or Config.Increment or 1,
 		Callback = Config.Callback or function() end,
 		UIElements = {},
 		IsFocusing = false,

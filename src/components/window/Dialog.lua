@@ -86,7 +86,7 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 		Visible = false, -- true
 		--GroupTransparency = 1, -- 0
 		ImageTransparency = 0.15,
-		Parent = Parent or Dialog.UIElements.FullScreen,
+		Parent = (not Key and Dialog.UIElements.FullScreen) or Parent,
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		AutomaticSize = "XY",
@@ -209,9 +209,10 @@ function DialogModule.Create(Key, Type, Window, WindUI, Parent)
 
 		task.spawn(function()
 			task.wait(duration + 0.05)
-			if not Key and fullScreen then
+			if fullScreen and fullScreen.Parent then
 				pcall(function() fullScreen:Destroy() end)
-			else
+			end
+			if mainContainer and mainContainer.Parent then
 				pcall(function() mainContainer:Destroy() end)
 			end
 		end)

@@ -107,16 +107,6 @@ SettingsTab:Keybind({
 
 SettingsTab:Section({ Title = "Interface" })
 
-SettingsTab:Dropdown({
-	Title = "Color Theme",
-	Desc = "Select interface theme palette",
-	Values = { "macOSDark", "macOSLight", "visionOS", "Dark", "Light", "Rose", "Midnight", "MonokaiPro" },
-	Value = "macOSDark",
-	Callback = function(themeName)
-		WindUI:SetTheme(themeName)
-	end,
-})
-
 SettingsTab:Slider({
 	Title = "UI Scale",
 	Desc = "Adjust scale factor of the interface",
