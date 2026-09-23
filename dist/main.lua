@@ -9517,6 +9517,7 @@ Locked=ak.Locked or false,
 LockedTitle=ak.LockedTitle,
 Value=NormalizeKeyCode(ak.Value)or"F",
 Callback=ak.Callback or function()end,
+OnChange=ak.OnChange or function()end,
 CanChange=ak.CanChange~=false,
 Blacklist=ak.Blacklist or{},
 Picking=false,
@@ -9644,6 +9645,7 @@ al.Picking=false
 
 al.UIElements.Keybind.Frame.Frame.TextLabel.Text=ar
 al.Value=ar
+ad.SafeCallback(al.OnChange,ar)
 
 ap:Disconnect()
 ao:Disconnect()

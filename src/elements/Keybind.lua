@@ -34,6 +34,7 @@ function Element:New(Config)
 		LockedTitle = Config.LockedTitle,
 		Value = NormalizeKeyCode(Config.Value) or "F",
 		Callback = Config.Callback or function() end,
+		OnChange = Config.OnChange or function() end,
 		CanChange = Config.CanChange ~= false,
 		Blacklist = Config.Blacklist or {},
 		Picking = false,
@@ -161,6 +162,7 @@ function Element:New(Config)
 
 							Keybind.UIElements.Keybind.Frame.Frame.TextLabel.Text = Key
 							Keybind.Value = Key
+							Creator.SafeCallback(Keybind.OnChange, Key)
 
 							Event:Disconnect()
 							EndedEvent:Disconnect()

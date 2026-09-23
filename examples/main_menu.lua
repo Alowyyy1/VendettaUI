@@ -50,16 +50,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	end
 end)
 
--- Переменная для сохранения пользовательского бинда
-local userKeyName = "RightControl"
-
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	if userKeyName and userKeyName ~= "" and input.KeyCode.Name == userKeyName then
-		Window:Toggle()
-	end
-end)
-
 -- =========================================================================
 -- ВКЛАДКА 1: SETTINGS (НАСТРОЙКИ)
 -- =========================================================================
@@ -89,14 +79,16 @@ SettingsTab:Keybind({
 	Desc = "Custom keybind to show or hide the menu.",
 	Value = Enum.KeyCode.RightControl,
 	CanChange = true,
-	Callback = function(keyName)
-		userKeyName = keyName
+	OnChange = function(keyName)
 		WindUI:Notify({
 			Title = "Keybind Updated",
 			Content = "Menu toggle key set to: " .. tostring(keyName),
 			Icon = "keyboard",
 			Duration = 3,
 		})
+	end,
+	Callback = function()
+		Window:Toggle()
 	end,
 })
 
