@@ -75,7 +75,7 @@ return function(Config)
 		Destroyed = false,
 		IsFullscreen = false,
 		CanResize = Config.Resizable ~= false,
-		IsOpenButtonEnabled = true,
+		IsOpenButtonEnabled = Config.OpenButton ~= nil and Config.OpenButton ~= false,
 
 		CurrentConfig = nil,
 		ConfigManager = nil,

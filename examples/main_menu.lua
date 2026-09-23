@@ -40,11 +40,6 @@ local Window = WindUI:CreateWindow({
 	Transparent = true,
 	Theme = "macOSDark",
 	Folder = "VendettaUI",
-	OpenButton = {
-		Title = "Open Menu",
-		Icon = "sfsymbols:slider.horizontal.3",
-		CornerRadius = UDim.new(0, 10),
-	},
 })
 
 -- 3. Скрытый системный бинд на RightShift (нельзя снять или изменить)

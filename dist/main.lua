@@ -14678,7 +14678,7 @@ Parent=aw.Parent,
 Destroyed=false,
 IsFullscreen=false,
 CanResize=aw.Resizable~=false,
-IsOpenButtonEnabled=true,
+IsOpenButtonEnabled=aw.OpenButton~=nil and aw.OpenButton~=false,
 
 CurrentConfig=nil,
 ConfigManager=nil,
